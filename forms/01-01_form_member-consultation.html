@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>양식 | 회원 상담표</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* iframe용 레이아웃만 오버라이드. 타이포(font-family/size/weight/line-height/color)는 style.css 기준 동일 */
+    body {
+      padding: 0;
+      margin: 0;
+      background: var(--bg-primary);
+      width: 100%;
+      min-height: 100%;
+      overflow: hidden;
+    }
+    
+    .form-container {
+      width: 100%;
+      padding: 16px;
+      margin: 0;
+      box-sizing: border-box;
+      position: relative;
+    }
+    
+    /* Header Section */
+    .form-header {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    
+    /* Auto-fill Button */
+    .auto-fill-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 16px;
+      background: #007AFF;
+      border: 1px solid #007AFF;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 122, 255, 0.3);
+      white-space: nowrap;
+      z-index: 100;
+    }
+    
+    .auto-fill-btn:hover {
+      background: #0051D5;
+      border-color: #0051D5;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    .auto-fill-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .brand-logo {
+      font-family: var(--font-family-serif);
+      font-size: 28px;
+      font-weight: var(--font-weight-medium);
+      color: #C67C4E;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    
+    .form-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    
+    .form-intro {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    
+    /* Administrative Section */
+    .admin-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+    }
+    
+    /* PDF 생성 시에만 표시 (signature-section만) */
+    .signature-section[data-pdf-only="true"] {
+      display: none;
+    }
+    
+    @media print {
+      .signature-section[data-pdf-only="true"] {
+        display: block !important;
+      }
+    }
+    
+    .admin-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .admin-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .admin-field input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-base);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: not-allowed;
+    }
+    
+    .admin-field input:focus {
+      outline: none;
+      border-color: var(--border-light);
+    }
+    
+    /* Section Styling */
+    .form-section {
+      margin-bottom: 32px;
+      padding: 0; /* 외부 스타일시트의 padding 적용 방지 */
+    }
+    
+    .section-title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-light);
+    }
+    
+    .section-subtitle {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+    
+    /* Customer Information */
+    .customer-info-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .info-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .info-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .info-field input[type="text"],
+    .info-field input[type="email"],
+    .info-field input[type="tel"] {
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-base);
+      background: var(--bg-primary);
+      width: 100%;
+    }
+    
+    .info-field.readonly input {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    
+    /* Radio/Checkbox Groups */
+    .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .radio-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 0;
+    }
+    
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      cursor: pointer;
+      margin: 0; /* 정렬을 위해 margin 제거 */
+    }
+    
+    .option-label input[type="radio"],
+    .option-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    /* Conditional Input */
+    .conditional-input {
+      margin-top: 12px;
+      padding-left: 0; /* 체크박스 그룹 내부에서는 들여쓰기 제거 */
+      display: block; /* 항상 표시 */
+    }
+    
+    /* 체크박스/라디오 그룹 내부의 조건부 입력은 새로운 줄에서 시작 (전체 너비 차지) */
+    .checkbox-group .conditional-input,
+    .radio-group .conditional-input {
+      grid-column: 1 / -1; /* 전체 열 차지하여 새로운 줄에서 시작 */
+      padding-left: 0;
+      margin-top: 0;
+    }
+    
+    .conditional-input input[type="text"],
+    .conditional-input input[type="date"] {
+      padding: 8px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-base);
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .conditional-input .duration-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .conditional-input .duration-group span {
+      white-space: nowrap;
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+    
+    /* Question Block */
+    .question-block {
+      margin-bottom: 24px;
+    }
+    
+    .question-text {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.6;
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .question-example {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 4px;
+    }
+    
+    /* Medical Conditions Grid */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+    }
+    
+    /* Confirmation Section */
+    .confirmation-section {
+      margin-top: 32px;
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      border: 2px solid var(--border-light);
+    }
+    
+    .confirmation-statement {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    
+    .confirmation-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .confirmation-checkbox input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    
+    .confirmation-checkbox label {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      cursor: pointer;
+      line-height: 1.6;
+    }
+    
+    /* Form Reset Section */
+    .form-reset-section {
+      text-align: center;
+    }
+    
+    .form-reset-btn:hover {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+    }
+    
+    .form-reset-btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* Signature Section */
+    .signature-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+    }
+    
+    .signature-label {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    .signature-label .required {
+      color: var(--error-color);
+    }
+    
+    .signature-line {
+      height: 60px;
+      border-bottom: 2px solid var(--text-primary);
+      margin-bottom: 16px;
+    }
+    
+    .date-time-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    
+    .date-time-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .date-time-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+    
+    .date-time-field .system-note {
+      font-size: var(--font-size-xs);
+      color: var(--text-light);
+      font-style: italic;
+      margin-top: 4px;
+    }
+    
+    .required-note {
+      font-size: var(--font-size-xs);
+      color: var(--text-light);
+      margin-top: 12px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <!-- Auto-fill Button -->
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data (excluding store and staff info)">
+      Auto-fill
+    </button>
+    
+    <!-- Header -->
+    <div class="form-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Member Consultation Form</div>
+      <div class="form-intro">
+        Sulwhasoo strives to achieve the beauty of harmony between body and mind and is committed to providing customers with the most attentive skincare services. To best meet your skincare needs, please fill in the following information:
+      </div>
+    </div>
+
+    <!-- Administrative Information (Read-only, displayed on screen) -->
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration:</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff:</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <!-- Customer Information -->
+    <div class="form-section">
+      <div class="section-title">Customer Information</div>
+      <div class="customer-info-grid">
+        <div class="info-field">
+          <label>Name:</label>
+          <input type="text" id="customer-name" readonly data-field="customer-name" value="" />
+        </div>
+        <div class="info-field">
+          <label>Title:</label>
+          <div class="radio-group">
+            <label class="option-label">
+              <input type="radio" name="title" value="Ms" />
+              <span>Ms.</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="title" value="Mrs" />
+              <span>Mrs.</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="title" value="Mr" />
+              <span>Mr.</span>
+            </label>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>Membership Number:</label>
+          <input type="text" id="membership-number" readonly data-field="membership-number" value="" />
+        </div>
+        <div class="info-field">
+          <label>Contact Number:</label>
+          <div class="radio-group" style="margin-bottom: 8px;">
+            <label class="option-label">
+              <input type="radio" name="country-code" value="852" />
+              <span>852</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="country-code" value="853" />
+              <span>853</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="country-code" value="86" />
+              <span>86</span>
+            </label>
+          </div>
+          <input type="tel" id="contact-number" placeholder="Enter phone number" />
+        </div>
+        <div class="info-field">
+          <label>Email:</label>
+          <input type="email" id="email" placeholder="Enter email address" />
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Facial Care Habits -->
+    <div class="form-section">
+      <div class="section-title">1. Facial Care Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">How often do you have facial treatments?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="facial-frequency" value="weekly" />
+            <span>Weekly</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="facial-frequency" value="every-two-weeks" />
+            <span>Every two weeks</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="facial-frequency" value="once-month-or-longer" />
+            <span>Once a month or longer</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="facial-frequency" value="never" />
+            <span>Never</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block" id="treatment-type-block">
+        <div class="question-text">If yes, please select the type of treatment:</div>
+        <div class="checkbox-group">
+          <label class="option-label">
+            <input type="checkbox" name="treatment-type" value="beauty-device" />
+            <span>Beauty device treatment</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="treatment-type" value="manual-facial" />
+            <span>Manual facial care</span>
+          </label>
+          <div class="conditional-input" id="treatment-others-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; padding: 0; width: 100%;">
+            <label class="option-label" style="margin: 0; flex-shrink: 0;">
+              <input type="checkbox" name="treatment-type" value="others" id="treatment-others" />
+              <span>Others</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">
+          Have you recently undergone or plan to undergo any medical aesthetic treatments 
+          <span class="question-example">(e.g., chemical peel, LASER, PICO, HIFU, injections, cosmetic surgery, etc.)?</span>
+        </div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="medical-aesthetic" value="no" />
+            <span>No</span>
+          </label>
+          <div id="medical-aesthetic-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="medical-aesthetic" value="yes" id="medical-aesthetic-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Do you need continuous treatment?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="continuous-treatment" value="yes" />
+            <span>Yes</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="continuous-treatment" value="no" />
+            <span>No</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span>Date of recent treatment:</span>
+          <div style="position: relative; display: inline-block;">
+            <input type="date" id="recent-treatment-date" class="date-input-hk" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); cursor: pointer; background: white;" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">
+          In the past 6 months, have you taken or used any medication/products that may affect treatment 
+          <span class="question-example">(e.g., insulin, steroids, AHA, retinoic acid)?</span>
+        </div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="medication-products" value="no" />
+            <span>No</span>
+          </label>
+          <div id="medication-products-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="medication-products" value="yes" id="medication-products-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+          <div class="duration-group" style="grid-column: 1 / -1; margin-top: 0; gap: 4px;">
+            <span>Duration:</span>
+            <span>from</span>
+            <div style="position: relative; display: inline-block;">
+              <input type="date" id="medication-duration-from" class="date-input-hk" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); cursor: pointer; background: white; width: 140px;" />
+            </div>
+            <span>to</span>
+            <div style="position: relative; display: inline-block;">
+              <input type="date" id="medication-duration-to" class="date-input-hk" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); cursor: pointer; background: white; width: 140px;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Body Care Habits -->
+    <div class="form-section">
+      <div class="section-title">2. Body Care Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">How often do you have body treatments?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="body-frequency" value="weekly" />
+            <span>Weekly</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="body-frequency" value="every-two-weeks" />
+            <span>Every two weeks</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="body-frequency" value="once-month-or-longer" />
+            <span>Once a month or longer</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="body-frequency" value="never" />
+            <span>Never</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block" id="body-treatment-type-block">
+        <div class="question-text">If yes, please specify the type of treatment:</div>
+        <input type="text" placeholder="Enter treatment type" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); width: 100%; max-width: 400px;" />
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Which body areas do you want to focus on?</div>
+        <div class="checkbox-group">
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="head" />
+            <span>Head</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="neck-shoulder" />
+            <span>Neck & Shoulder</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="shoulder" />
+            <span>Shoulder</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="waist" />
+            <span>Waist</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="upper-back" />
+            <span>Upper Back</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="lower-back" />
+            <span>Lower Back</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="thigh" />
+            <span>Thigh</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="calf" />
+            <span>Calf</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="body-areas" value="arm" />
+            <span>Arm</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Preferred massage pressure:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="massage-pressure" value="gentle" />
+            <span>Gentle</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="massage-pressure" value="medium" />
+            <span>Medium</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="massage-pressure" value="deep" />
+            <span>Deep</span>
+          </label>
+          <div class="conditional-input" id="massage-pressure-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; padding: 0; grid-column: 1 / -1;">
+            <label class="option-label" style="margin: 0; flex-shrink: 0;">
+              <input type="radio" name="massage-pressure" value="others" id="massage-pressure-others" />
+              <span>Others</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+      </div>
+    </div>
+
+    <!-- 3. Physical Condition -->
+    <div class="form-section">
+      <div class="section-title">3. Physical Condition</div>
+      
+      <div class="question-block">
+        <div class="question-text">Current status:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="pregnancy-status" value="not-pregnant" />
+            <span>Not pregnant</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="pregnancy-status" value="pregnant" />
+            <span>Pregnant</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="pregnancy-status" value="planning-pregnancy" />
+            <span>Planning pregnancy</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any injuries in the past 6 months?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="injuries" value="no" />
+            <span>No</span>
+          </label>
+          <div id="injuries-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="injuries" value="yes" id="injuries-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any recent surgeries?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="surgeries" value="no" />
+            <span>No</span>
+          </label>
+          <div id="surgeries-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="surgeries" value="yes" id="surgeries-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Long-term medication?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="long-term-medication" value="no" />
+            <span>No</span>
+          </label>
+          <div id="long-term-medication-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="long-term-medication" value="yes" id="long-term-medication-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Product/food allergies?</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="allergies" value="no" />
+            <span>No</span>
+          </label>
+          <div id="allergies-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0;">
+              <input type="radio" name="allergies" value="yes" id="allergies-yes" />
+              <span>Yes</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any chronic conditions or areas to avoid?</div>
+        <div class="checkbox-group">
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="no" />
+            <span>No</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="head" />
+            <span>Head</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="neck-shoulder" />
+            <span>Neck & Shoulder</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="shoulder" />
+            <span>Shoulder</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="waist" />
+            <span>Waist</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="upper-back" />
+            <span>Upper Back</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="lower-back" />
+            <span>Lower Back</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="thigh" />
+            <span>Thigh</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="calf" />
+            <span>Calf</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="chronic-conditions" value="arm" />
+            <span>Arm</span>
+          </label>
+          <div class="conditional-input" id="chronic-conditions-input" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; padding: 0; grid-column: 2 / 4;">
+            <label class="option-label" style="margin: 0; flex-shrink: 0;">
+              <input type="checkbox" name="chronic-conditions" value="others" id="chronic-conditions-others" />
+              <span>Others</span>
+            </label>
+            <input type="text" placeholder="please specify" style="flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base);" />
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="section-subtitle">For safety when using beauty devices, please indicate if you have any of the following conditions:</div>
+        <div class="conditions-grid">
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="metal-dental-fillings" />
+            <span>Metal dental fillings</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="asthma" />
+            <span>Asthma</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="diabetes" />
+            <span>Diabetes</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="headache-migraine" />
+            <span>Headache/Migraine</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="eczema" />
+            <span>Eczema</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="epilepsy" />
+            <span>Epilepsy</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="severe-warts" />
+            <span>Severe warts</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="recent-scars" />
+            <span>Recent scars</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="lupus" />
+            <span>Lupus</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="rosacea" />
+            <span>Rosacea</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="infectious-skin-disease" />
+            <span>Infectious skin disease</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="psoriasis" />
+            <span>Psoriasis</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="severe-sunburn" />
+            <span>Severe sunburn</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="pacemaker" />
+            <span>Pacemaker</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="heart-problems" />
+            <span>Heart problems</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="internal-metal-implants" />
+            <span>Internal metal implants</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="thyroid-disease" />
+            <span>Thyroid disease</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="hypertension" />
+            <span>Hypertension</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="easy-bruising" />
+            <span>Easy bruising</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="blood-clotting-issues" />
+            <span>Blood clotting issues</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="nail-fungus-hand" />
+            <span>Nail fungus (hand)</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="nail-fungus-foot" />
+            <span>Nail fungus (foot)</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="severe-varicose-veins" />
+            <span>Severe varicose veins</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="congenital-disorders" />
+            <span>Congenital disorders</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="joint-problems" />
+            <span>Joint problems</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="claustrophobia" />
+            <span>Claustrophobia</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="device-conditions" value="eye-disease" />
+            <span>Eye disease</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Lifestyle Habits -->
+    <div class="form-section">
+      <div class="section-title">4. Lifestyle Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">Exercise:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="exercise" value="none" />
+            <span>None</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="exercise" value="occasionally" />
+            <span>Occasionally</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="exercise" value="regularly" />
+            <span>Regularly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Smoking:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="smoking" value="no" />
+            <span>No</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="smoking" value="yes" />
+            <span>Yes</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep quality:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="sleep-quality" value="good" />
+            <span>Good</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="sleep-quality" value="average" />
+            <span>Average</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="sleep-quality" value="poor" />
+            <span>Poor</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span>Sleep duration:</span>
+          <span>Normal (about</span>
+          <input type="number" id="sleep-duration" min="0" max="24" placeholder="hours" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); width: 80px;" />
+          <span>hours/day)</span>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep time:</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="text" id="sleep-time-from" placeholder="HH:MM" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); width: 100px;" />
+          <span>to</span>
+          <input type="text" id="sleep-time-to" placeholder="HH:MM" pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); width: 100px;" />
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep issues:</div>
+        <div class="checkbox-group">
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="difficulty-falling-asleep" />
+            <span>Difficulty falling asleep</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="light-sleep" />
+            <span>Light sleep</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="frequent-dreams" />
+            <span>Frequent dreams</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="excessive-sleep" />
+            <span>Excessive sleep</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="tired-after-waking" />
+            <span>Tired after waking</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="stay-up-late" />
+            <span>Stay up late</span>
+          </label>
+          <label class="option-label">
+            <input type="checkbox" name="sleep-issues" value="take-sedatives" />
+            <span>Take sedatives/sleeping pills</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Diet preference:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="diet-preference" value="normal" />
+            <span>Normal</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="diet-preference" value="strong-flavor" />
+            <span>Strong flavor</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="diet-preference" value="light" />
+            <span>Light</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="diet-preference" value="vegetarian" />
+            <span>Vegetarian</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="diet-preference" value="sweet-tooth" />
+            <span>Sweet tooth</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Tea/Coffee:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="tea-coffee" value="no" />
+            <span>No</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="tea-coffee" value="yes" />
+            <span>Yes</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Alcohol:</div>
+        <div class="radio-group">
+          <label class="option-label">
+            <input type="radio" name="alcohol" value="no" />
+            <span>No</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="alcohol" value="occasionally" />
+            <span>Occasionally</span>
+          </label>
+          <label class="option-label">
+            <input type="radio" name="alcohol" value="frequently" />
+            <span>Frequently</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">How many cups of water do you drink daily?</div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input type="number" id="water-intake" min="0" placeholder="cups" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); width: 100px;" />
+          <span>cups</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Section -->
+    <div class="confirmation-section">
+      <div class="confirmation-statement">
+        I confirm that the above information is accurate. I agree to inform my beauty consultant before treatment if I undergo any medical aesthetic procedures or if my skin condition changes in the future.
+      </div>
+      <div class="confirmation-checkbox">
+        <input type="checkbox" id="confirmation-checkbox" required />
+        <label for="confirmation-checkbox">I have read and agree to the above statement</label>
+      </div>
+    </div>
+
+    <!-- Signature Section (Hidden in screen, used for PDF generation) -->
+    <!-- 서명은 상위 화면(app/04_tabs.html)에서 수집되므로 입력 화면에서는 표시하지 않음 -->
+    <!-- PDF 생성 시에만 표시되며, 서명 이미지와 날짜/시간이 자동으로 주입됨 -->
+    <div class="signature-section" style="display: none;" data-pdf-only="true">
+      <div class="signature-label">
+        * Signature: <span class="required">(Required)</span>
+      </div>
+      <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">
+        <!-- PDF 생성 시: <img src="data:image/png;base64,..." style="max-width: 100%; height: auto;" /> -->
+        Signature will be injected during PDF generation
+      </div>
+      <div class="date-time-group">
+        <div class="date-time-field">
+          <label>Date: Day / Month / Year</label>
+          <input type="text" readonly data-field="signature-date" id="signature-date" value="" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-secondary);" />
+          <div class="system-note">(Displayed by system)</div>
+        </div>
+        <div class="date-time-field">
+          <label>Time:</label>
+          <input type="text" readonly data-field="signature-time" id="signature-time" value="" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-secondary);" />
+          <div class="system-note">(Displayed by system)</div>
+        </div>
+      </div>
+      <div class="required-note">* Required fields</div>
+    </div>
+
+    <!-- Form Reset Button (동의·서명 섹션 아래) -->
+    <div class="form-reset-section" style="margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light);">
+      <button type="button" id="form-reset-btn" class="form-reset-btn" style="width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; transition: var(--transition);">
+        Reset Form
+      </button>
+      <p class="form-reset-hint" style="margin-top: 8px; font-size: var(--font-size-xs); color: var(--text-light); text-align: center;">
+        Click to clear all input fields in this form
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Conditional input display logic
+    document.addEventListener('DOMContentLoaded', function() {
+      // Facial treatment frequency -> treatment type
+      const facialFrequencyRadios = document.querySelectorAll('input[name="facial-frequency"]');
+      const treatmentTypeBlock = document.getElementById('treatment-type-block');
+      
+      facialFrequencyRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (this.value !== 'never') {
+            treatmentTypeBlock.style.display = 'block';
+          } else {
+            treatmentTypeBlock.style.display = 'none';
+          }
+        });
+      });
+
+      // Treatment type others
+      const treatmentOthers = document.getElementById('treatment-others');
+      const treatmentOthersInput = document.getElementById('treatment-others-input');
+      if (treatmentOthers && treatmentOthersInput) {
+        treatmentOthers.addEventListener('change', function() {
+          if (this.checked) {
+            treatmentOthersInput.classList.add('active');
+          } else {
+            treatmentOthersInput.classList.remove('active');
+          }
+        });
+      }
+
+      // Medical aesthetic yes
+      const medicalAestheticYes = document.getElementById('medical-aesthetic-yes');
+      const medicalAestheticInput = document.getElementById('medical-aesthetic-input');
+      if (medicalAestheticInput) {
+        document.querySelectorAll('input[name="medical-aesthetic"]').forEach(radio => {
+          radio.addEventListener('change', function() {
+            if (this.value === 'yes') {
+              medicalAestheticInput.classList.add('active');
+            } else {
+              medicalAestheticInput.classList.remove('active');
+            }
+          });
+        });
+      }
+
+      // Medication products yes
+      const medicationProductsYes = document.getElementById('medication-products-yes');
+      const medicationProductsInput = document.getElementById('medication-products-input');
+      document.querySelectorAll('input[name="medication-products"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (this.value === 'yes') {
+            medicationProductsInput.classList.add('active');
+          } else {
+            medicationProductsInput.classList.remove('active');
+          }
+        });
+      });
+
+      // Body treatment frequency -> treatment type
+      const bodyFrequencyRadios = document.querySelectorAll('input[name="body-frequency"]');
+      const bodyTreatmentTypeBlock = document.getElementById('body-treatment-type-block');
+      
+      if (bodyTreatmentTypeBlock) {
+        bodyFrequencyRadios.forEach(radio => {
+          radio.addEventListener('change', function() {
+            if (this.value !== 'never') {
+              bodyTreatmentTypeBlock.style.display = 'block';
+            } else {
+              bodyTreatmentTypeBlock.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      // Massage pressure others
+      const massagePressureOthers = document.getElementById('massage-pressure-others');
+      const massagePressureInput = document.getElementById('massage-pressure-input');
+      if (massagePressureInput) {
+        document.querySelectorAll('input[name="massage-pressure"]').forEach(radio => {
+          radio.addEventListener('change', function() {
+            if (this.value === 'others') {
+              massagePressureInput.classList.add('active');
+            } else {
+              massagePressureInput.classList.remove('active');
+            }
+          });
+        });
+      }
+
+      // Injuries yes
+      document.querySelectorAll('input[name="injuries"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const injuriesInput = document.getElementById('injuries-input');
+          if (injuriesInput) {
+            if (this.value === 'yes') {
+              injuriesInput.classList.add('active');
+            } else {
+              injuriesInput.classList.remove('active');
+            }
+          }
+        });
+      });
+
+      // Surgeries yes
+      document.querySelectorAll('input[name="surgeries"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const surgeriesInput = document.getElementById('surgeries-input');
+          if (surgeriesInput) {
+            if (this.value === 'yes') {
+              surgeriesInput.classList.add('active');
+            } else {
+              surgeriesInput.classList.remove('active');
+            }
+          }
+        });
+      });
+
+      // Long-term medication yes
+      document.querySelectorAll('input[name="long-term-medication"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const longTermMedicationInput = document.getElementById('long-term-medication-input');
+          if (this.value === 'yes') {
+            longTermMedicationInput.classList.add('active');
+          } else {
+            longTermMedicationInput.classList.remove('active');
+          }
+        });
+      });
+
+      // Allergies yes
+      document.querySelectorAll('input[name="allergies"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          const allergiesInput = document.getElementById('allergies-input');
+          if (allergiesInput) {
+            if (this.value === 'yes') {
+              allergiesInput.classList.add('active');
+            } else {
+              allergiesInput.classList.remove('active');
+            }
+          }
+        });
+      });
+
+      // Chronic conditions others
+      const chronicConditionsOthers = document.getElementById('chronic-conditions-others');
+      const chronicConditionsInput = document.getElementById('chronic-conditions-input');
+      if (chronicConditionsOthers && chronicConditionsInput) {
+        chronicConditionsOthers.addEventListener('change', function() {
+          if (this.checked) {
+            chronicConditionsInput.classList.add('active');
+          } else {
+            chronicConditionsInput.classList.remove('active');
+          }
+        });
+      }
+    });
+
+
+    // 표준 HTML5 date input 초기화 (호환성을 위해 유지, 실제 동작 없음)
+    function initDatePicker(inputId, wrapper) {
+      // date input은 브라우저 기본 동작 사용
+    }
+    
+    // iframe 높이 자동 조정: 문서 높이를 부모에게 전송 (전역 함수)
+    function sendHeightToParent() {
+      // 문서의 실제 높이 측정
+      const height = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight,
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      
+      // 부모 창에 높이 전송
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'iframe-resize',
+          height: height
+        }, '*');
+        console.log('[Form] Height sent to parent:', height);
+      }
+    }
+    
+    // 양식 데이터 수집 함수
+    function collectFormData() {
+      const formData = {};
+      
+      // 라디오 버튼 (선택된 값) - 먼저 수집
+      const radioGroups = document.querySelectorAll('input[type="radio"]');
+      const radioValues = {};
+      radioGroups.forEach(radio => {
+        if (radio.name && radio.checked) {
+          radioValues[radio.name] = radio.value;
+        }
+      });
+      Object.assign(formData, radioValues);
+      
+      // 체크박스 (선택된 값들) - 먼저 수집
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const checkboxValues = {};
+      checkboxes.forEach(checkbox => {
+        if (checkbox.name) {
+          if (!checkboxValues[checkbox.name]) {
+            checkboxValues[checkbox.name] = [];
+          }
+          if (checkbox.checked) {
+            checkboxValues[checkbox.name].push(checkbox.value || 'checked');
+          }
+        } else if (checkbox.id && checkbox.checked) {
+          // name이 없는 경우 id 사용
+          formData[checkbox.id] = checkbox.value || true;
+        }
+      });
+      // 체크박스 배열을 쉼표 구분 문자열로 변환
+      Object.keys(checkboxValues).forEach(name => {
+        if (checkboxValues[name].length > 0) {
+          formData[name] = checkboxValues[name].join(',');
+        }
+      });
+      
+      // 동의 체크박스 확인
+      const confirmationCheckbox = document.querySelector('#confirmation-checkbox');
+      if (confirmationCheckbox) {
+        formData['confirmation-checkbox'] = confirmationCheckbox.checked;
+      }
+      
+      // 특정 필드들 명시적으로 수집 (중요한 필드들)
+      // 필드명은 PDF 템플릿의 data-field와 일치해야 함
+      // 이 필드들은 id가 없거나 특별한 처리가 필요한 필드들
+      const importantFields = {
+        'customer-name': '#customer-name',
+        'membership-number': '#membership-number',
+        'contact-number': '#contact-number',
+        'email': '#email',
+        'title': 'input[name="title"]:checked',
+        'country-code': 'input[name="country-code"]:checked',
+        'store-registration': '[data-field="store-registration"]',
+        'responsible-staff': '[data-field="responsible-staff"]',
+        'recent-treatment-date': '#recent-treatment-date',
+        'medication-duration-from': '#medication-duration-from',
+        'medication-duration-to': '#medication-duration-to',
+        // Lifestyle Habits 필드들
+        'sleep-duration': '#sleep-duration',
+        'sleep-time-from': '#sleep-time-from',
+        'sleep-time-to': '#sleep-time-to',
+        'water-intake': '#water-intake',
+        // PDF 템플릿 필드명과 일치하도록 수정 (id가 없는 입력 필드들)
+        // 주의: input[type="text"]를 명시적으로 선택하여 체크박스와 구분
+        'treatment-type-others': '#treatment-others-input input[type="text"]',
+        'medical-aesthetic-details': '#medical-aesthetic-input input[type="text"]',
+        'medication-products-details': '#medication-products-input input[type="text"]',
+        'body-treatment-type': '#body-treatment-type-block input[type="text"]',
+        'massage-pressure-others': '#massage-pressure-input input[type="text"]',
+        'injuries-details': '#injuries-input input[type="text"]',
+        'surgeries-details': '#surgeries-input input[type="text"]',
+        'long-term-medication-details': '#long-term-medication-input input[type="text"]',
+        'allergies-details': '#allergies-input input[type="text"]',
+        'chronic-conditions-others': '#chronic-conditions-input input[type="text"]'
+      };
+      
+      Object.keys(importantFields).forEach(key => {
+        const selector = importantFields[key];
+        const element = document.querySelector(selector);
+        if (element) {
+          // 라디오 버튼이나 체크박스는 이미 위에서 수집했으므로 여기서는 텍스트 입력만 처리
+          if (element.type === 'text' || element.type === 'email' || element.type === 'tel' || element.type === 'number' || element.tagName === 'TEXTAREA') {
+            if (element.value && element.value.trim() !== '') {
+              formData[key] = element.value;
+            }
+          } else if (element.type === 'radio' || element.type === 'checkbox') {
+            // 라디오/체크박스는 이미 위에서 수집했으므로 건너뛰기
+            // 단, title과 country-code는 여기서도 처리 (명시적 선택자 사용)
+            if (key === 'title' || key === 'country-code') {
+              if (element.checked) {
+                formData[key] = element.value;
+              }
+            }
+          } else if (element.value) {
+            // 기타 입력 필드 (예: date)
+            formData[key] = element.value;
+          }
+        } else {
+          // 요소를 찾지 못한 경우, name 속성으로 라디오 그룹 전체 검색
+          if (key === 'title' || key === 'country-code') {
+            const radioGroup = document.querySelectorAll(`input[name="${key}"]`);
+            radioGroup.forEach(radio => {
+              if (radio.checked) {
+                formData[key] = radio.value;
+              }
+            });
+          }
+        }
+      });
+      
+      // 일반 텍스트 입력 필드 (id가 있는 경우만, importantFields에서 이미 처리된 필드는 제외)
+      const textInputs = document.querySelectorAll('input[type="text"]:not(#treatment-others-input input):not(#medical-aesthetic-input input):not(#medication-products-input input):not(#body-treatment-type-block input):not(#massage-pressure-input input):not(#injuries-input input):not(#surgeries-input input):not(#long-term-medication-input input):not(#allergies-input input):not(#chronic-conditions-input input), input[type="email"], input[type="tel"], input[type="number"], textarea');
+      textInputs.forEach(input => {
+        if (input.id && input.value && !formData.hasOwnProperty(input.id)) {
+          formData[input.id] = input.value;
+        }
+      });
+      
+      // 날짜 입력 필드 (브라우저 기본 형식 그대로 사용, ISO 형식 YYYY-MM-DD)
+      const dateInputs = document.querySelectorAll('input[type="date"]');
+      dateInputs.forEach(input => {
+        if (input.id && input.value) {
+          formData[input.id] = input.value; // ISO 형식 그대로 사용
+        }
+      });
+      
+      return formData;
+    }
+    
+    // postMessage 수신: 부모 창에서 데이터 주입 및 수집 요청
+    console.log('[Form] Setting up message listener...');
+    window.addEventListener('message', function(event) {
+      console.log('[Form] Message received:', event.data);
+      
+      // 보안: 같은 origin에서만 처리 (또는 신뢰할 수 있는 origin 확인)
+      // if (event.origin !== window.location.origin) return;
+      
+      // 데이터 수집 요청
+      if (event.data && event.data.type === 'form-data-request') {
+        console.log('[Form] Data collection requested');
+        const formData = collectFormData();
+        const formKey = event.data.formKey || 'unknown';
+        
+        // 부모 창에 데이터 전송
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'form-data-collected',
+            formKey: formKey,
+            data: formData
+          }, '*');
+          console.log('[Form] Data sent to parent:', { formKey, formData });
+        }
+        return;
+      }
+      
+      // 데이터 주입
+      if (event.data && event.data.type === 'form-data-inject') {
+        console.log('[Form] Received data from parent:', event.data);
+        const data = event.data.data || {};
+        
+        // 매장 정보 (Store Registration)
+        const storeField = document.querySelector('[data-field="store-registration"]');
+        if (storeField && data['store-registration']) {
+          storeField.value = data['store-registration'];
+        }
+        
+        // 담당 직원 정보 (Responsible Staff)
+        const staffField = document.querySelector('[data-field="responsible-staff"]');
+        if (staffField && data['responsible-staff']) {
+          staffField.value = data['responsible-staff'];
+        }
+        
+        // 브랜드 로고(개별 이미지 170×75) 또는 브랜드명 텍스트 (이미지 없으면 텍스트로 대체)
+        const brandEl = document.querySelector('[data-field="brand-name"]');
+        if (brandEl) {
+          const logoFilename = data['brand-logo-filename'];
+          if (logoFilename) {
+            var brandImg = new Image();
+            var logoUrl = '../assets/images/' + logoFilename;
+            brandImg.onload = function() {
+              brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+              brandEl.style.backgroundSize = '170px 75px';
+              brandEl.style.backgroundRepeat = 'no-repeat';
+              brandEl.style.backgroundPosition = '';
+              brandEl.textContent = '';
+              brandEl.style.height = '75px';
+            };
+            brandImg.onerror = function() {
+              brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+              brandEl.style.backgroundImage = '';
+              brandEl.style.backgroundSize = '';
+            };
+            brandImg.src = logoUrl;
+          } else if (data['brand-name']) {
+            brandEl.textContent = data['brand-name'];
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          }
+        }
+        
+        // 고객명
+        const nameInput = document.querySelector('#customer-name');
+        if (nameInput && data['customer-name']) {
+          nameInput.value = data['customer-name'];
+        }
+        
+        // 호칭 (Title)
+        if (data['title']) {
+          const titleRadio = document.querySelector(`input[name="title"][value="${data['title']}"]`);
+          if (titleRadio) {
+            titleRadio.checked = true;
+          }
+        }
+        
+        // 회원번호
+        const membershipInput = document.querySelector('#membership-number');
+        if (membershipInput && data['membership-number']) {
+          membershipInput.value = data['membership-number'];
+        }
+        
+        // 국가번호 (Country Code)
+        if (data['country-code']) {
+          const countryCodeRadio = document.querySelector(`input[name="country-code"][value="${data['country-code']}"]`);
+          if (countryCodeRadio) {
+            countryCodeRadio.checked = true;
+          }
+        }
+        
+        // 연락처
+        const contactInput = document.querySelector('#contact-number');
+        if (contactInput && data['contact-number']) {
+          contactInput.value = data['contact-number'];
+        }
+        
+        // 이메일
+        const emailInput = document.querySelector('#email');
+        if (emailInput && data['email']) {
+          emailInput.value = data['email'];
+        }
+        
+        // 서명 날짜/시간
+        const signatureDateInput = document.querySelector('#signature-date');
+        if (signatureDateInput && data['signature-date']) {
+          signatureDateInput.value = data['signature-date'];
+        }
+        
+        const signatureTimeInput = document.querySelector('#signature-time');
+        if (signatureTimeInput && data['signature-time']) {
+          signatureTimeInput.value = data['signature-time'];
+        }
+        
+        // 일반 날짜 필드들 (브라우저 기본 형식 그대로 사용)
+        const recentTreatmentDateInput = document.querySelector('#recent-treatment-date');
+        if (recentTreatmentDateInput && data['recent-treatment-date'] && !recentTreatmentDateInput.value) {
+          recentTreatmentDateInput.value = data['recent-treatment-date'];
+        }
+        
+        const medicationDurationFromInput = document.querySelector('#medication-duration-from');
+        if (medicationDurationFromInput && data['medication-duration-from'] && !medicationDurationFromInput.value) {
+          medicationDurationFromInput.value = data['medication-duration-from'];
+        }
+        
+        const medicationDurationToInput = document.querySelector('#medication-duration-to');
+        if (medicationDurationToInput && data['medication-duration-to'] && !medicationDurationToInput.value) {
+          medicationDurationToInput.value = data['medication-duration-to'];
+        }
+        
+        // 높이 재전송 (데이터 주입 후 높이 변경 가능)
+        setTimeout(() => {
+          sendHeightToParent();
+        }, 100);
+      }
+    });
+    
+    // 페이지 로드 시 현재 날짜/시간 자동 입력 (홍콩 형식)
+    // iframe 방식으로 변경되어 DOMContentLoaded 이벤트 사용 가능
+    console.log('[Form] Script loaded, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('[Form Init] Initializing form...');
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      // 서명 날짜/시간 (PDF 전용 필드, 텍스트 필드)
+      // 브라우저 로케일에 따라 형식이 달라질 수 있지만, 기본적으로는 간단한 형식 사용
+      const dateStr = `${day}-${month}-${year}`;
+      const timeStr = `${hours}:${minutes}`;
+      // postMessage로 주입될 수 있으므로, 값이 없을 때만 기본값 설정
+      const signatureDateInput = document.querySelector('#signature-date');
+      const signatureTimeInput = document.querySelector('#signature-time');
+      
+      if (signatureDateInput && !signatureDateInput.value) {
+        signatureDateInput.value = dateStr;
+      }
+      if (signatureTimeInput && !signatureTimeInput.value) {
+        signatureTimeInput.value = timeStr;
+      }
+      
+      // 일반 날짜 입력 필드들에 오늘 날짜 기본값 설정 (ISO 형식 YYYY-MM-DD)
+      // postMessage로 주입될 수 있으므로, 값이 없을 때만 기본값 설정
+      const nowISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
+      const recentTreatmentDateInput = document.querySelector('#recent-treatment-date');
+      if (recentTreatmentDateInput && !recentTreatmentDateInput.value) {
+        recentTreatmentDateInput.value = nowISO;
+      }
+      
+      const medicationDurationFromInput = document.querySelector('#medication-duration-from');
+      if (medicationDurationFromInput && !medicationDurationFromInput.value) {
+        medicationDurationFromInput.value = nowISO;
+      }
+      
+      const medicationDurationToInput = document.querySelector('#medication-duration-to');
+      if (medicationDurationToInput && !medicationDurationToInput.value) {
+        medicationDurationToInput.value = nowISO;
+      }
+      
+      // 날짜 선택기 초기화 (표준 date input이므로 단순 변환만)
+      if (typeof initDatePicker === 'function') {
+        initDatePicker('recent-treatment-date', document);
+        initDatePicker('medication-duration-from', document);
+        initDatePicker('medication-duration-to', document);
+      }
+      
+      // 양식 초기화 함수 정의
+      // 매장 정보(store-registration, responsible-staff)와 회원 정보(customer-name, membership-number, title, country-code, contact-number, email)는 제외
+      function resetForm() {
+        // 모든 입력 필드 초기화
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], input[type="tel"], textarea');
+        inputs.forEach(input => {
+          // POS 연동 필드(읽기 전용)는 제외
+          if (input.readOnly) return;
+          
+          // 매장 정보와 회원 정보는 제외
+          const fieldId = input.id || '';
+          const fieldName = input.name || '';
+          const dataField = input.getAttribute('data-field') || '';
+          
+          if (fieldId === 'store-registration' || fieldId === 'responsible-staff' || 
+              fieldId === 'customer-name' || fieldId === 'membership-number' ||
+              fieldName === 'title' || fieldName === 'country-code' ||
+              fieldId === 'contact-number' || fieldId === 'email' ||
+              dataField === 'store-registration' || dataField === 'responsible-staff' ||
+              dataField === 'customer-name' || dataField === 'membership-number' ||
+              fieldId === 'signature-date' || fieldId === 'signature-time') {
+            return; // 제외
+          }
+          
+          input.value = '';
+        });
+        
+        // 라디오 버튼 초기화 (매장 정보와 회원 정보 제외)
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+          const fieldName = radio.name || '';
+          // title과 country-code는 회원 정보이므로 제외
+          if (fieldName === 'title' || fieldName === 'country-code') {
+            return; // 제외
+          }
+          radio.checked = false;
+        });
+        
+        // 체크박스 초기화
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        // 날짜 입력 필드는 오늘 날짜로 초기화 (ISO 형식 YYYY-MM-DD)
+        const now = new Date();
+        const nowISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        
+        const recentTreatmentDateInput = document.querySelector('#recent-treatment-date');
+        if (recentTreatmentDateInput) {
+          recentTreatmentDateInput.value = nowISO;
+        }
+        
+        const medicationDurationFromInput = document.querySelector('#medication-duration-from');
+        if (medicationDurationFromInput) {
+          medicationDurationFromInput.value = nowISO;
+        }
+        
+        const medicationDurationToInput = document.querySelector('#medication-duration-to');
+        if (medicationDurationToInput) {
+          medicationDurationToInput.value = nowISO;
+        }
+        
+        // 고객 정보는 POS에서 가져온 것이므로 유지 (읽기 전용 필드)
+        // 동의 체크박스는 초기화됨
+        
+        // 리셋 후 높이 재전송
+        setTimeout(() => {
+          sendHeightToParent();
+        }, 100);
+      }
+      
+      // 자동 생성 함수 (매장정보, 직원정보, 회원정보 제외)
+      function autoFillForm() {
+        // 1. Facial Care Habits
+        // How often do you have facial treatments?
+        const facialWeekly = document.querySelector('input[name="facial-frequency"][value="weekly"]');
+        if (facialWeekly) facialWeekly.checked = true;
+        
+        // Treatment type
+        const treatmentBeautyDevice = document.querySelector('input[name="treatment-type"][value="beauty-device"]');
+        const treatmentManual = document.querySelector('input[name="treatment-type"][value="manual-facial"]');
+        if (treatmentBeautyDevice) treatmentBeautyDevice.checked = true;
+        if (treatmentManual) treatmentManual.checked = true;
+        
+        // Medical aesthetic
+        const medicalAestheticNo = document.querySelector('input[name="medical-aesthetic"][value="no"]');
+        if (medicalAestheticNo) medicalAestheticNo.checked = true;
+        
+        // Continuous treatment
+        const continuousYes = document.querySelector('input[name="continuous-treatment"][value="yes"]');
+        if (continuousYes) continuousYes.checked = true;
+        
+        // Recent treatment date (오늘 날짜)
+        const recentTreatmentDate = document.querySelector('#recent-treatment-date');
+        if (recentTreatmentDate) {
+          const today = new Date();
+          const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+          recentTreatmentDate.value = todayISO;
+        }
+        
+        // Medication products
+        const medicationNo = document.querySelector('input[name="medication-products"][value="no"]');
+        if (medicationNo) medicationNo.checked = true;
+        
+        // Medication duration (오늘 날짜)
+        const medicationFrom = document.querySelector('#medication-duration-from');
+        const medicationTo = document.querySelector('#medication-duration-to');
+        if (medicationFrom && medicationTo) {
+          const today = new Date();
+          const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+          medicationFrom.value = todayISO;
+          medicationTo.value = todayISO;
+        }
+        
+        // 2. Body Care Habits
+        // Body frequency
+        const bodyWeekly = document.querySelector('input[name="body-frequency"][value="weekly"]');
+        if (bodyWeekly) bodyWeekly.checked = true;
+        
+        // Body treatment type
+        const bodyTreatmentTypeInput = document.querySelector('#body-treatment-type-block input[type="text"]');
+        if (bodyTreatmentTypeInput) {
+          bodyTreatmentTypeInput.value = 'Massage therapy';
+        }
+        
+        // Body areas
+        const bodyAreas = ['neck-shoulder', 'shoulder', 'upper-back'];
+        bodyAreas.forEach(area => {
+          const checkbox = document.querySelector(`input[name="body-areas"][value="${area}"]`);
+          if (checkbox) checkbox.checked = true;
+        });
+        
+        // Massage pressure
+        const massageMedium = document.querySelector('input[name="massage-pressure"][value="medium"]');
+        if (massageMedium) massageMedium.checked = true;
+        
+        // 3. Physical Condition
+        // Pregnancy status
+        const notPregnant = document.querySelector('input[name="pregnancy-status"][value="not-pregnant"]');
+        if (notPregnant) notPregnant.checked = true;
+        
+        // Injuries
+        const injuriesNo = document.querySelector('input[name="injuries"][value="no"]');
+        if (injuriesNo) injuriesNo.checked = true;
+        
+        // Surgeries
+        const surgeriesNo = document.querySelector('input[name="surgeries"][value="no"]');
+        if (surgeriesNo) surgeriesNo.checked = true;
+        
+        // Long-term medication
+        const longTermMedNo = document.querySelector('input[name="long-term-medication"][value="no"]');
+        if (longTermMedNo) longTermMedNo.checked = true;
+        
+        // Allergies
+        const allergiesNo = document.querySelector('input[name="allergies"][value="no"]');
+        if (allergiesNo) allergiesNo.checked = true;
+        
+        // Chronic conditions
+        const chronicNo = document.querySelector('input[name="chronic-conditions"][value="no"]');
+        if (chronicNo) chronicNo.checked = true;
+        
+        // Device conditions (일부만 선택)
+        const deviceConditions = ['asthma', 'headache-migraine'];
+        deviceConditions.forEach(condition => {
+          const checkbox = document.querySelector(`input[name="device-conditions"][value="${condition}"]`);
+          if (checkbox) checkbox.checked = true;
+        });
+        
+        // 4. Lifestyle Habits
+        // Exercise
+        const exerciseOccasionally = document.querySelector('input[name="exercise"][value="occasionally"]');
+        if (exerciseOccasionally) exerciseOccasionally.checked = true;
+        
+        // Smoking
+        const smokingNo = document.querySelector('input[name="smoking"][value="no"]');
+        if (smokingNo) smokingNo.checked = true;
+        
+        // Sleep quality
+        const sleepGood = document.querySelector('input[name="sleep-quality"][value="good"]');
+        if (sleepGood) sleepGood.checked = true;
+        
+        // Sleep duration (모든 number input 중 placeholder에 "hours"가 있는 것)
+        const allNumberInputs = document.querySelectorAll('input[type="number"]');
+        allNumberInputs.forEach(input => {
+          if (input.placeholder && input.placeholder.toLowerCase().includes('hours')) {
+            input.value = '7';
+          }
+        });
+        
+        // Sleep time (모든 text input 중 placeholder가 "HH:MM"인 것들)
+        const allTextInputs = document.querySelectorAll('input[type="text"]');
+        const hhmmInputs = Array.from(allTextInputs).filter(input => 
+          input.placeholder === 'HH:MM'
+        );
+        if (hhmmInputs.length >= 2) {
+          hhmmInputs[0].value = '22:00';
+          hhmmInputs[1].value = '07:00';
+        }
+        
+        // Sleep issues
+        const sleepIssues = ['light-sleep', 'frequent-dreams'];
+        sleepIssues.forEach(issue => {
+          const checkbox = document.querySelector(`input[name="sleep-issues"][value="${issue}"]`);
+          if (checkbox) checkbox.checked = true;
+        });
+        
+        // Diet preference
+        const dietNormal = document.querySelector('input[name="diet-preference"][value="normal"]');
+        if (dietNormal) dietNormal.checked = true;
+        
+        // Tea/Coffee
+        const teaCoffeeYes = document.querySelector('input[name="tea-coffee"][value="yes"]');
+        if (teaCoffeeYes) teaCoffeeYes.checked = true;
+        
+        // Alcohol
+        const alcoholOccasionally = document.querySelector('input[name="alcohol"][value="occasionally"]');
+        if (alcoholOccasionally) alcoholOccasionally.checked = true;
+        
+        // Water cups (모든 number input 중 placeholder에 "cups"가 있는 것)
+        allNumberInputs.forEach(input => {
+          if (input.placeholder && input.placeholder.toLowerCase().includes('cups')) {
+            input.value = '8';
+          }
+        });
+        
+        // Conditional fields 트리거 (facial-frequency가 weekly이므로 treatment-type-block 표시)
+        const treatmentTypeBlock = document.getElementById('treatment-type-block');
+        if (treatmentTypeBlock) {
+          treatmentTypeBlock.style.display = 'block';
+        }
+        
+        // 마지막 동의 체크박스
+        const confirmationCheckbox = document.querySelector('#confirmation-checkbox');
+        if (confirmationCheckbox) confirmationCheckbox.checked = true;
+        
+        // 높이 재전송
+        setTimeout(() => {
+          sendHeightToParent();
+        }, 100);
+        
+        console.log('[Form Script] Auto-fill completed');
+      }
+      
+      // 자동 생성 버튼 이벤트 리스너 등록
+      const autoFillBtn = document.querySelector('#auto-fill-btn');
+      if (autoFillBtn) {
+        autoFillBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          autoFillForm();
+        });
+      }
+      
+      // 양식 초기화 버튼 이벤트 리스너 등록
+      const resetBtn = document.querySelector('#form-reset-btn');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (confirm('이 양식을 초기화하시겠습니까?\n입력한 내용이 모두 삭제됩니다.')) {
+            resetForm();
+          }
+        });
+        console.log('[Form Script] Reset button event listener registered');
+      }
+      
+      // 초기 높이 전송
+      sendHeightToParent();
+      
+      // DOM 변경 감지하여 높이 재전송 (MutationObserver 사용)
+      const observer = new MutationObserver(function() {
+        sendHeightToParent();
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+      
+      // 리사이즈 이벤트도 감지
+      window.addEventListener('resize', function() {
+        sendHeightToParent();
+      });
+      
+      // 이미지 로드 완료 시 높이 재전송
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        if (img.complete) {
+          sendHeightToParent();
+        } else {
+          img.addEventListener('load', sendHeightToParent);
+          img.addEventListener('error', sendHeightToParent);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

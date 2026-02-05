@@ -1,0 +1,301 @@
+/* ============================================
+   Tablet (portrait) screen base
+   Target: iPad 10.2 portrait (768 x 1024)
+   ============================================ */
+
+html, body {
+  width: 768px;
+  height: 1024px;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  overflow: hidden; /* 실제 스크롤은 내부 컨텐츠에서 */
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+}
+
+.t-screen {
+  width: 768px;
+  height: 1024px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Legacy (demo-only): topbar header.
+   실제 서비스 UI에서는 별도 단계 진행(stepper) UI로 대체 예정 */
+.t-topbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.t-title {
+  font-family: var(--font-family-serif);
+  color: var(--primary-color);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.2px;
+}
+
+.t-step {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.t-body {
+  flex: 1;
+  padding: 0 16px 16px 16px;
+  overflow: auto; /* 세로 스크롤은 여기에서 */
+  background: var(--bg-secondary);
+}
+
+/* Brand logo (회원검색 등 상단) */
+.t-brand-header {
+  margin: 0 -16px 12px -16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  box-sizing: border-box;
+}
+
+.t-brand-logo {
+  width: 170px;
+  height: 75px;
+  background-size: 170px 75px;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: var(--font-family-serif);
+  font-size: 20px;
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-color, #C67C4E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.2px;
+}
+
+/* Step progress (service UI placeholder) */
+.t-stepper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin: 0 -16px 12px -16px;
+  padding: 10px 16px 12px;
+  background: rgba(250, 248, 245, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+  /* 양식 내용이 상단으로 올라가지 않도록 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.t-stepper__list {
+  list-style: none;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr; /* 항목 수(3/4/...)에 맞춰 자동 분배 */
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.t-stepper__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.t-stepper__no {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  font-weight: var(--font-weight-medium);
+  flex: 0 0 auto;
+}
+
+.t-stepper__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.t-stepper__item.is-done {
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.72);
+}
+.t-stepper__item.is-done .t-stepper__no {
+  background: rgba(0, 122, 255, 0.10);
+  border-color: rgba(0, 122, 255, 0.22);
+  color: var(--primary-color);
+}
+
+.t-stepper__item.is-active {
+  color: var(--text-primary);
+  border-color: rgba(0, 122, 255, 0.30);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.10);
+}
+.t-stepper__item.is-active .t-stepper__no {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+
+.t-logo {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 14px;
+}
+
+.t-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+.t-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  padding: 16px;
+}
+
+/* Customer search - multi field layout */
+.t-form-grid {
+  display: grid;
+  gap: 12px;
+}
+.t-form-grid .form-group {
+  margin-bottom: 0;
+}
+.t-form-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Input field with value - highlight border */
+.demo-input.has-value {
+  border-color: var(--primary-color);
+  border-width: 2px;
+  background-color: rgba(0, 122, 255, 0.02);
+}
+
+/* Customer search progressive reveal (default hidden) */
+#result-card,
+#selected-card {
+  display: none;
+}
+
+/* Customer card - clickable */
+.customer-card {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.customer-card:hover {
+  border-color: rgba(0, 122, 255, 0.40) !important;
+  background-color: rgba(0, 122, 255, 0.02);
+}
+
+.t-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.t-actions .demo-btn-secondary,
+.t-actions .demo-btn-primary {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* Form selection - category grouping */
+.form-category {
+  margin-bottom: 16px;
+}
+
+.form-category h4 {
+  margin: 0 0 8px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.form-category-items {
+  display: grid;
+  gap: 6px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkbox-label:hover {
+  border-color: var(--primary-color);
+  background: rgba(139, 111, 71, 0.03);
+}
+
+.checkbox-label:has(input:checked) {
+  border-color: var(--primary-color);
+  background: rgba(139, 111, 71, 0.08);
+  box-shadow: 0 0 0 2px rgba(139, 111, 71, 0.10);
+}
+
+.form-checkbox {
+  margin-top: 2px;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.checkbox-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.checkbox-title {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-base);
+}
+
+.checkbox-note {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consent Form [Aqua Peel] - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    /* PDF/Print Optimized Styles - 상단 여백으로 페이지 경계 직후 글씨 잘림 방지 */
+    @page { size: A4; margin: 18mm 15mm 15mm 15mm; }
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: ui-serif, "Times New Roman", serif;
+      font-size: 9pt;
+      line-height: 1.25;
+      color: #000;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      padding-top: 2pt;
+      orphans: 2;
+      widows: 2;
+    }
+
+    .pdf-container { max-width: 210mm; margin: 0 auto; padding: 0 12pt; padding-top: 1pt; }
+    .pdf-header { margin-bottom: 10pt; text-align: center; }
+    .brand-logo { font-size: 18pt; font-weight: 500; color: #C67C4E; margin-bottom: 4pt; letter-spacing: -0.3pt; }
+    .form-title { font-size: 12pt; font-weight: 600; color: #000; margin-bottom: 6pt; }
+    .form-intro { font-size: 9pt; color: #333; line-height: 1.3; margin-bottom: 10pt; text-align: left; }
+
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 10pt; padding-bottom: 8pt; border-bottom: 1pt solid #ccc; font-size: 9pt; }
+    .admin-field { display: flex; flex-direction: column; gap: 4pt; }
+    .admin-field label { font-weight: 600; color: #333; }
+    .admin-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+
+    .pdf-section { margin-bottom: 10pt; page-break-inside: auto; }
+    .section-title { font-size: 10.5pt; font-weight: 700; color: #000; margin-bottom: 6pt; padding-top: 2pt; padding-bottom: 4pt; border-bottom: 2pt solid #000; page-break-after: avoid; }
+    .section-subtitle { font-size: 9.5pt; font-weight: 500; color: #000; margin-bottom: 6pt; margin-top: 8pt; padding-top: 2pt; }
+
+    /* Part 1: 입력 화면(01-01 수준)의 회원정보만 표시 */
+    .customer-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; margin-bottom: 0; }
+    .info-field { display: flex; flex-direction: column; gap: 2pt; }
+    .info-field label { font-size: 9pt; font-weight: 500; color: #333; }
+    .info-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+
+    .static-content { font-size: 9pt; line-height: 1.3; margin-bottom: 8pt; }
+    .static-content ul { margin: 4pt 0 4pt 18pt; padding: 0; }
+
+    .consent-block { margin-top: 8pt; padding: 6pt; border: 1pt solid #ccc; page-break-inside: avoid; }
+    .consent-statement { font-size: 9pt; line-height: 1.3; display: flex; align-items: flex-start; gap: 6pt; }
+    .consent-statement .pdf-checkbox { flex-shrink: 0; margin-top: 2pt; }
+
+    .pdf-option-group { display: flex; flex-wrap: wrap; gap: 8pt; align-items: center; }
+    .pdf-option-item { display: flex; align-items: center; gap: 4pt; font-size: 9pt; }
+    .pdf-radio { width: 10pt; height: 10pt; border: 1.2pt solid #000; border-radius: 50%; display: inline-block; position: relative; flex-shrink: 0; }
+    .pdf-radio.checked::after { content: '●'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6.5pt; }
+    .pdf-checkbox { width: 10pt; height: 10pt; border: 1.2pt solid #000; display: inline-block; position: relative; flex-shrink: 0; }
+    .pdf-checkbox.checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -62%); font-size: 11pt; font-weight: bold; }
+
+    .signature-section { margin-top: 10pt; padding-top: 8pt; border-top: 1pt solid #000; page-break-inside: avoid; }
+    .signature-label { font-size: 9pt; margin-bottom: 4pt; }
+    .signature-line { min-height: 60px; border-bottom: 2pt solid #000; margin-bottom: 8pt; display: flex; align-items: center; justify-content: center; }
+    .signature-line img { max-width: 100%; max-height: 60px; object-fit: contain; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-top: 8pt; }
+    .date-time-field { display: flex; flex-direction: column; gap: 2pt; }
+    .date-time-field label { font-size: 8pt; color: #333; }
+    .date-time-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .system-note { font-size: 7pt; color: #666; font-style: italic; margin-top: 1pt; }
+    .required-note { font-size: 8pt; color: #666; margin-top: 6pt; font-style: italic; }
+
+    .pdf-toolbar { position: fixed; top: 12px; right: 12px; z-index: 100; }
+    .pdf-btn { padding: 8px 14px; font-size: 13px; font-weight: 500; color: #fff; background: #c67c4e; border: none; border-radius: 6px; cursor: pointer; }
+    @media print { .pdf-toolbar { display: none !important; } body { print-color-adjust: exact; padding: 0; background: #fff; } .pdf-container { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+
+  <div class="pdf-container">
+    <div class="pdf-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Consent Form for Using Beauty Device [Aqua Peel]</div>
+      <div class="form-intro">
+        The purpose of this consent form is to provide you with written information regarding the risks, benefits, and alternative treatments related to this procedure. This document supplements the consultation or discussion you have already had with Sulwhasoo staff. You must confirm and fully understand the information listed in this document, so please read it carefully. If you have any questions about this treatment, please consult Sulwhasoo staff before signing.
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <div class="pdf-value" data-field="store-registration"></div>
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <div class="pdf-value" data-field="responsible-staff"></div>
+      </div>
+    </div>
+
+    <div class="pdf-section customer-info-section">
+      <div class="section-title">Part 1 : Personal Information *</div>
+      <div class="customer-info-grid">
+        <div class="info-field">
+          <label>Name :</label>
+          <div class="pdf-value" data-field="customer-name"></div>
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="pdf-option-group" data-field="title">
+            <div class="pdf-option-item"><span class="pdf-radio" data-value="Ms"></span><span>Ms.</span></div>
+            <div class="pdf-option-item"><span class="pdf-radio" data-value="Mrs"></span><span>Mrs.</span></div>
+            <div class="pdf-option-item"><span class="pdf-radio" data-value="Mr"></span><span>Mr.</span></div>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>Membership Number :</label>
+          <div class="pdf-value" data-field="membership-number"></div>
+        </div>
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="pdf-value" data-field="contact-number-formatted"></div>
+        </div>
+        <div class="info-field">
+          <label>Email :</label>
+          <div class="pdf-value" data-field="email"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Part 2 : Principle and Treatment Description</div>
+      <div class="static-content">
+        This device features Aqua Peel technology, which deeply removes aged keratin and pore impurities, leaving the skin light, burden-free, and improving absorption. It makes the skin silky smooth and clear. Using a turbine-style design, it painlessly and quickly extracts blackheads and acne, removes aged keratin, and enhances product absorption. After cleansing, nutrients are infused to revitalize skin regeneration and restore radiance. During the treatment, you will feel suction and a cooling sensation from the serum. After the treatment, mild to moderate redness may occur temporarily.
+      </div>
+      <div class="consent-block">
+        <div class="consent-statement">
+          <span class="pdf-checkbox" data-field="confirmation-part2"></span>
+          <span>I have understood the nature and expected results of the treatment and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Part 3 : Medications, Contraindications, and Precautions</div>
+      <div class="static-content">
+        <ul>
+          <li>If you have health issues, are taking medication, or have a medical history, please consult your doctor and disclose this information before treatment.</li>
+          <li>The device is not suitable for individuals with certain health conditions (e.g. facial nerve paralysis, epilepsy, muscle disease, lupus, herpes, severe cystic acne, open wounds, lymphatic or liver disease, loss of skin sensation, fever or infectious disease, pregnancy, implanted electronic or metal devices, abnormal response to electrical stimulation, metal allergy). Failure to disclose may result in you bearing the consequences.</li>
+          <li>Before each treatment, confirm you have no discomfort (e.g. pregnancy, menstruation, chronic illness, skin inflammation, injury, eczema, coagulation disorders) and are not on medication (e.g. anticoagulants, aspirin).</li>
+          <li>If any abnormality is discovered during treatment, notify staff immediately. The company may take measures as necessary; you bear costs if the abnormality is not caused by the company.</li>
+          <li>Risks and complications cannot be fully listed; unforeseen complications may occur.</li>
+        </ul>
+      </div>
+      <div class="consent-block">
+        <div class="consent-statement">
+          <span class="pdf-checkbox" data-field="confirmation-part3"></span>
+          <span>I have understood the contraindications and precautions and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Part 4 : Risks and Side Effects</div>
+      <div class="static-content">
+        <ul>
+          <li>Local skin may show dark red or purple "sha" marks. Red marks may fade within a few days or over a week.</li>
+          <li>Heat sensation on the back after treatment is normal and may last a few hours. Fatigue or drowsiness after treatment is common; rest may help.</li>
+          <li>Keep warm after treatment; avoid cold exposure. Wait 2–3 hours before showering; avoid very hot water on the back.</li>
+          <li>Avoid raw, oily, or strongly flavored foods for 2–3 days. Avoid strenuous exercise; ensure adequate rest and sleep. Temporarily stop using strong exfoliating products.</li>
+        </ul>
+      </div>
+      <div class="consent-block">
+        <div class="consent-statement">
+          <span class="pdf-checkbox" data-field="confirmation-part4"></span>
+          <span>I clearly understand the risks and side effects and agree to bear any possible consequences and post-treatment conditions. *</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Part 5 : Disclaimer</div>
+      <div class="static-content">
+        <ul>
+          <li>I confirm that the information was explained by staff and my questions were addressed.</li>
+          <li>I acknowledge that the treatment is elective and I assume all risks.</li>
+          <li>I agree to follow post-treatment care (e.g. avoid sun exposure as advised).</li>
+          <li>I confirm that the treatment will be performed by trained Sulwhasoo staff.</li>
+          <li>I agree to follow-up and authorise AP Beauty to take photos/videos if applicable.</li>
+          <li>I understand that treatment effectiveness is not guaranteed.</li>
+          <li>I will inform Sulwhasoo staff of any health changes within two weeks before treatment.</li>
+          <li>I confirm that the English version of this consent form shall prevail in case of any discrepancy.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Part 6 : Signature Confirmation</div>
+      <div class="consent-block">
+        <div class="static-content">
+          By signing this consent form, I confirm I clearly understand and acknowledge the above disclaimer and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *
+        </div>
+        <div class="consent-statement">
+          <span class="pdf-checkbox" data-field="confirmation-part6"></span>
+          <span>I confirm I clearly understand all the above matters. *</span>
+        </div>
+      </div>
+
+      <div class="signature-section">
+        <div class="signature-label">Signature * :</div>
+        <div class="signature-line" data-field="signature-image"></div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <div class="pdf-value" data-field="signature-date"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <div class="pdf-value" data-field="signature-time"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    function injectPDFData(formData) {
+      const brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        const logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var img = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          img.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          img.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          img.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+      document.querySelectorAll('.pdf-value[data-field]').forEach(el => {
+        const name = el.getAttribute('data-field');
+        if (name === 'contact-number-formatted') {
+          const cc = formData['country-code'] || '';
+          const cn = formData['contact-number'] || '';
+          if (cc && cn) el.textContent = '(' + cc + ') ' + cn;
+          else if (cn) el.textContent = cn;
+          else el.textContent = '________________';
+          return;
+        }
+        const val = formData[name];
+        el.textContent = (val != null && val !== '') ? val : '________________';
+      });
+
+      document.querySelectorAll('.pdf-radio').forEach(el => {
+        const group = el.closest('.pdf-option-group[data-field]');
+        if (!group) return;
+        const name = group.getAttribute('data-field');
+        const v = formData[name];
+        const ev = el.getAttribute('data-value');
+        if (v === ev || String(v) === String(ev)) el.classList.add('checked'); else el.classList.remove('checked');
+      });
+
+      document.querySelectorAll('.pdf-checkbox[data-field]').forEach(el => {
+        const name = el.getAttribute('data-field');
+        const v = formData[name];
+        if (v === true || v === 'true' || v === 'checked') el.classList.add('checked'); else el.classList.remove('checked');
+      });
+
+      const sigEl = document.querySelector('[data-field="signature-image"]');
+      if (sigEl) {
+        sigEl.innerHTML = '';
+        if (formData['signature-image']) {
+          const img = document.createElement('img');
+          img.src = formData['signature-image'];
+          img.style.maxWidth = '100%';
+          img.style.maxHeight = '60px';
+          img.style.objectFit = 'contain';
+          sigEl.appendChild(img);
+        }
+      }
+    }
+
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    const pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        const opt = { margin: [18, 15, 15, 15], filename: 'Aqua-Peel-Consent.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.querySelector('.pdf-container')).save();
+      });
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-inject') {
+        const data = event.data.data || {};
+        injectPDFData(data);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-injection-complete', formKey: data.formKey || '' }, '*');
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { sendHeightToParent(); });
+    } else {
+      sendHeightToParent();
+    }
+    window.addEventListener('resize', function() { sendHeightToParent(); });
+    const observer = new MutationObserver(function() { sendHeightToParent(); });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+    document.querySelectorAll('img').forEach(function(img) {
+      if (img.complete) sendHeightToParent();
+      else { img.addEventListener('load', sendHeightToParent); img.addEventListener('error', sendHeightToParent); }
+    });
+  </script>
+</body>
+</html>

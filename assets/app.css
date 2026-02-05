@@ -1,0 +1,321 @@
+/* ============================================
+   HK POS eSignature - Screen Spec (Tablet)
+   - Extends existing planning CSS (html/assets/css/style.css)
+   ============================================ */
+
+body.app-body {
+  padding-top: 0; /* planning doc uses fixed navbar; app screens do not */
+  background-color: var(--bg-secondary);
+  /* 기본은 body 스크롤 허용. (우측만 스크롤은 레이아웃 컨테이너에서 제어) */
+}
+
+/* Make existing button styles usable for anchors too */
+.demo-btn-primary,
+.demo-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* iPad-first stage */
+.app-stage {
+  /* list(index)는 태블릿 고정이 아니라 넓게 사용 */
+  max-width: 1650px;
+  margin: 0 auto;
+  padding: 24px 16px 32px;
+}
+
+/* 공통 레이아웃: 좌(태블릿 프리뷰) 확장 + 우(설명) 고정폭 */
+
+.app-shell {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.app-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-brand-title {
+  font-family: var(--font-family-serif);
+  color: var(--primary-color);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.2px;
+}
+
+.app-logo {
+  height: 22px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.app-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-brand-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* One-line title + subtitle */
+.app-brand-subtitle--inline {
+  display: inline;
+  margin-left: 8px;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.app-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* Topbar meta: remove "pill" look (less rounded) */
+.app-topbar-actions .app-pill {
+  border: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: var(--text-secondary);
+}
+
+.app-topbar-actions .app-pill + .app-pill {
+  border-left: 1px solid var(--border-light);
+  padding-left: 10px;
+  margin-left: 2px;
+}
+
+.app-page {
+  padding: 16px;
+  flex: 1;
+  overflow: hidden; /* 우측만 스크롤: 내부에서 처리 */
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: minmax(920px, 1fr) 550px; /* 좌 넓게 / 우 고정 */
+  gap: 16px;
+  align-items: start;
+  height: 100%;
+}
+
+/* 우측(설명)만 스크롤 */
+.app-grid > aside {
+  overflow: auto;
+  padding-right: 6px; /* 스크롤바 여백 */
+}
+
+/* 좌측은 기본 고정(iframe 내부에서 스크롤) */
+.app-grid > section {
+  overflow: hidden;
+}
+
+/* 우측 설명 숨김(토글) */
+body.help-collapsed .app-grid {
+  grid-template-columns: 1fr;
+}
+body.help-collapsed .app-grid > aside {
+  display: none;
+}
+
+/* 반응형: 좁아지면 1컬럼 */
+@media (max-width: 1280px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+  .app-grid > section {
+    overflow: auto; /* 작은 화면에서는 좌도 스크롤 가능 */
+  }
+}
+
+/* ============================================
+   Device frame (iPad portrait preview)
+   - Screen: 768 x 1024
+   ============================================ */
+.device-frame {
+  --df-screen-w: 768px;
+  --df-screen-h: 1024px;
+  --df-bezel: 22px;
+  --df-radius: 22px;
+  --df-inner-radius: 10px;
+
+  width: calc(var(--df-screen-w) + (var(--df-bezel) * 2));
+  height: calc(var(--df-screen-h) + (var(--df-bezel) * 2));
+  border-radius: var(--df-radius);
+  background: #111;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.18);
+  padding: var(--df-bezel);
+}
+
+.device-frame__screen {
+  width: var(--df-screen-w);
+  height: var(--df-screen-h);
+  border-radius: var(--df-inner-radius);
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+.device-frame__iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #fff;
+}
+
+.device-frame__home-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.18);
+  pointer-events: none;
+}
+
+.app-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  padding: 16px;
+}
+
+.app-card-title {
+  font-size: var(--font-size-lg);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 10px;
+}
+
+.app-hint {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.app-callout {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--bg-overlay);
+  border-left: 3px solid var(--primary-color);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.app-footer-actions {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-primary);
+}
+
+.app-footer-actions .demo-btn-secondary,
+.app-footer-actions .demo-btn-primary {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* Dynamic tabs container for embedded forms */
+.app-form-frame {
+  width: 100%;
+  height: 520px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+}
+
+.app-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+}
+
+.app-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: min(420px, calc(100vw - 36px));
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--box-shadow-hover);
+  padding: 12px 12px;
+  z-index: 9999;
+  display: none;
+}
+
+.app-toast.show {
+  display: block;
+}
+
+.app-toast-title {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: 4px;
+}
+
+.app-toast-desc {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+}
+
+/* Small responsive tweak */
+@media (max-width: 900px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+  .app-form-frame {
+    height: 440px;
+  }
+}
+

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authorization Letter</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html { padding: 0; margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      padding: 0; margin: 0; background: var(--bg-primary);
+      width: 100%; min-height: 100%; overflow: hidden;
+      font-family: var(--font-family); font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium); line-height: 1.7; color: var(--text-primary);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    .form-container { width: 100%; padding: 16px; margin: 0; box-sizing: border-box; position: relative; }
+    .form-header { margin-bottom: 24px; position: relative; }
+    .auto-fill-btn { position: absolute; top: 16px; right: 16px; padding: 8px 16px; background: #007AFF; border: 1px solid #007AFF; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 100; }
+    .auto-fill-btn:hover { background: #0051D5; border-color: #0051D5; }
+    .brand-logo { font-family: var(--font-family-serif); font-size: 28px; font-weight: var(--font-weight-medium); color: #C67C4E; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .form-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+    .form-intro { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--border-radius); }
+    .admin-field { display: flex; flex-direction: column; gap: 4px; }
+    .admin-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .admin-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-primary); cursor: not-allowed; }
+    .form-section { margin-bottom: 32px; padding: 0; }
+    .section-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
+    .member-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-bottom: 12px; }
+    .member-row .info-field { flex: 1; }
+    .info-field { display: flex; flex-direction: column; gap: 6px; }
+    .info-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .info-field input { padding: 10px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-primary); width: 100%; box-sizing: border-box; }
+    .info-field input[readonly] { background: var(--bg-secondary); cursor: not-allowed; }
+    .btn-select { padding: 8px 14px; font-size: var(--font-size-sm); font-weight: 600; color: #007AFF; background: var(--bg-primary); border: 1px solid #007AFF; border-radius: var(--border-radius); cursor: pointer; white-space: nowrap; }
+    .btn-select:hover { background: rgba(0,122,255,0.08); }
+    .validity-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+    .validity-row .info-field input { background: var(--bg-primary); cursor: text; }
+    .validity-row .info-field input[readonly] { cursor: not-allowed; }
+    .scope-checkboxes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .scope-checkboxes .option-label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: var(--font-size-base); }
+    .scope-checkboxes .scope-other-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0; padding: 0; width: 100%; }
+    .scope-checkboxes .scope-other-row input[type="text"] { flex: 1; min-width: 200px; max-width: 400px; padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); }
+    .notice-bullets { font-size: var(--font-size-sm); color: var(--text-secondary); line-height: 1.6; margin: 12px 0; padding-left: 20px; }
+    .notice-bullets li { margin-bottom: 6px; }
+    .static-content { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+    .confirmation-section { margin-top: 16px; padding: 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); page-break-inside: avoid; }
+    .confirmation-checkbox { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; }
+    .confirmation-checkbox input { margin-top: 4px; }
+    .signature-section[data-pdf-only="true"] { display: none; }
+    @media print { .signature-section[data-pdf-only="true"] { display: block !important; } }
+    .signature-label { font-size: var(--font-size-sm); margin-bottom: 4px; }
+    .signature-line { min-height: 60px; border-bottom: 2px solid var(--border-color); margin-bottom: 8px; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .date-time-field { display: flex; flex-direction: column; gap: 4px; }
+    .date-time-field label { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .date-time-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); }
+    .system-note { font-size: var(--font-size-xs); color: var(--text-light); font-style: italic; margin-top: 4px; }
+    .required-note { font-size: var(--font-size-xs); color: var(--text-light); margin-top: 12px; font-style: italic; }
+    .form-reset-section { margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .form-reset-btn { width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; }
+
+    .layer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .layer-backdrop.is-open { display: flex; }
+    .layer-box { background: var(--bg-primary); border-radius: var(--border-radius); box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 480px; width: 100%; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+    .layer-header { padding: 16px; border-bottom: 1px solid var(--border-light); font-weight: 600; font-size: var(--font-size-lg); display: flex; justify-content: space-between; align-items: center; }
+    .layer-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0 4px; line-height: 1; }
+    .layer-body { padding: 16px; overflow-y: auto; flex: 1; }
+    .layer-list { list-style: none; margin: 0; padding: 0; }
+    .layer-list li { padding: 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); margin-bottom: 8px; cursor: pointer; transition: background 0.2s; }
+    .layer-list li:hover { background: var(--bg-secondary); }
+    .layer-list li.selected { border-color: #007AFF; background: rgba(0,122,255,0.08); }
+    .layer-list li .member-id { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data">Auto-fill</button>
+    <div class="form-header">
+      <input type="hidden" id="document-id" data-field="document-id" value="" />
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Authorization Letter</div>
+      <div class="form-intro">
+        I, the undersigned (Delegator), hereby authorize the person named below (Delegatee) to act on my behalf within the scope specified, for the validity period stated.
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Delegator (Authorizing Party)</div>
+      <div class="customer-info-grid" style="display: grid; gap: 16px;">
+        <div class="info-field">
+          <label>Name :</label>
+          <input type="text" readonly data-field="delegator-name" id="delegator-name" value="" />
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="radio-group" style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Ms" /><span>Ms.</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mrs" /><span>Mrs.</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mr" /><span>Mr.</span></label>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>Membership Number :</label>
+          <input type="text" readonly data-field="delegator-membership-no" id="delegator-membership-no" value="" />
+        </div>
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="radio-group" style="margin-bottom: 6px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="852" /><span>852</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="853" /><span>853</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="86" /><span>86</span></label>
+          </div>
+          <input type="tel" readonly data-field="delegator-contact" id="delegator-contact" value="" />
+        </div>
+        <div class="info-field">
+          <label>Email :</label>
+          <input type="email" readonly data-field="delegator-email" id="delegator-email" value="" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Delegatee (Authorized Party)</div>
+      <div class="member-row">
+        <div class="info-field" style="flex: 1;">
+          <label>Name :</label>
+          <input type="text" readonly data-field="delegatee-name" id="delegatee-name" value="" />
+        </div>
+        <button type="button" class="btn-select" id="btn-select-delegatee">Select Member</button>
+      </div>
+      <div class="member-row" style="margin-bottom: 0;">
+        <div class="info-field" style="flex: 1;">
+          <label>Name (confirm) :</label>
+          <input type="text" readonly data-field="delegatee-name-2" id="delegatee-name-2" value="" />
+        </div>
+      </div>
+      <div class="info-field" style="margin-top: 12px;">
+        <label>Contact Number :</label>
+        <input type="text" readonly data-field="delegatee-contact" id="delegatee-contact" value="" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Validity Period</div>
+      <div class="validity-row">
+        <div class="info-field">
+          <label>Start Date :</label>
+          <input type="date" data-field="validity-start" id="validity-start" />
+        </div>
+        <div class="info-field">
+          <label>End Date :</label>
+          <input type="date" data-field="validity-end" id="validity-end" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Scope of Authorization</div>
+      <p class="static-content" style="margin-bottom: 12px;">Please select at least one. The company (store) reserves the right to verify the delegatee's contact and identity document, and may refuse processing if valid proof cannot be provided.</p>
+      <ul class="notice-bullets">
+        <li>The company (store) reserves the right to verify the delegatee's contact details and identity document.</li>
+        <li>Processing may be refused if valid proof cannot be provided.</li>
+      </ul>
+      <div class="scope-checkboxes">
+        <label class="option-label">
+          <input type="checkbox" name="scope" value="gift-exchange" id="scope-gift" />
+          <span><span class="brand-name-replace">[Brand]</span> Gift Exchange</span>
+        </label>
+        <label class="option-label">
+          <input type="checkbox" name="scope" value="points-use" id="scope-points" />
+          <span><span class="brand-name-replace">[Brand]</span> Points Use</span>
+        </label>
+        <div class="scope-other-row" id="scope-other-wrap">
+          <label class="option-label" style="margin: 0; flex-shrink: 0;">
+            <input type="checkbox" name="scope" value="Other" id="scope-other-cb" />
+            <span>Other</span>
+          </label>
+          <input type="text" id="scope-other-input" data-field="scope-other" placeholder="Please specify" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="confirmation-section">
+        <div class="static-content">
+          I acknowledge and accept that all actions taken by the delegatee within the scope of this authorization are binding on me, and I assume full responsibility therefor.
+        </div>
+        <div class="confirmation-checkbox">
+          <input type="checkbox" id="confirmation-checkbox" required name="confirmation-checkbox" data-field="confirmation-checkbox" />
+          <label for="confirmation-checkbox">I have read and agree to the above. *</label>
+        </div>
+      </div>
+      <div class="signature-section" style="display: none;" data-pdf-only="true">
+        <div class="signature-label">Delegator Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">Signature will be injected during PDF generation</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <input type="text" readonly data-field="signature-date" id="signature-date" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <input type="text" readonly data-field="signature-time" id="signature-time" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+      </div>
+    </div>
+
+    <div class="form-reset-section">
+      <button type="button" id="form-reset-btn" class="form-reset-btn">Reset Form</button>
+      <p class="form-reset-hint" style="margin-top: 8px; font-size: var(--font-size-xs); color: var(--text-light); text-align: center;">Click to clear all input fields in this form</p>
+    </div>
+  </div>
+
+  <!-- Layer: Select Delegatee -->
+  <div class="layer-backdrop" id="layer-delegatee" role="dialog" aria-modal="true" aria-labelledby="layer-delegatee-title">
+    <div class="layer-box">
+      <div class="layer-header"><span id="layer-delegatee-title">Select Delegatee (Member)</span><button type="button" class="layer-close" id="layer-delegatee-close" aria-label="Close">&times;</button></div>
+      <div class="layer-body">
+        <ul class="layer-list" id="delegatee-member-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var formKey = 'authorization-letter';
+      var delegateeCandidates = [];
+
+      function sendHeightToParent() {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+        }
+      }
+
+      function setTodayDates() {
+        var today = new Date();
+        var yyyy = today.getFullYear();
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var dd = String(today.getDate()).padStart(2, '0');
+        var todayStr = yyyy + '-' + mm + '-' + dd;
+        var startEl = document.getElementById('validity-start');
+        var endEl = document.getElementById('validity-end');
+        if (startEl) startEl.value = todayStr;
+        if (endEl) endEl.value = todayStr;
+      }
+
+      function setValiditySevenDays() {
+        var start = new Date();
+        var end = new Date(start);
+        end.setDate(end.getDate() + 7);
+        var fmt = function(d) {
+          return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        };
+        var startEl = document.getElementById('validity-start');
+        var endEl = document.getElementById('validity-end');
+        if (startEl) startEl.value = fmt(start);
+        if (endEl) endEl.value = fmt(end);
+      }
+
+      function openDelegateeLayer() {
+        var listEl = document.getElementById('delegatee-member-list');
+        if (!listEl) return;
+        listEl.innerHTML = delegateeCandidates.map(function(m) {
+          var contact = (m.countryCode || '') && (m.phone || '') ? (m.countryCode + ' ' + m.phone) : (m.phone || m.contact || '');
+          return '<li data-id="' + (m.id || '') + '" data-name="' + (m.name || '').replace(/"/g, '&quot;') + '" data-contact="' + (contact || '').replace(/"/g, '&quot;') + '">' + (m.name || '') + '<div class="member-id">' + (m.id || '') + '</div></li>';
+        }).join('');
+        listEl.querySelectorAll('li').forEach(function(li) {
+          li.addEventListener('click', function() {
+            var name = (this.getAttribute('data-name') || '').replace(/&quot;/g, '"');
+            var contact = (this.getAttribute('data-contact') || '').replace(/&quot;/g, '"');
+            document.getElementById('delegatee-name').value = name;
+            document.getElementById('delegatee-name-2').value = name;
+            document.getElementById('delegatee-contact').value = contact;
+            document.getElementById('layer-delegatee').classList.remove('is-open');
+            sendHeightToParent();
+          });
+        });
+        document.getElementById('layer-delegatee').classList.add('is-open');
+      }
+
+      function collectFormData() {
+        var formData = {};
+        var set = function(key) {
+          var el = document.querySelector('[data-field="' + key + '"]') || document.getElementById(key);
+          if (el && el.value !== undefined) formData[key] = (el.value || '').trim();
+        };
+        set('document-id');
+        set('store-registration');
+        set('responsible-staff');
+        set('delegator-name');
+        set('delegator-membership-no');
+        set('delegator-contact');
+        set('delegator-email');
+        set('delegatee-name');
+        set('delegatee-name-2');
+        set('delegatee-contact');
+        set('validity-start');
+        set('validity-end');
+        set('scope-other');
+        set('signature-date');
+        set('signature-time');
+        var titleRadio = document.querySelector('input[name="delegator-title"]:checked');
+        formData['delegator-title'] = titleRadio ? titleRadio.value : '';
+        var ccRadio = document.querySelector('input[name="delegator-country-code"]:checked');
+        formData['delegator-country-code'] = ccRadio ? ccRadio.value : '';
+        var scopeChecked = [];
+        document.querySelectorAll('input[name="scope"]:checked').forEach(function(cb) {
+          var v = cb.value;
+          if (v === 'Other') {
+            var otherInput = document.getElementById('scope-other-input');
+            if (otherInput && otherInput.value.trim()) scopeChecked.push('Other: ' + otherInput.value.trim());
+            else scopeChecked.push('Other');
+          } else {
+            scopeChecked.push(v);
+          }
+        });
+        formData['scope'] = scopeChecked;
+        var cb = document.getElementById('confirmation-checkbox');
+        formData['confirmation-checkbox'] = !!(cb && cb.checked);
+        return formData;
+      }
+
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'form-data-request') {
+          var formData = collectFormData();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'form-data-collected', formKey: formKey, data: formData }, '*');
+          }
+          return;
+        }
+        if (event.data && event.data.type === 'form-data-inject') {
+          var data = event.data.data || {};
+          var set = function(selector, val) {
+            var el = document.querySelector(selector);
+            if (el && val != null && val !== '') el.value = val;
+          };
+          var setRadio = function(name, val) {
+            var el = document.querySelector('input[name="' + name + '"][value="' + (val || '') + '"]');
+            if (el) el.checked = true;
+          };
+          set('[data-field="document-id"]', data['document-id']);
+          set('[data-field="store-registration"]', data['store-registration']);
+          set('[data-field="responsible-staff"]', data['responsible-staff']);
+          set('[data-field="delegator-name"]', data['delegator-name']);
+          set('#delegator-name', data['delegator-name']);
+          set('[data-field="delegator-membership-no"]', data['delegator-membership-no']);
+          set('[data-field="delegator-contact"]', data['delegator-contact']);
+          set('#delegator-contact', data['delegator-contact']);
+          set('[data-field="delegator-email"]', data['delegator-email']);
+          set('#delegator-email', data['delegator-email']);
+          set('[data-field="delegatee-name"]', data['delegatee-name']);
+          set('#delegatee-name', data['delegatee-name']);
+          set('[data-field="delegatee-name-2"]', data['delegatee-name']);
+          set('#delegatee-name-2', data['delegatee-name']);
+          set('[data-field="delegatee-contact"]', data['delegatee-contact']);
+          set('#delegatee-contact', data['delegatee-contact']);
+          if (data['validity-start']) set('#validity-start', data['validity-start']);
+          if (data['validity-end']) set('#validity-end', data['validity-end']);
+          set('#signature-date', data['signature-date']);
+          set('#signature-time', data['signature-time']);
+          setRadio('delegator-title', data['delegator-title']);
+          setRadio('delegator-country-code', data['delegator-country-code']);
+          if (data['scope-other'] != null) set('#scope-other-input', data['scope-other']);
+          delegateeCandidates = Array.isArray(data['delegatee-candidates']) ? data['delegatee-candidates'] : [];
+          if (Array.isArray(data['scope'])) {
+            document.querySelectorAll('input[name="scope"]').forEach(function(cb) { cb.checked = false; });
+            document.getElementById('scope-other-cb').checked = false;
+            document.getElementById('scope-other-input').value = '';
+            data['scope'].forEach(function(v) {
+              if (v === 'Other' || (typeof v === 'string' && v.indexOf('Other:') === 0)) {
+                document.getElementById('scope-other-cb').checked = true;
+                if (v.indexOf('Other:') === 0) document.getElementById('scope-other-input').value = v.replace(/^Other:\s*/, '');
+              } else if (v === 'gift-exchange') document.getElementById('scope-gift').checked = true;
+              else if (v === 'points-use') document.getElementById('scope-points').checked = true;
+            });
+          }
+          var brandName = data['brand-name'] || 'Sulwhasoo';
+          document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+          var brandEl = document.querySelector('[data-field="brand-name"]');
+          if (brandEl) {
+            var logoFilename = data['brand-logo-filename'];
+            if (logoFilename) {
+              var img = new Image();
+              var logoUrl = '../assets/images/' + logoFilename;
+              img.onload = function() {
+                brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+                brandEl.style.backgroundSize = '170px 75px';
+                brandEl.style.backgroundRepeat = 'no-repeat';
+                brandEl.style.backgroundPosition = '';
+                brandEl.textContent = '';
+                brandEl.style.height = '75px';
+              };
+              img.onerror = function() {
+                brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+                brandEl.style.backgroundImage = '';
+                brandEl.style.backgroundSize = '';
+              };
+              img.src = logoUrl;
+            } else if (data['brand-name']) {
+              brandEl.textContent = data['brand-name'];
+              brandEl.style.backgroundImage = '';
+              brandEl.style.backgroundSize = '';
+            }
+          }
+          setTimeout(sendHeightToParent, 100);
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var now = new Date();
+        var dateStr = String(now.getDate()).padStart(2, '0') + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
+        var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        var dateEl = document.getElementById('signature-date');
+        var timeEl = document.getElementById('signature-time');
+        if (dateEl && !dateEl.value) dateEl.value = dateStr;
+        if (timeEl && !timeEl.value) timeEl.value = timeStr;
+        setTodayDates();
+
+        document.getElementById('validity-start').addEventListener('change', function() {
+          var start = this.value;
+          var endEl = document.getElementById('validity-end');
+          if (start && endEl && endEl.value && endEl.value < start) {
+            endEl.value = start;
+          }
+          sendHeightToParent();
+        });
+        document.getElementById('validity-end').addEventListener('change', function() {
+          var end = this.value;
+          var startEl = document.getElementById('validity-start');
+          if (end && startEl && startEl.value && startEl.value > end) {
+            alert('종료일은 시작일보다 이전일 수 없습니다.');
+            this.value = startEl.value;
+          }
+          sendHeightToParent();
+        });
+
+        document.getElementById('auto-fill-btn').addEventListener('click', function() {
+          if (delegateeCandidates.length > 0 && !document.getElementById('delegatee-name').value) {
+            var first = delegateeCandidates[0];
+            var contact = (first.countryCode || '') && (first.phone || '') ? (first.countryCode + ' ' + first.phone) : (first.phone || '');
+            document.getElementById('delegatee-name').value = first.name || '';
+            document.getElementById('delegatee-name-2').value = first.name || '';
+            document.getElementById('delegatee-contact').value = contact || '';
+          }
+          setValiditySevenDays();
+          document.getElementById('scope-gift').checked = true;
+          document.getElementById('scope-points').checked = true;
+          document.getElementById('confirmation-checkbox').checked = true;
+          sendHeightToParent();
+        });
+
+        document.getElementById('btn-select-delegatee').addEventListener('click', openDelegateeLayer);
+        document.getElementById('layer-delegatee-close').addEventListener('click', function() { document.getElementById('layer-delegatee').classList.remove('is-open'); });
+        document.getElementById('layer-delegatee').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('is-open'); });
+
+        document.getElementById('form-reset-btn').addEventListener('click', function() {
+          if (confirm('양식을 초기화하시겠습니까? 입력한 모든 내용이 삭제됩니다.')) {
+            document.getElementById('delegatee-name').value = '';
+            document.getElementById('delegatee-name-2').value = '';
+            document.getElementById('delegatee-contact').value = '';
+            document.querySelectorAll('input[name="scope"]').forEach(function(cb) { cb.checked = false; });
+            document.getElementById('scope-other-input').value = '';
+            document.getElementById('confirmation-checkbox').checked = false;
+            setTodayDates();
+            if (dateEl) dateEl.value = dateStr;
+            if (timeEl) timeEl.value = timeStr;
+            setTimeout(sendHeightToParent, 100);
+          }
+        });
+
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 300);
+        var observer = new MutationObserver(function() { sendHeightToParent(); });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        window.addEventListener('resize', sendHeightToParent);
+      });
+    })();
+  </script>
+</body>
+</html>

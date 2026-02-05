@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=768, height=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>태블릿 화면 | 전송 완료</title>
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./tablet.css" />
+</head>
+<body data-app-page="completion">
+  <div class="t-screen">
+    <main class="t-body">
+      <nav class="t-stepper" data-i18n-aria="app.stepper.ariaLabel" aria-label="단계 진행">
+        <ol class="t-stepper__list">
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">1</span><span class="t-stepper__label" data-i18n="app.stepper.step1"></span></li>
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">2</span><span class="t-stepper__label" data-i18n="app.stepper.step2"></span></li>
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">3</span><span class="t-stepper__label" data-i18n="app.stepper.step3"></span></li>
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">4</span><span class="t-stepper__label" data-i18n="app.stepper.step4"></span></li>
+          <li class="t-stepper__item is-active"><span class="t-stepper__no">5</span><span class="t-stepper__label" data-i18n="app.stepper.step5"></span></li>
+        </ol>
+      </nav>
+
+      <div class="t-card">
+        <div style="text-align: center; padding: 40px 20px;">
+          <!-- 성공/오류 아이콘 영역 (동적 변경) -->
+          <div id="status-icon" style="width: 80px; height: 80px; margin: 0 auto 24px; border-radius: 50%; background: rgba(52, 199, 89, 0.15); display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 48px; color: var(--success-color, #34c759);">✓</span>
+          </div>
+          <!-- 성공/오류 제목 (동적 변경) -->
+          <h2 id="status-title" style="font-size: 24px; font-weight: var(--font-weight-semibold); color: var(--text-primary); margin-bottom: 12px;" data-i18n="app.completion.statusSuccess"></h2>
+          <!-- 성공/오류 메시지 (동적 변경) -->
+          <p id="status-message" style="font-size: var(--font-size-base); color: var(--text-secondary); margin-bottom: 32px;" data-i18n="app.completion.messageSuccess"></p>
+
+          <div id="pos-result" style="text-align: left; padding: 20px; background: var(--bg-secondary); border-radius: var(--border-radius); margin-bottom: 24px;">
+            <div class="app-card-title" style="margin-bottom: 16px; font-size: var(--font-size-base);" data-i18n="app.completion.posResultTitle"></div>
+            <div id="result-content" style="color: var(--text-secondary); line-height: 1.7;">
+              <!-- POS 처리 결과가 여기에 동적으로 표시됩니다 -->
+            </div>
+          </div>
+
+          <div class="t-actions" style="justify-content: center; gap: 12px;">
+            <button class="demo-btn-secondary" id="retry-submit" type="button" style="display: none;" data-i18n="app.completion.retry"></button>
+            <button class="demo-btn-primary" id="back-to-start" type="button" data-i18n="app.completion.backToStart"></button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="app-toast" id="app-toast" role="status" aria-live="polite">
+    <div class="app-toast-title" id="app-toast-title">알림</div>
+    <div class="app-toast-desc" id="app-toast-desc">메시지</div>
+  </div>
+
+  <!-- Core modules -->
+  <script src="../assets/config.js"></script>
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/i18n.js"></script>
+  <script src="../assets/form-handler.js"></script>
+  <!-- Page modules -->
+  <script src="../assets/pages/topbar.js"></script>
+  <script src="../assets/pages/list.js"></script>
+  <script src="../assets/pages/login.js"></script>
+  <script src="../assets/pages/customer-search.js"></script>
+  <script src="../assets/pages/consultation-selection.js"></script>
+  <script src="../assets/pages/tabs.js"></script>
+  <script src="../assets/pages/review.js"></script>
+  <script src="../assets/pages/completion.js"></script>
+  <script src="../assets/pages/signature.js"></script>
+  <script src="../assets/pages/wrapper.js"></script>
+  <!-- Main entry point -->
+  <script src="../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Consultation Form - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    /* PDF/Print Optimized Styles - 상단 여백으로 페이지 경계 직후 글씨 잘림 방지 */
+    @page {
+      size: A4;
+      margin: 18mm 15mm 15mm 15mm;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* 원본 종이 2장에 맞춤: 폰트·줄간격·여백 축소 */
+    body {
+      font-family: ui-serif, "Times New Roman", serif;
+      font-size: 9pt;
+      line-height: 1.25;
+      color: #000;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      padding-top: 2pt;
+      orphans: 2;
+      widows: 2;
+    }
+    
+    .pdf-container {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 0 12pt;
+      padding-top: 1pt;
+    }
+    
+    /* Header Section */
+    .pdf-header {
+      margin-bottom: 10pt;
+      text-align: center;
+    }
+    
+    .brand-logo {
+      font-size: 18pt;
+      font-weight: 500;
+      color: #C67C4E;
+      margin-bottom: 4pt;
+      letter-spacing: -0.3pt;
+    }
+    
+    .form-title {
+      font-size: 12pt;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 6pt;
+    }
+    
+    .form-intro {
+      font-size: 9pt;
+      color: #333;
+      line-height: 1.3;
+      margin-bottom: 10pt;
+      text-align: left;
+    }
+    
+    /* Administrative Section */
+    .admin-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      margin-bottom: 10pt;
+      padding-bottom: 8pt;
+      border-bottom: 1pt solid #ccc;
+      font-size: 9pt;
+    }
+    
+    .admin-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4pt;
+    }
+    
+    .admin-field label {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .admin-field .pdf-value {
+      padding: 2pt 6pt;
+      border-bottom: 1pt solid #000;
+      min-height: 14pt;
+    }
+    
+    /* Section Styling: page-break-inside auto로 내용이 페이지를 자연스럽게 채우도록 */
+    .pdf-section {
+      margin-bottom: 10pt;
+      page-break-inside: auto;
+    }
+    
+    /* 회원정보(Customer Information) 섹션 하단 여백 */
+    .pdf-section.customer-info-section {
+      margin-bottom: 12pt;
+    }
+    
+    .section-title {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 6pt;
+      padding-top: 2pt;
+      padding-bottom: 4pt;
+      border-bottom: 2pt solid #000;
+      page-break-after: avoid;
+    }
+    
+    .section-subtitle {
+      font-size: 9.5pt;
+      font-weight: 500;
+      color: #000;
+      margin-bottom: 6pt;
+      margin-top: 8pt;
+      padding-top: 2pt;
+    }
+    
+    /* Customer Information */
+    .customer-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8pt;
+      margin-bottom: 0;
+    }
+    
+    .info-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2pt;
+    }
+    
+    .info-field label {
+      font-size: 9pt;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    .info-field .pdf-value {
+      padding: 2pt 6pt;
+      border-bottom: 1pt solid #000;
+      min-height: 14pt;
+    }
+    
+    /* Question Block: 페이지 경계에서 잘리지 않도록 한 블록 단위로 유지 */
+    .question-block {
+      margin-bottom: 8pt;
+      padding-top: 2pt;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    
+    .question-text {
+      font-size: 9pt;
+      color: #000;
+      margin-bottom: 4pt;
+      line-height: 1.25;
+    }
+    
+    .question-example {
+      font-size: 8pt;
+      color: #666;
+      font-style: italic;
+      margin-top: 1pt;
+    }
+    
+    /* Radio/Checkbox Display */
+    .pdf-option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8pt;
+      margin-bottom: 6pt;
+    }
+    
+    .pdf-option-item {
+      display: flex;
+      align-items: center;
+      gap: 4pt;
+      font-size: 9pt;
+    }
+    
+    .pdf-checkbox {
+      width: 10pt;
+      height: 10pt;
+      border: 1.2pt solid #000;
+      display: inline-block;
+      position: relative;
+      flex-shrink: 0;
+    }
+    
+    .pdf-checkbox.checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -62%);
+      font-size: 11pt;
+      font-weight: bold;
+    }
+    
+    .pdf-radio {
+      width: 10pt;
+      height: 10pt;
+      border: 1.2pt solid #000;
+      border-radius: 50%;
+      display: inline-block;
+      position: relative;
+      flex-shrink: 0;
+    }
+    
+    .pdf-radio.checked::after {
+      content: '●';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6.5pt;
+    }
+    
+    /* Conditional Input */
+    .pdf-conditional {
+      margin-top: 4pt;
+      margin-left: 14pt;
+      padding-left: 8pt;
+      border-left: 1.5pt solid #ccc;
+    }
+    
+    .pdf-conditional .pdf-value {
+      padding: 2pt 6pt;
+      border-bottom: 1pt solid #000;
+      min-height: 14pt;
+    }
+    
+    /* Medical Conditions Grid: 그리드가 페이지 중간에서 잘리지 않도록 */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5pt;
+      margin-top: 6pt;
+      padding: 8pt;
+      background: #f5f5f5;
+      border: 1pt solid #ccc;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    
+    /* Confirmation Section */
+    .confirmation-section {
+      margin-top: 12pt;
+      padding: 8pt;
+      background: #f9f9f9;
+      border: 2pt solid #000;
+      page-break-inside: avoid;
+    }
+    
+    .confirmation-statement {
+      font-size: 9pt;
+      color: #000;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 6pt;
+      flex-wrap: wrap;
+    }
+    
+    .confirmation-statement .pdf-checkbox {
+      flex-shrink: 0;
+    }
+    
+    /* Signature Section */
+    .signature-section {
+      margin-top: 10pt;
+      padding-top: 8pt;
+      border-top: 1pt solid #000;
+      page-break-inside: avoid;
+    }
+    
+    .signature-label {
+      font-size: 9pt;
+      color: #000;
+      margin-bottom: 4pt;
+    }
+    
+    .signature-label .required {
+      color: #000;
+      font-weight: 600;
+    }
+    
+    .signature-line {
+      min-height: 60px;
+      border-bottom: 2pt solid #000;
+      margin-bottom: 8pt;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .signature-line img {
+      max-width: 100%;
+      max-height: 60px;
+      object-fit: contain;
+    }
+    
+    .date-time-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      margin-top: 8pt;
+    }
+    
+    .date-time-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2pt;
+    }
+    
+    .date-time-field label {
+      font-size: 8pt;
+      color: #333;
+    }
+    
+    .date-time-field .pdf-value {
+      padding: 2pt 6pt;
+      border-bottom: 1pt solid #000;
+      min-height: 14pt;
+    }
+    
+    .system-note {
+      font-size: 7pt;
+      color: #666;
+      font-style: italic;
+      margin-top: 1pt;
+    }
+    
+    .required-note {
+      font-size: 8pt;
+      color: #666;
+      margin-top: 6pt;
+      font-style: italic;
+    }
+    
+    /* Tablet/Screen Styles (BC 확인 화면용) - 02-01과 동일: 회색 공간 없이 흰 배경 + 약간의 마진만 */
+    @media screen {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+      
+      .pdf-container {
+        max-width: 100%;
+        padding: 0 12pt;
+        padding-top: 1pt;
+        background: #fff;
+      }
+      
+      /* 태블릿 화면에서 폰트 크기 조정 */
+      body {
+        font-size: 12pt;
+      }
+      
+      .brand-logo {
+        font-size: 20pt;
+      }
+      
+      .form-title {
+        font-size: 14pt;
+      }
+      
+      .section-title {
+        font-size: 12pt;
+      }
+      
+      .question-text {
+        font-size: 11pt;
+      }
+      
+      /* 태블릿에서 간격 조정 */
+      .pdf-section {
+        margin-bottom: 18px;
+      }
+      
+      .pdf-section.customer-info-section {
+        margin-bottom: 20px;
+      }
+      
+      .section-title {
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+      }
+      
+      .customer-info-grid {
+        margin-bottom: 0;
+      }
+      
+      .question-block {
+        margin-bottom: 12px;
+      }
+      
+      .pdf-toolbar {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 100;
+      }
+      
+      .pdf-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #fff;
+        background: #c67c4e;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      }
+      
+      .pdf-btn:hover {
+        background: #b56d42;
+      }
+    }
+    
+    /* Print/PDF Styles (PDF 생성 및 인쇄용 - 원본 2장에 맞춘 컴팩트 스타일) */
+    @media print {
+      .pdf-toolbar {
+        display: none !important;
+      }
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+        padding: 0;
+        background: #fff;
+      }
+      
+      .pdf-container {
+        max-width: 210mm;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      
+      /* A4 2~3페이지 맞춤: 기본 스타일과 동일한 컴팩트 값 유지 */
+      body {
+        font-size: 9pt;
+        line-height: 1.25;
+        orphans: 2;
+        widows: 2;
+      }
+      
+      .brand-logo {
+        font-size: 18pt;
+      }
+      
+      .form-title {
+        font-size: 12pt;
+      }
+      
+      .section-title {
+        font-size: 10.5pt;
+      }
+      
+      .question-text {
+        font-size: 9pt;
+      }
+      
+      .pdf-section {
+        margin-bottom: 10pt;
+        page-break-inside: auto;
+      }
+      
+      .pdf-section.customer-info-section {
+        margin-bottom: 12pt;
+      }
+      
+      .section-title {
+        margin-bottom: 6pt;
+        padding-bottom: 4pt;
+        page-break-after: avoid;
+      }
+      
+      .customer-info-grid {
+        margin-bottom: 0;
+      }
+      
+      .question-block {
+        margin-bottom: 8pt;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      
+      .conditions-grid {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      
+      .confirmation-section {
+        page-break-inside: avoid;
+      }
+      
+      .signature-section {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+  <div class="pdf-container">
+    <!-- Header -->
+    <div class="pdf-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Member Consultation Form</div>
+      <div class="form-intro">
+        Sulwhasoo strives to achieve the beauty of harmony between body and mind and is committed to providing customers with the most attentive skincare services. To best meet your skincare needs, please fill in the following information:
+      </div>
+    </div>
+
+    <!-- Administrative Information -->
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <div class="pdf-value" data-field="store-registration"></div>
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <div class="pdf-value" data-field="responsible-staff"></div>
+      </div>
+    </div>
+
+    <!-- Customer Information -->
+    <div class="pdf-section customer-info-section">
+      <div class="section-title">Customer Information</div>
+      <div class="customer-info-grid">
+        <div class="info-field">
+          <label>Name :</label>
+          <div class="pdf-value" data-field="customer-name"></div>
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="pdf-option-group" data-field="title">
+            <div class="pdf-option-item">
+              <span class="pdf-radio" data-value="Ms"></span>
+              <span>Ms.</span>
+            </div>
+            <div class="pdf-option-item">
+              <span class="pdf-radio" data-value="Mrs"></span>
+              <span>Mrs.</span>
+            </div>
+            <div class="pdf-option-item">
+              <span class="pdf-radio" data-value="Mr"></span>
+              <span>Mr.</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>Membership Number :</label>
+          <div class="pdf-value" data-field="membership-number"></div>
+        </div>
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="pdf-value" data-field="contact-number-formatted" style="padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt;"></div>
+        </div>
+        <div class="info-field">
+          <label>Email :</label>
+          <div class="pdf-value" data-field="email"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Facial Care Habits -->
+    <div class="pdf-section">
+      <div class="section-title">1. Facial Care Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">How often do you have facial treatments?</div>
+        <div class="pdf-option-group" data-field="facial-frequency">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="weekly"></span>
+            <span>Weekly</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="every-two-weeks"></span>
+            <span>Every two weeks</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="once-month-or-longer"></span>
+            <span>Once a month or longer</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="never"></span>
+            <span>Never</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block" data-conditional="facial-frequency" data-conditional-values="weekly,every-two-weeks,once-month-or-longer">
+        <div class="question-text">If yes, please select the type of treatment:</div>
+        <div class="pdf-option-group" data-field="treatment-type">
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="beauty-device"></span>
+            <span>Beauty device treatment</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="manual-facial"></span>
+            <span>Manual facial care</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-checkbox" data-value="others"></span>
+            <span>Others</span>
+            <div class="pdf-value" data-field="treatment-type-others" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">
+          Have you recently undergone or plan to undergo any medical aesthetic treatments 
+          <span class="question-example">(e.g., chemical peel, LASER, PICO, HIFU, injections, cosmetic surgery, etc.)?</span>
+        </div>
+        <div class="pdf-option-group" data-field="medical-aesthetic">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="medical-aesthetic-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Do you need continuous treatment?</div>
+        <div class="pdf-option-group" data-field="continuous-treatment">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Date of recent treatment:</div>
+        <div class="pdf-value" data-field="recent-treatment-date" style="max-width: 200pt;"></div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">
+          In the past 6 months, have you taken or used any medication/products that may affect treatment 
+          <span class="question-example">(e.g., insulin, steroids, AHA, retinoic acid)?</span>
+        </div>
+        <div class="pdf-option-group" data-field="medication-products">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="medication-products-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+        <div class="pdf-conditional" data-conditional="medication-products" data-conditional-values="yes" style="margin-top: 4pt;">
+          <div style="display: flex; align-items: center; gap: 4pt; font-size: 9pt;">
+            <span>Duration: from</span>
+            <div class="pdf-value" data-field="medication-duration-from" style="max-width: 120pt; display: inline-block;"></div>
+            <span>to</span>
+            <div class="pdf-value" data-field="medication-duration-to" style="max-width: 120pt; display: inline-block;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Body Care Habits -->
+    <div class="pdf-section">
+      <div class="section-title">2. Body Care Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">How often do you have body treatments?</div>
+        <div class="pdf-option-group" data-field="body-frequency">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="weekly"></span>
+            <span>Weekly</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="every-two-weeks"></span>
+            <span>Every two weeks</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="once-month-or-longer"></span>
+            <span>Once a month or longer</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="never"></span>
+            <span>Never</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block" data-conditional="body-frequency" data-conditional-values="weekly,every-two-weeks,once-month-or-longer">
+        <div class="question-text">If yes, please specify the type of treatment:</div>
+        <div class="pdf-value" data-field="body-treatment-type"></div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Which body areas do you want to focus on?</div>
+        <div class="pdf-option-group" data-field="body-areas">
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="head"></span>
+            <span>Head</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="neck-shoulder"></span>
+            <span>Neck & Shoulder</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="shoulder"></span>
+            <span>Shoulder</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="waist"></span>
+            <span>Waist</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="upper-back"></span>
+            <span>Upper Back</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="lower-back"></span>
+            <span>Lower Back</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="thigh"></span>
+            <span>Thigh</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="calf"></span>
+            <span>Calf</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="arm"></span>
+            <span>Arm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Preferred massage pressure:</div>
+        <div class="pdf-option-group" data-field="massage-pressure">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="gentle"></span>
+            <span>Gentle</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="medium"></span>
+            <span>Medium</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="deep"></span>
+            <span>Deep</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="others"></span>
+            <span>Others</span>
+            <div class="pdf-value" data-field="massage-pressure-others" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Physical Condition -->
+    <div class="pdf-section">
+      <div class="section-title">3. Physical Condition</div>
+      
+      <div class="question-block">
+        <div class="question-text">Current status:</div>
+        <div class="pdf-option-group" data-field="pregnancy-status">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="not-pregnant"></span>
+            <span>Not pregnant</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="pregnant"></span>
+            <span>Pregnant</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="planning-pregnancy"></span>
+            <span>Planning pregnancy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any injuries in the past 6 months?</div>
+        <div class="pdf-option-group" data-field="injuries">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="injuries-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any recent surgeries?</div>
+        <div class="pdf-option-group" data-field="surgeries">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="surgeries-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Long-term medication?</div>
+        <div class="pdf-option-group" data-field="long-term-medication">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="long-term-medication-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Product/food allergies?</div>
+        <div class="pdf-option-group" data-field="allergies">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+            <div class="pdf-value" data-field="allergies-details" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Any chronic conditions or areas to avoid?</div>
+        <div class="pdf-option-group" data-field="chronic-conditions">
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="head"></span>
+            <span>Head</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="neck-shoulder"></span>
+            <span>Neck & Shoulder</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="shoulder"></span>
+            <span>Shoulder</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="waist"></span>
+            <span>Waist</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="upper-back"></span>
+            <span>Upper Back</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="lower-back"></span>
+            <span>Lower Back</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="thigh"></span>
+            <span>Thigh</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="calf"></span>
+            <span>Calf</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="arm"></span>
+            <span>Arm</span>
+          </div>
+          <div class="pdf-option-item" style="display: flex; align-items: center; gap: 6pt; flex-wrap: wrap;">
+            <span class="pdf-checkbox" data-value="others"></span>
+            <span>Others</span>
+            <div class="pdf-value" data-field="chronic-conditions-others" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 6pt;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="section-subtitle">For safety when using beauty devices, please indicate if you have any of the following conditions:</div>
+        <div class="conditions-grid" data-field="device-conditions">
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="metal-dental-fillings"></span>
+            <span>Metal dental fillings</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="asthma"></span>
+            <span>Asthma</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="diabetes"></span>
+            <span>Diabetes</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="headache-migraine"></span>
+            <span>Headache/Migraine</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="eczema"></span>
+            <span>Eczema</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="epilepsy"></span>
+            <span>Epilepsy</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="severe-warts"></span>
+            <span>Severe warts</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="recent-scars"></span>
+            <span>Recent scars</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="lupus"></span>
+            <span>Lupus</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="rosacea"></span>
+            <span>Rosacea</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="infectious-skin-disease"></span>
+            <span>Infectious skin disease</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="psoriasis"></span>
+            <span>Psoriasis</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="severe-sunburn"></span>
+            <span>Severe sunburn</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="pacemaker"></span>
+            <span>Pacemaker</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="heart-problems"></span>
+            <span>Heart problems</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="internal-metal-implants"></span>
+            <span>Internal metal implants</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="thyroid-disease"></span>
+            <span>Thyroid disease</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="hypertension"></span>
+            <span>Hypertension</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="easy-bruising"></span>
+            <span>Easy bruising</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="blood-clotting-issues"></span>
+            <span>Blood clotting issues</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="nail-fungus-hand"></span>
+            <span>Nail fungus (hand)</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="nail-fungus-foot"></span>
+            <span>Nail fungus (foot)</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="severe-varicose-veins"></span>
+            <span>Severe varicose veins</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="congenital-disorders"></span>
+            <span>Congenital disorders</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="joint-problems"></span>
+            <span>Joint problems</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="claustrophobia"></span>
+            <span>Claustrophobia</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="eye-disease"></span>
+            <span>Eye disease</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Lifestyle Habits -->
+    <div class="pdf-section">
+      <div class="section-title">4. Lifestyle Habits</div>
+      
+      <div class="question-block">
+        <div class="question-text">Exercise:</div>
+        <div class="pdf-option-group" data-field="exercise">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="none"></span>
+            <span>None</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="occasionally"></span>
+            <span>Occasionally</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="regularly"></span>
+            <span>Regularly</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Smoking:</div>
+        <div class="pdf-option-group" data-field="smoking">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep quality:</div>
+        <div class="pdf-option-group" data-field="sleep-quality">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="good"></span>
+            <span>Good</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="average"></span>
+            <span>Average</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="poor"></span>
+            <span>Poor</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep duration:</div>
+        <div style="display: flex; align-items: center; gap: 4pt; font-size: 9pt;">
+          <span>Normal (about</span>
+          <div class="pdf-value" data-field="sleep-duration" style="max-width: 60pt; display: inline-block;"></div>
+          <span>hours/day)</span>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep time:</div>
+        <div style="display: flex; align-items: center; gap: 4pt; font-size: 9pt;">
+          <div class="pdf-value" data-field="sleep-time-from" style="max-width: 80pt; display: inline-block;"></div>
+          <span>to</span>
+          <div class="pdf-value" data-field="sleep-time-to" style="max-width: 80pt; display: inline-block;"></div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Sleep issues:</div>
+        <div class="pdf-option-group" data-field="sleep-issues">
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="difficulty-falling-asleep"></span>
+            <span>Difficulty falling asleep</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="light-sleep"></span>
+            <span>Light sleep</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="frequent-dreams"></span>
+            <span>Frequent dreams</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="excessive-sleep"></span>
+            <span>Excessive sleep</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="tired-after-waking"></span>
+            <span>Tired after waking</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="stay-up-late"></span>
+            <span>Stay up late</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-checkbox" data-value="take-sedatives"></span>
+            <span>Take sedatives/sleeping pills</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Diet preference:</div>
+        <div class="pdf-option-group" data-field="diet-preference">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="normal"></span>
+            <span>Normal</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="strong-flavor"></span>
+            <span>Strong flavor</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="light"></span>
+            <span>Light</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="vegetarian"></span>
+            <span>Vegetarian</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="sweet-tooth"></span>
+            <span>Sweet tooth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Tea/Coffee:</div>
+        <div class="pdf-option-group" data-field="tea-coffee">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="yes"></span>
+            <span>Yes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">Alcohol:</div>
+        <div class="pdf-option-group" data-field="alcohol">
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="no"></span>
+            <span>No</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="occasionally"></span>
+            <span>Occasionally</span>
+          </div>
+          <div class="pdf-option-item">
+            <span class="pdf-radio" data-value="frequently"></span>
+            <span>Frequently</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <div class="question-text">How many cups of water do you drink daily?</div>
+        <div style="display: flex; align-items: center; gap: 4pt; font-size: 9pt;">
+          <div class="pdf-value" data-field="water-intake" style="max-width: 80pt; display: inline-block;"></div>
+          <span>cups</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Section -->
+    <div class="confirmation-section">
+      <div class="confirmation-statement">
+        I confirm that the above information is accurate. I agree to inform my beauty consultant before treatment if I undergo any medical aesthetic procedures or if my skin condition changes in the future.
+        <span class="pdf-checkbox" data-field="confirmation-checkbox" style="margin-left: 8pt;"></span>
+      </div>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="signature-section">
+      <div class="signature-label">
+        * Signature: <span class="required">(Required)</span>
+      </div>
+      <div class="signature-line" data-field="signature-image">
+        <!-- Signature image will be injected here -->
+      </div>
+      <div class="date-time-group">
+        <div class="date-time-field">
+          <label>Date : Year / Month / Day</label>
+          <div class="pdf-value" data-field="signature-date"></div>
+          <div class="system-note">(System generated)</div>
+        </div>
+        <div class="date-time-field">
+          <label>Time :</label>
+          <div class="pdf-value" data-field="signature-time"></div>
+          <div class="system-note">(System generated)</div>
+        </div>
+      </div>
+      <div class="required-note">* Required fields</div>
+    </div>
+  </div>
+
+  <!-- PDF 생성: html2pdf.js (HTML → PDF, 프린터 종류와 무관하게 동일 출력) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    // PDF 데이터 주입 함수 (서버 측에서 실행되거나, 클라이언트 측에서 PDF 생성 전 실행)
+    // 이 스크립트는 PDF 생성 엔진(Puppeteer, Playwright 등)에서 실행됩니다.
+    
+    function injectPDFData(formData) {
+      console.log('[PDF] Injecting data:', formData);
+      
+      // 브랜드 로고(개별 이미지 170×75) 또는 브랜드명 텍스트 (이미지 없으면 텍스트로 대체)
+      const brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        const logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var brandImg = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          brandImg.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          brandImg.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          brandImg.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+      
+      // 디버깅: 라디오 버튼 및 체크박스 값 확인
+      console.log('[PDF] Radio/Checkbox values:', {
+        'title': formData['title'],
+        'country-code': formData['country-code'],
+        'facial-frequency': formData['facial-frequency'],
+        'treatment-type': formData['treatment-type'],
+        'medical-aesthetic': formData['medical-aesthetic'],
+        'continuous-treatment': formData['continuous-treatment'],
+        'medication-products': formData['medication-products'],
+        'body-frequency': formData['body-frequency'],
+        'body-areas': formData['body-areas'],
+        'massage-pressure': formData['massage-pressure'],
+        'device-conditions': formData['device-conditions'],
+        'sleep-issues': formData['sleep-issues']
+      });
+      
+      // 디버깅: 입력 필드 값 확인
+      console.log('[PDF] Input field values:', {
+        'sleep-duration': formData['sleep-duration'],
+        'sleep-time-from': formData['sleep-time-from'],
+        'sleep-time-to': formData['sleep-time-to'],
+        'water-intake': formData['water-intake'],
+        'treatment-type-others': formData['treatment-type-others'],
+        'body-treatment-type': formData['body-treatment-type']
+      });
+      
+      // 추가 입력 필드 목록 (Others/Yes specify 필드 - 빈 값일 때 밑줄 없이 border-bottom만 표시)
+      const additionalInputFields = new Set([
+        'treatment-type-others',
+        'medical-aesthetic-details',
+        'medication-products-details',
+        'massage-pressure-others',
+        'injuries-details',
+        'surgeries-details',
+        'long-term-medication-details',
+        'allergies-details',
+        'chronic-conditions-others'
+      ]);
+      
+      // 1. pdf-value 요소 처리 (텍스트 필드)
+      document.querySelectorAll('.pdf-value[data-field]').forEach(element => {
+        const fieldName = element.getAttribute('data-field');
+        
+        // 전화번호 포맷팅 처리
+        if (fieldName === 'contact-number-formatted') {
+          const countryCode = formData['country-code'] || '';
+          const contactNumber = formData['contact-number'] || '';
+          if (countryCode && contactNumber) {
+            element.textContent = `(${countryCode}) ${contactNumber}`;
+          } else if (contactNumber) {
+            element.textContent = contactNumber;
+          } else {
+            element.textContent = '________________';
+          }
+          return;
+        }
+        
+        const value = formData[fieldName];
+        // 입력 안해도 빈 필드 표시 (원본과 동일하게)
+        if (value !== undefined && value !== null && value !== '') {
+          element.textContent = value;
+        } else {
+          // 추가 입력 필드는 빈 값일 때 텍스트 없이 border-bottom만 표시 (한 줄만)
+          if (additionalInputFields.has(fieldName)) {
+            element.textContent = '';
+          } else {
+            // 일반 필드는 빈 필드도 밑줄로 표시 (입력 화면과 동일하게)
+            element.textContent = '________________';
+          }
+        }
+      });
+      
+      // 2. pdf-radio 요소 처리 (라디오 버튼)
+      document.querySelectorAll('.pdf-radio').forEach(element => {
+        const fieldGroup = element.closest('.pdf-option-group[data-field]');
+        if (fieldGroup) {
+          const groupFieldName = fieldGroup.getAttribute('data-field');
+          const groupValue = formData[groupFieldName];
+          const elementValue = element.getAttribute('data-value');
+          
+          // 디버깅: 중요한 필드만 로그 출력
+          if (groupFieldName === 'title' || groupFieldName === 'country-code' || groupFieldName === 'facial-frequency') {
+            console.log(`[PDF] Radio check: ${groupFieldName}`, {
+              groupValue: groupValue,
+              elementValue: elementValue,
+              match: groupValue === elementValue || String(groupValue) === String(elementValue)
+            });
+          }
+          
+          // 값이 정확히 일치하면 선택 표시
+          if (groupValue === elementValue || String(groupValue) === String(elementValue)) {
+            element.classList.add('checked');
+            if (groupFieldName === 'title' || groupFieldName === 'country-code' || groupFieldName === 'facial-frequency') {
+              console.log(`[PDF] Radio checked: ${groupFieldName} = ${elementValue}`);
+            }
+          } else {
+            element.classList.remove('checked');
+          }
+        }
+      });
+      
+      // 3. pdf-checkbox 요소 처리 (체크박스)
+      document.querySelectorAll('.pdf-checkbox').forEach(element => {
+        const fieldGroup = element.closest('[data-field]');
+        if (fieldGroup) {
+          const groupFieldName = fieldGroup.getAttribute('data-field');
+          const groupValue = formData[groupFieldName];
+          const elementValue = element.getAttribute('data-value');
+          
+          let shouldCheck = false;
+          if (Array.isArray(groupValue) && groupValue.includes(elementValue)) {
+            shouldCheck = true;
+          } else if (typeof groupValue === 'string') {
+            // 쉼표 구분 문자열 또는 단일 값
+            const values = groupValue.split(',').map(v => v.trim());
+            if (values.includes(elementValue) || groupValue === elementValue) {
+              shouldCheck = true;
+            }
+          } else if (groupValue === true || groupValue === 'true') {
+            // 약관동의 체크박스는 boolean true로 처리
+            shouldCheck = true;
+          }
+          
+          // 디버깅: 중요한 체크박스 필드만 로그 출력
+          if (groupFieldName === 'body-areas' || groupFieldName === 'device-conditions' || groupFieldName === 'treatment-type') {
+            console.log(`[PDF] Checkbox check: ${groupFieldName}`, {
+              elementValue: elementValue,
+              groupValue: groupValue,
+              shouldCheck: shouldCheck
+            });
+          }
+          
+          if (shouldCheck) {
+            element.classList.add('checked');
+            if (groupFieldName === 'body-areas' || groupFieldName === 'device-conditions' || groupFieldName === 'treatment-type') {
+              console.log(`[PDF] Checkbox checked: ${groupFieldName} = ${elementValue}`);
+            }
+          } else {
+            element.classList.remove('checked');
+          }
+        }
+      });
+      
+      // 4. 서명 이미지 주입
+      const signatureLine = document.querySelector('[data-field="signature-image"]');
+      if (signatureLine && formData['signature-image']) {
+        signatureLine.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = formData['signature-image'];
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.display = 'block';
+        img.style.maxHeight = '60px';
+        signatureLine.appendChild(img);
+      }
+      
+      // 5. 조건부 섹션 표시/숨김 및 입력 필드 값 주입
+      // 입력 화면과 동일하게 항상 표시되도록 수정 (입력 안해도 빈 필드 표시)
+      document.querySelectorAll('[data-conditional]').forEach(element => {
+        const conditionalField = element.getAttribute('data-conditional');
+        const conditionalValues = element.getAttribute('data-conditional-values').split(',').map(v => v.trim());
+        const fieldValue = formData[conditionalField];
+        
+        let shouldShow = false;
+        if (Array.isArray(fieldValue)) {
+          shouldShow = conditionalValues.some(cv => fieldValue.includes(cv));
+        } else if (typeof fieldValue === 'string' && fieldValue.includes(',')) {
+          // 체크박스의 경우 쉼표로 구분된 문자열 (예: "beauty-device,manual-facial,others")
+          const fieldValues = fieldValue.split(',').map(v => v.trim());
+          shouldShow = conditionalValues.some(cv => fieldValues.includes(cv));
+        } else {
+          shouldShow = conditionalValues.includes(String(fieldValue));
+        }
+        
+        // 디버깅: 조건부 섹션 표시 여부 확인
+        if (conditionalField === 'treatment-type' || conditionalField === 'medical-aesthetic' || conditionalField === 'medication-products' || conditionalField === 'massage-pressure' || conditionalField === 'chronic-conditions') {
+          console.log(`[PDF] Conditional section: ${conditionalField}`, {
+            fieldValue: fieldValue,
+            conditionalValues: conditionalValues,
+            shouldShow: shouldShow
+          });
+        }
+        
+        // 입력 화면과 동일하게 항상 표시 (입력 안해도 빈 필드 표시)
+        // 단, pdf-option-item 내부에 포함된 경우는 별도 처리 불필요 (이미 표시됨)
+        if (element.classList.contains('pdf-conditional')) {
+          // 별도 div로 된 조건부 섹션 (medication-products의 Duration 등)
+          if (shouldShow) {
+            element.style.display = 'block';
+            // 조건부 섹션이 표시될 때 내부 입력 필드도 확인
+            const inputField = element.querySelector('.pdf-value[data-field]');
+            if (inputField) {
+              const inputFieldName = inputField.getAttribute('data-field');
+              const inputValue = formData[inputFieldName];
+              if (inputValue && inputValue.trim() !== '') {
+                inputField.textContent = inputValue;
+              } else {
+                // 조건부 섹션의 입력 필드도 빈 값일 때 텍스트 없이 border-bottom만 표시
+                inputField.textContent = '';
+              }
+            }
+          } else {
+            element.style.display = 'none';
+          }
+        }
+        // pdf-option-item 내부에 포함된 입력 필드는 이미 위에서 처리됨
+      });
+      
+      // 6. pdf-option-item 내부의 입력 필드 값 주입 (항상 표시되므로 항상 처리)
+      document.querySelectorAll('.pdf-option-item .pdf-value[data-field]').forEach(inputField => {
+        const inputFieldName = inputField.getAttribute('data-field');
+        const inputValue = formData[inputFieldName];
+        if (inputValue && inputValue.trim() !== '') {
+          inputField.textContent = inputValue;
+        } else {
+          // 추가 입력 필드는 빈 값일 때 텍스트 없이 border-bottom만 표시 (한 줄만)
+          inputField.textContent = '';
+        }
+      });
+      
+      console.log('[PDF] Data injection completed');
+      
+      // 데이터 주입 완료 후 부모에게 알림
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'form-data-injection-complete',
+          formKey: formData.formKey || ''
+        }, '*');
+      }
+    }
+    
+    // iframe 높이를 부모에게 전송하는 함수
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+        window.parent.postMessage({
+          type: 'iframe-resize',
+          height: height
+        }, '*');
+      }
+    }
+    
+    // postMessage 수신: 부모 창에서 데이터 주입 요청
+    window.addEventListener('message', function(event) {
+      // 데이터 주입
+      if (event.data && event.data.type === 'form-data-inject') {
+        const formData = event.data.data || {};
+        console.log('[PDF] Received form-data-inject message:', formData);
+        
+        // DOM이 완전히 로드된 후 데이터 주입
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            injectPDFData(formData);
+            setTimeout(() => {
+              sendHeightToParent();
+            }, 100);
+          });
+        } else {
+          injectPDFData(formData);
+          setTimeout(() => {
+            sendHeightToParent();
+          }, 100);
+        }
+      }
+    });
+    
+    // 페이지 로드 시 초기 높이 전송
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        sendHeightToParent();
+      });
+    } else {
+      sendHeightToParent();
+    }
+    
+    // 리사이즈 이벤트 감지
+    window.addEventListener('resize', function() {
+      sendHeightToParent();
+    });
+    
+    // DOM 변경 감지하여 높이 재전송 (MutationObserver 사용)
+    const observer = new MutationObserver(function() {
+      sendHeightToParent();
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
+    });
+    
+    // 이미지 로드 완료 시 높이 재전송
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      if (img.complete) {
+        sendHeightToParent();
+      } else {
+        img.addEventListener('load', sendHeightToParent);
+        img.addEventListener('error', sendHeightToParent);
+      }
+    });
+    
+    // PDF 버튼: 현재 양식을 PDF로 생성 후 다운로드 (프린터 종류와 무관하게 동일한 PDF 출력)
+    const pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        var el = document.querySelector('.pdf-container');
+        if (!el) return;
+        if (typeof html2pdf === 'undefined') {
+          alert('PDF 생성 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.');
+          return;
+        }
+        pdfBtn.disabled = true;
+        pdfBtn.textContent = '생성 중…';
+        var opt = {
+          margin: 10,
+          filename: 'member-consultation-form.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(el).save().then(function() {
+          pdfBtn.disabled = false;
+          pdfBtn.textContent = 'PDF';
+        }).catch(function() {
+          pdfBtn.disabled = false;
+          pdfBtn.textContent = 'PDF';
+        });
+      });
+    }
+    
+    // 페이지 로드 시 데이터 주입 (예시 - 실제로는 서버 측에서 처리)
+    // window.addEventListener('DOMContentLoaded', function() {
+    //   const formData = JSON.parse(document.getElementById('form-data').textContent);
+    //   injectPDFData(formData);
+    // });
+  </script>
+</body>
+</html>

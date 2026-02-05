@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatment Package & Product Package Purchase Terms and Conditions</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html { padding: 0; margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { padding: 0; margin: 0; background: var(--bg-primary); width: 100%; min-height: 100%; overflow: hidden; font-family: var(--font-family); font-size: var(--font-size-base); font-weight: var(--font-weight-medium); line-height: 1.7; color: var(--text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .form-container { width: 100%; padding: 16px; margin: 0; box-sizing: border-box; position: relative; }
+    .form-header { margin-bottom: 24px; position: relative; }
+    .auto-fill-btn { position: absolute; top: 16px; right: 16px; padding: 8px 16px; background: #007AFF; border: 1px solid #007AFF; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 100; }
+    .auto-fill-btn:hover { background: #0051D5; border-color: #0051D5; }
+    .brand-logo { font-family: var(--font-family-serif); font-size: 28px; font-weight: var(--font-weight-medium); color: #C67C4E; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .form-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); margin-bottom: 8px; }
+    .form-intro { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--border-radius); }
+    .admin-field { display: flex; flex-direction: column; gap: 4px; }
+    .admin-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .admin-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-primary); cursor: not-allowed; }
+    .form-section { margin-bottom: 28px; padding: 0; }
+    .section-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
+    .customer-info-grid { display: grid; gap: 16px; margin-bottom: 20px; }
+    .info-field { display: flex; flex-direction: column; gap: 6px; }
+    .info-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .info-field input[type="text"], .info-field input[type="email"], .info-field input[type="tel"] { padding: 10px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-primary); width: 100%; box-sizing: border-box; }
+    .info-field.readonly input { background: var(--bg-secondary); cursor: not-allowed; }
+    .radio-group { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .option-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: var(--font-size-base); color: var(--text-primary); }
+    .option-label input { margin: 0; cursor: pointer; }
+    .terms-list { margin: 12px 0; padding-left: 20px; }
+    .terms-list li { margin-bottom: 10px; line-height: 1.5; color: var(--text-primary); }
+    .terms-list ol { padding-left: 20px; margin: 8px 0; }
+    .terms-list ol li { margin-bottom: 8px; }
+    .static-content { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+    .confirmation-section { margin-top: 24px; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .confirmation-checkbox { display: flex; align-items: flex-start; gap: 10px; }
+    .confirmation-checkbox input { margin-top: 4px; }
+    .signature-section[data-pdf-only="true"] { display: none; }
+    @media print { .signature-section[data-pdf-only="true"] { display: block !important; } }
+    .signature-label { font-size: var(--font-size-sm); margin-bottom: 4px; }
+    .signature-line { min-height: 60px; border-bottom: 2px solid var(--border-color); margin-bottom: 8px; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .date-time-field label { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .date-time-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); }
+    .system-note { font-size: var(--font-size-xs); color: var(--text-light); font-style: italic; margin-top: 4px; }
+    .required-note { font-size: var(--font-size-xs); color: var(--text-light); margin-top: 12px; font-style: italic; }
+    .form-reset-section { margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .form-reset-btn { width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data">Auto-fill</button>
+    <div class="form-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Treatment Package & Product Package Purchase Terms and Conditions</div>
+      <p class="form-intro">*These terms and conditions apply to all treatment packages and product packages purchased from our company.</p>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Customer Information</div>
+      <div class="customer-info-grid">
+        <div class="info-field readonly">
+          <label>Name :</label>
+          <input type="text" id="customer-name" readonly data-field="customer-name" value="" />
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="radio-group">
+            <label class="option-label"><input type="radio" name="title" value="Ms" /><span>Ms.</span></label>
+            <label class="option-label"><input type="radio" name="title" value="Mrs" /><span>Mrs.</span></label>
+            <label class="option-label"><input type="radio" name="title" value="Mr" /><span>Mr.</span></label>
+          </div>
+        </div>
+        <div class="info-field readonly">
+          <label>Membership Number :</label>
+          <input type="text" id="membership-number" readonly data-field="membership-number" value="" />
+        </div>
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="radio-group" style="margin-bottom: 8px;">
+            <label class="option-label"><input type="radio" name="country-code" value="852" /><span>852</span></label>
+            <label class="option-label"><input type="radio" name="country-code" value="853" /><span>853</span></label>
+            <label class="option-label"><input type="radio" name="country-code" value="86" /><span>86</span></label>
+          </div>
+          <input type="tel" id="contact-number" data-field="contact-number" placeholder="Enter phone number" />
+        </div>
+        <div class="info-field">
+          <label>Email :</label>
+          <input type="email" id="email" data-field="email" placeholder="Enter email address" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Important Notice Before Purchase</div>
+      <ol class="terms-list" start="1">
+        <li>All treatments and products purchased from <span class="brand-name-replace">[Brand]</span> are governed by these terms and form a legally binding contract.</li>
+        <li>Customers with special health conditions (e.g. pregnancy, pacemaker, metal implants) must consult a doctor before use; the company is not responsible for problems arising from non-disclosure.</li>
+        <li>Refund or exchange amounts will deduct all discounts enjoyed (special discounts, member points, free products); used treatments are calculated at original price.</li>
+        <li>Staff may request valid identification for identity verification.</li>
+        <li>CCTV and audio recording systems are installed in public areas for customer rights and safety.</li>
+        <li>The company is not responsible for loss or damage of valuables; customers are advised not to bring valuables.</li>
+        <li>Customers must use company equipment and facilities correctly; the company is not responsible for damage due to improper use or negligence.</li>
+        <li>Appointments are automatically cancelled when Typhoon Signal No. 8 or above or Black Rainstorm Warning is in force; customers must contact the store to rearrange.</li>
+      </ol>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Treatment Packages</div>
+      <ol class="terms-list" start="1">
+        <li>Treatments are non-transferable and non-refundable except as set out in these terms.</li>
+        <li>Customers must declare any health conditions; the company may refuse service if guidelines are not met.</li>
+        <li>Customers must comply with treatment guidelines; the company reserves the right to refuse service.</li>
+        <li>In case of health abnormalities during treatment, follow staff instructions and company procedures.</li>
+        <li>Appointment confirmation: 48-hour notice and 24-hour confirmation window apply.</li>
+        <li>Cancellation or rescheduling of facial treatments: at least 24 hours notice; otherwise one session may be deducted.</li>
+        <li>If you arrive late, treatment time may be shortened; late arrival over 30 minutes may result in cancellation and session deduction.</li>
+        <li>Treatments are valid for a specified period; validity dates apply.</li>
+        <li>Expired treatments are forfeited and cannot be used.</li>
+        <li>Appointments are on a first-come, first-served basis; no refund for failure to secure an appointment.</li>
+        <li>Customers accept assigned staff; no refund for failure to book a specific staff member.</li>
+        <li>In case of store relocation or merger, the company will arrange alternatives.</li>
+        <li>Certain treatments or equipment may not be available at all stores; no refund for unavailability.</li>
+        <li>Results of treatments and products may vary; no refund for unsatisfactory results.</li>
+      </ol>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Product Packages</div>
+      <ol class="terms-list" start="1">
+        <li>Valid for 12 months from the purchase date.</li>
+        <li>Products must be redeemed by the purchaser and cannot be transferred.</li>
+        <li>Applicable for redemption at <span class="brand-name-replace">[Brand]</span> counters or boutiques.</li>
+        <li>Other redemption locations and methods may apply as notified.</li>
+        <li>Valid identification may be required upon redemption.</li>
+        <li>Customers with special health conditions should consult a doctor before use.</li>
+        <li>Refund and exchange calculations: discounts deducted; see terms for details.</li>
+        <li>Expired products cannot be used or extended.</li>
+        <li>Discount combination restrictions may apply.</li>
+        <li>Not applicable for online store redemption.</li>
+        <li>Not applicable during certain promotional events (e.g. Sogo Thankful Week, Beauty Gala) and not applicable for beauty services, facial treatments, or add-on products.</li>
+      </ol>
+    </div>
+
+    <div class="form-section">
+      <div class="static-content">
+        <strong>Disclaimer:</strong> By signing below, you confirm that you have read, understood, and agreed to the terms and risks disclosed in this contract. This contract supersedes all prior representations made by staff. You authorise the company and relevant personnel to access records for services and treatments. The company may terminate membership or take legal action in case of breach. In case of any dispute, <span class="brand-name-replace">[Brand]</span> reserves the right of final decision.
+      </div>
+      <div class="confirmation-section">
+        <div class="confirmation-checkbox">
+          <input type="checkbox" id="confirmation-checkbox" required name="confirmation-checkbox" />
+          <label for="confirmation-checkbox">I confirm that I clearly understand all the above matters *</label>
+        </div>
+      </div>
+      <div class="signature-section" style="display: none;" data-pdf-only="true">
+        <div class="signature-label">Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">Signature will be injected during PDF generation</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <input type="text" readonly data-field="signature-date" id="signature-date" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <input type="text" readonly data-field="signature-time" id="signature-time" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Required field</div>
+      </div>
+    </div>
+
+    <div class="form-reset-section">
+      <button type="button" id="form-reset-btn" class="form-reset-btn">Reset Form</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function sendHeightToParent() {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+        }
+      }
+
+      function collectFormData() {
+        var formData = {};
+        var set = function(key) {
+          var el = document.querySelector('[data-field="' + key + '"]') || document.getElementById(key);
+          if (el && el.value !== undefined) formData[key] = el.value || '';
+        };
+        set('store-registration');
+        set('responsible-staff');
+        set('customer-name');
+        set('membership-number');
+        set('contact-number');
+        set('email');
+        set('signature-date');
+        set('signature-time');
+        var titleRadio = document.querySelector('input[name="title"]:checked');
+        formData['title'] = titleRadio ? titleRadio.value : '';
+        var ccRadio = document.querySelector('input[name="country-code"]:checked');
+        formData['country-code'] = ccRadio ? ccRadio.value : '';
+        var cb = document.getElementById('confirmation-checkbox');
+        formData['confirmation-checkbox'] = !!(cb && cb.checked);
+        return formData;
+      }
+
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'form-data-request') {
+          var formData = collectFormData();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'form-data-collected', formKey: 'package-terms', data: formData }, '*');
+          }
+          return;
+        }
+        if (event.data && event.data.type === 'form-data-inject') {
+          var data = event.data.data || {};
+          var set = function(selector, val) {
+            var el = document.querySelector(selector);
+            if (el && val != null && val !== '') el.value = val;
+          };
+          var setRadio = function(name, val) {
+            var el = document.querySelector('input[name="' + name + '"][value="' + (val || '') + '"]');
+            if (el) el.checked = true;
+          };
+          set('[data-field="store-registration"]', data['store-registration']);
+          set('[data-field="responsible-staff"]', data['responsible-staff']);
+          set('[data-field="customer-name"]', data['customer-name']);
+          set('[data-field="membership-number"]', data['membership-number']);
+          set('[data-field="contact-number"]', data['contact-number']);
+          set('#contact-number', data['contact-number']);
+          set('[data-field="email"]', data['email']);
+          set('#email', data['email']);
+          set('#signature-date', data['signature-date']);
+          set('#signature-time', data['signature-time']);
+          setRadio('title', data['title']);
+          setRadio('country-code', data['country-code']);
+          var brandName = data['brand-name'] || 'Sulwhasoo';
+          document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+          var brandEl = document.querySelector('[data-field="brand-name"]');
+          if (brandEl) {
+            var logoFilename = data['brand-logo-filename'];
+            if (logoFilename) {
+              var img = new Image();
+              var logoUrl = '../assets/images/' + logoFilename;
+              img.onload = function() {
+                brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+                brandEl.style.backgroundSize = '170px 75px';
+                brandEl.style.backgroundRepeat = 'no-repeat';
+                brandEl.style.backgroundPosition = '';
+                brandEl.textContent = '';
+                brandEl.style.height = '75px';
+              };
+              img.onerror = function() {
+                brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+                brandEl.style.backgroundImage = '';
+                brandEl.style.backgroundSize = '';
+              };
+              img.src = logoUrl;
+            } else if (data['brand-name']) {
+              brandEl.textContent = data['brand-name'];
+              brandEl.style.backgroundImage = '';
+              brandEl.style.backgroundSize = '';
+            }
+          }
+          setTimeout(sendHeightToParent, 100);
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var now = new Date();
+        var dateStr = String(now.getDate()).padStart(2, '0') + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
+        var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        var dateEl = document.getElementById('signature-date');
+        var timeEl = document.getElementById('signature-time');
+        if (dateEl && !dateEl.value) dateEl.value = dateStr;
+        if (timeEl && !timeEl.value) timeEl.value = timeStr;
+
+        document.getElementById('auto-fill-btn').addEventListener('click', function() {
+          var cb = document.getElementById('confirmation-checkbox');
+          if (cb) cb.checked = true;
+          var titleRadio = document.querySelector('input[name="title"]');
+          if (titleRadio) titleRadio.checked = true;
+          var ccRadio = document.querySelector('input[name="country-code"]');
+          if (ccRadio) ccRadio.checked = true;
+          sendHeightToParent();
+        });
+
+        document.getElementById('form-reset-btn').addEventListener('click', function() {
+          if (confirm('Reset this form? All entered data will be cleared.')) {
+            document.getElementById('confirmation-checkbox').checked = false;
+            if (dateEl) dateEl.value = dateStr;
+            if (timeEl) timeEl.value = timeStr;
+            setTimeout(sendHeightToParent, 100);
+          }
+        });
+
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 300);
+        var observer = new MutationObserver(function() { sendHeightToParent(); });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        window.addEventListener('resize', sendHeightToParent);
+      });
+    })();
+  </script>
+</body>
+</html>

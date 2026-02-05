@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointment Cancellation Waiver - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    @page { size: A4; margin: 16mm 12mm 14mm 12mm; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Times New Roman', serif; font-size: 9pt; line-height: 1.28; color: #000; background: #fff; margin: 0; padding: 0; padding-top: 2pt; orphans: 2; widows: 2; }
+    .pdf-container { max-width: 210mm; margin: 0 auto; padding: 0 12pt; padding-top: 2pt; }
+    .pdf-header { margin-bottom: 10pt; }
+    .brand-logo { font-size: 17pt; font-weight: 500; color: #C67C4E; margin-bottom: 2pt; }
+    .form-title { font-size: 11.5pt; font-weight: 600; color: #000; margin-bottom: 3pt; }
+    .form-intro { font-size: 9pt; color: #333; line-height: 1.28; margin-bottom: 6pt; font-style: italic; }
+    .doc-id { font-size: 8pt; color: #555; margin-bottom: 8pt; }
+    .pdf-section { margin-bottom: 12pt; page-break-inside: auto; }
+    .section-title { font-size: 10.5pt; font-weight: 700; margin-bottom: 6pt; padding-top: 4pt; padding-bottom: 4pt; border-bottom: 2pt solid #000; page-break-after: avoid; }
+    .customer-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5pt 12pt; margin-bottom: 8pt; }
+    .info-field { display: flex; flex-direction: column; gap: 1pt; }
+    .info-field label { font-size: 8.5pt; font-weight: 500; color: #333; }
+    .info-field .pdf-value { padding: 2pt 5pt; border-bottom: 1pt solid #000; min-height: 12pt; font-size: 9pt; }
+    .appt-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5pt 12pt; margin-bottom: 8pt; }
+    .appt-detail-full { grid-column: 1 / -1; }
+    .policy-text { font-size: 9pt; line-height: 1.4; margin-bottom: 10pt; padding: 8pt; border: 1pt solid #ddd; background: #fafafa; }
+    .signature-section { margin-top: 12pt; padding-top: 10pt; border-top: 1pt solid #000; page-break-inside: avoid; }
+    .signature-label { font-size: 9pt; margin-bottom: 4pt; }
+    .signature-line { min-height: 40px; border-bottom: 2pt solid #000; margin-bottom: 5pt; }
+    .signature-line img { max-width: 100%; max-height: 48px; object-fit: contain; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8pt; margin-top: 6pt; }
+    .date-time-field label { font-size: 8pt; color: #333; }
+    .date-time-field .pdf-value { padding: 2pt 5pt; border-bottom: 1pt solid #000; min-height: 12pt; }
+    .system-note { font-size: 7pt; color: #666; font-style: italic; margin-top: 1pt; }
+    .required-note { font-size: 8pt; color: #666; margin-top: 4pt; font-style: italic; }
+    .pdf-toolbar { position: fixed; top: 12px; right: 12px; z-index: 100; }
+    .pdf-btn { padding: 8px 14px; font-size: 13px; font-weight: 500; color: #fff; background: #c67c4e; border: none; border-radius: 6px; cursor: pointer; }
+    @media print { .pdf-toolbar { display: none !important; } body { print-color-adjust: exact; padding: 0; background: #fff; } .pdf-container { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+
+  <div class="pdf-container">
+    <div class="page-1-content">
+      <div class="pdf-header">
+        <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+        <div class="form-title">Appointment Cancellation Waiver</div>
+        <p class="form-intro">Please confirm the appointment details and the cancellation policy below.</p>
+        <div class="doc-id" data-field="document-id"></div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Customer Information</div>
+        <div class="customer-info-grid">
+          <div class="info-field">
+            <label>Name :</label>
+            <div class="pdf-value" data-field="customer-name"></div>
+          </div>
+          <div class="info-field">
+            <label>Title :</label>
+            <div class="pdf-value" data-field="title"></div>
+          </div>
+          <div class="info-field">
+            <label>Membership Number :</label>
+            <div class="pdf-value" data-field="membership-number"></div>
+          </div>
+          <div class="info-field">
+            <label>Contact Number :</label>
+            <div class="pdf-value" data-field="contact-number-formatted"></div>
+          </div>
+          <div class="info-field">
+            <label>Email :</label>
+            <div class="pdf-value" data-field="email"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Appointment Details</div>
+        <div class="appt-detail-grid">
+          <div class="info-field">
+            <label>Appointment Date :</label>
+            <div class="pdf-value" data-field="appointment-date"></div>
+          </div>
+          <div class="info-field">
+            <label>Appointment Time :</label>
+            <div class="pdf-value" data-field="appointment-time"></div>
+          </div>
+          <div class="info-field appt-detail-full">
+            <label>Appointment Location :</label>
+            <div class="pdf-value" data-field="appointment-location"></div>
+          </div>
+          <div class="info-field appt-detail-full">
+            <label>Treatment :</label>
+            <div class="pdf-value" data-field="appointment-treatment"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Cancellation Policy</div>
+        <p class="policy-text" id="policy-text-pdf">If you notify us at least 24 hours before your appointment, the cancellation fee will be waived. Otherwise, the treatment fee may be deducted.</p>
+      </div>
+
+      <div class="pdf-section">
+        <div class="signature-section">
+          <div class="signature-label">I have read the above cancellation policy and agree to the waiver conditions. *</div>
+          <div class="signature-label" style="margin-top: 8pt;">Signature * : <span class="required">(Required)</span></div>
+          <div class="signature-line" data-field="signature-image" style="display: flex; align-items: center; justify-content: center; color: #999; font-style: italic;">Signature will be injected</div>
+          <div class="date-time-group">
+            <div class="date-time-field">
+              <label>Date : Year / Month / Day</label>
+              <div class="pdf-value" data-field="signature-date"></div>
+              <div class="system-note">(System generated)</div>
+            </div>
+            <div class="date-time-field">
+              <label>Time :</label>
+              <div class="pdf-value" data-field="signature-time"></div>
+              <div class="system-note">(System generated)</div>
+            </div>
+          </div>
+          <div class="required-note">* Required field</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    function injectPDFData(formData) {
+      var brandName = formData['brand-name'] || 'Sulwhasoo';
+      document.querySelectorAll('.pdf-value[data-field]').forEach(function(el) {
+        var name = el.getAttribute('data-field');
+        if (name === 'contact-number-formatted') {
+          var cc = formData['country-code'] || '';
+          var num = formData['contact-number'] || '';
+          el.textContent = (cc && num) ? ('(' + cc + ') ' + num) : (num || '________________');
+          return;
+        }
+        if (name === 'title') {
+          var t = formData['title'] || '';
+          el.textContent = t ? (t + '.') : '________________';
+          return;
+        }
+        var val = formData[name];
+        el.textContent = (val != null && val !== '') ? String(val) : '________________';
+      });
+      var docIdEl = document.querySelector('.doc-id[data-field="document-id"]');
+      if (docIdEl && formData['document-id']) {
+        docIdEl.textContent = 'Document ID: ' + formData['document-id'];
+      }
+
+      var brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        var logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var img = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          img.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          img.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          img.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+
+      var sigEl = document.querySelector('[data-field="signature-image"]');
+      if (sigEl && formData['signature-image']) {
+        sigEl.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = formData['signature-image'];
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '48px';
+        img.style.objectFit = 'contain';
+        sigEl.appendChild(img);
+      }
+    }
+
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    var pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        var opt = { margin: [18, 15, 15, 15], filename: 'Appointment-Cancellation-Waiver.pdf', image: { type: 'jpeg', quality: 0.98 }, html2pdf: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.querySelector('.pdf-container')).save();
+      });
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-inject') {
+        var data = event.data.data || {};
+        injectPDFData(data);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-injection-complete', formKey: 'appointment-cancellation-waiver' }, '*');
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { sendHeightToParent(); });
+    } else {
+      sendHeightToParent();
+    }
+    window.addEventListener('resize', function() { sendHeightToParent(); });
+    var observer = new MutationObserver(function() { sendHeightToParent(); });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+  </script>
+</body>
+</html>

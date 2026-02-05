@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=768, height=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>태블릿 화면 | 내용입력(탭)</title>
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./tablet.css" />
+</head>
+<body data-app-page="tabs">
+  <div class="t-screen">
+    <main class="t-body">
+      <nav class="t-stepper" data-i18n-aria="app.stepper.ariaLabel" aria-label="단계 진행">
+        <ol class="t-stepper__list">
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">1</span><span class="t-stepper__label" data-i18n="app.stepper.step1"></span></li>
+          <li class="t-stepper__item is-done"><span class="t-stepper__no">2</span><span class="t-stepper__label" data-i18n="app.stepper.step2"></span></li>
+          <li class="t-stepper__item is-active"><span class="t-stepper__no">3</span><span class="t-stepper__label" data-i18n="app.stepper.step3"></span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">4</span><span class="t-stepper__label" data-i18n="app.stepper.step4"></span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">5</span><span class="t-stepper__label" data-i18n="app.stepper.step5"></span></li>
+        </ol>
+      </nav>
+
+      <div class="t-card">
+        <div class="form-selection-header" style="position: sticky; z-index: 9; background: var(--bg-primary); padding: 12px 0 8px 0; margin: 0 0 8px 0; border-bottom: 1px solid var(--border-light); backdrop-filter: blur(10px); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);">
+          <div class="app-card-title" style="display:flex; align-items:center; justify-content:space-between; gap: 12px; margin-bottom: 6px; font-size: var(--font-size-sm);">
+            <span data-i18n="app.tabs.selectedForms"></span>
+            <span class="app-badge"><span id="tab-count">0</span>개</span>
+          </div>
+          <div class="tab-menu" id="tab-menu"></div>
+        </div>
+        <div class="tab-content" id="tab-host"></div>
+
+        <div id="signature-block" class="signature-section" style="display:none;">
+          <h4 data-i18n="app.tabs.customerConfirm"></h4>
+          <div style="margin-bottom: 12px;">
+            <label for="customer-real-name" style="display: block; margin-bottom: 6px; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">
+              <span data-i18n="app.tabs.realNameLabel"></span>
+            </label>
+            <input id="customer-real-name" class="demo-input" type="text" data-i18n-placeholder="app.tabs.realNamePlaceholder" placeholder="본인의 실명을 입력해주세요" style="width: 100%;" required />
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="display: block; margin-bottom: 6px; font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--text-primary);">
+              <span data-i18n="app.tabs.signatureLabel"></span>
+            </label>
+            <div class="signature-wrapper">
+              <canvas id="signature-canvas"></canvas>
+            </div>
+          </div>
+          <div class="signature-controls">
+            <button class="demo-btn-secondary" id="clear-signature" type="button" data-i18n="app.tabs.clearSignature"></button>
+          </div>
+        </div>
+
+        <div class="t-actions">
+          <button class="demo-btn-secondary" id="back-to-consultation-selection" type="button" data-i18n="app.tabs.reselect"></button>
+          <button class="demo-btn-primary" id="validate-next" type="button" data-i18n="app.tabs.next"></button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="app-toast" id="app-toast" role="status" aria-live="polite">
+    <div class="app-toast-title" id="app-toast-title">알림</div>
+    <div class="app-toast-desc" id="app-toast-desc">메시지</div>
+  </div>
+
+  <!-- Core modules -->
+  <script src="../assets/config.js"></script>
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/i18n.js"></script>
+  <script src="../assets/form-handler.js"></script>
+  <!-- Page modules -->
+  <script src="../assets/pages/topbar.js"></script>
+  <script src="../assets/pages/list.js"></script>
+  <script src="../assets/pages/login.js"></script>
+  <script src="../assets/pages/customer-search.js"></script>
+  <script src="../assets/pages/consultation-selection.js"></script>
+  <script src="../assets/pages/tabs.js"></script>
+  <script src="../assets/pages/review.js"></script>
+  <script src="../assets/pages/completion.js"></script>
+  <script src="../assets/pages/signature.js"></script>
+  <script src="../assets/pages/wrapper.js"></script>
+  <!-- Main entry point -->
+  <script src="../assets/app.js"></script>
+</body>
+</html>
+

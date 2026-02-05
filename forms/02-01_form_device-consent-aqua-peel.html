@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consent Form | Aqua Peel</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    /* iframe용 레이아웃만 오버라이드. 01-01과 동일 폰트/굵기(style.css + lang=ko로 동일 스택 적용) */
+    body {
+      padding: 0;
+      margin: 0;
+      background: var(--bg-primary);
+      width: 100%;
+      min-height: 100%;
+      overflow: hidden;
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.7;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .form-container {
+      width: 100%;
+      padding: 16px;
+      margin: 0;
+      box-sizing: border-box;
+      position: relative;
+    }
+    
+    /* Header Section */
+    .form-header {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    
+    /* Auto-fill Button */
+    .auto-fill-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px 16px;
+      background: #007AFF;
+      border: 1px solid #007AFF;
+      border-radius: 6px;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 122, 255, 0.3);
+      white-space: nowrap;
+      z-index: 100;
+    }
+    
+    .auto-fill-btn:hover {
+      background: #0051D5;
+      border-color: #0051D5;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    .auto-fill-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .brand-logo {
+      font-family: var(--font-family-serif);
+      font-size: 28px;
+      font-weight: var(--font-weight-medium);
+      color: #C67C4E;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    
+    .form-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    
+    .form-intro {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    
+    /* Administrative Section */
+    .admin-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+    }
+    
+    /* PDF 생성 시에만 표시 (signature-section만) */
+    .signature-section[data-pdf-only="true"] {
+      display: none;
+    }
+    
+    @media print {
+      .signature-section[data-pdf-only="true"] {
+        display: block !important;
+      }
+    }
+    
+    .admin-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .admin-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .admin-field input {
+      padding: 8px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-base);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: not-allowed;
+    }
+    
+    .admin-field input:focus {
+      outline: none;
+      border-color: var(--border-light);
+    }
+    
+    /* Section Styling */
+    .form-section {
+      margin-bottom: 32px;
+      padding: 0; /* 외부 스타일시트의 padding 적용 방지 */
+    }
+    
+    .section-title {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-light);
+    }
+    
+    .section-subtitle {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+    
+    /* Customer Information (01-01과 동일 형식) */
+    .customer-info-grid {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .part-note {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    
+    .info-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .info-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    .info-field input[type="text"],
+    .info-field input[type="email"],
+    .info-field input[type="tel"] {
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-base);
+      background: var(--bg-primary);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .info-field.readonly input,
+    .info-field input[readonly] {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    
+    /* Radio/Checkbox Groups */
+    .option-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .radio-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 0;
+    }
+    
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      cursor: pointer;
+      margin: 0; /* 정렬을 위해 margin 제거 */
+    }
+    
+    .option-label input[type="radio"],
+    .option-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    /* 02-01 전용: Part 2~4 동의 블록 */
+    .static-content {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    
+    .static-content ul {
+      margin: 8px 0 8px 20px;
+      padding: 0;
+    }
+    
+    .consent-block {
+      margin: 16px 0;
+      padding: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius);
+      background: var(--bg-secondary);
+    }
+    
+    .consent-block .statement {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    
+    .consent-block .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .consent-block .checkbox-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .consent-block .checkbox-row label {
+      font-size: var(--font-size-base);
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    
+    /* Confirmation Section */
+    .confirmation-section {
+      margin-top: 32px;
+      padding: 20px;
+      background: var(--bg-secondary);
+      border-radius: var(--border-radius);
+      border: 2px solid var(--border-light);
+    }
+    
+    .confirmation-statement {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    
+    .confirmation-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .confirmation-checkbox input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    
+    .confirmation-checkbox label {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      cursor: pointer;
+      line-height: 1.6;
+    }
+    
+    /* Form Reset Section */
+    .form-reset-section {
+      text-align: center;
+    }
+    
+    .form-reset-btn:hover {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+    }
+    
+    .form-reset-btn:active {
+      transform: scale(0.98);
+    }
+    
+    /* Signature Section */
+    .signature-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-light);
+    }
+    
+    .signature-label {
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    .signature-label .required {
+      color: var(--error-color);
+    }
+    
+    .signature-line {
+      height: 60px;
+      border-bottom: 2px solid var(--text-primary);
+      margin-bottom: 16px;
+    }
+    
+    .date-time-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    
+    .date-time-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .date-time-field label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+    
+    .date-time-field .system-note {
+      font-size: var(--font-size-xs);
+      color: var(--text-light);
+      font-style: italic;
+      margin-top: 4px;
+    }
+    
+    .required-note {
+      font-size: var(--font-size-xs);
+      color: var(--text-light);
+      margin-top: 12px;
+      font-style: italic;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <!-- Auto-fill Button -->
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data (excluding store and staff info)">
+      Auto-fill
+    </button>
+    
+    <!-- Header -->
+    <div class="form-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Consent Form for Using Beauty Device [Aqua Peel]</div>
+      <div class="form-intro">
+        The purpose of this consent form is to provide you with written information regarding the risks, benefits, and alternative treatments related to this procedure. This document supplements the consultation or discussion you have already had with Sulwhasoo staff. You must confirm and fully understand the information listed in this document, so please read it carefully. If you have any questions about this treatment, please consult Sulwhasoo staff before signing.
+      </div>
+    </div>
+
+    <!-- Administrative Information (Read-only, displayed on screen) -->
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <!-- Part 1: Personal Information (01-01 Customer Information 항목과 동일) -->
+    <div class="form-section">
+      <div class="section-title">Part 1 : Personal Information *</div>
+      <div class="customer-info-grid">
+        <div class="info-field">
+          <label>Name:</label>
+          <input type="text" id="customer-name" readonly data-field="customer-name" value="" />
+        </div>
+        <div class="info-field">
+          <label>Title:</label>
+          <div class="radio-group">
+            <label class="option-label">
+              <input type="radio" name="title" value="Ms" />
+              <span>Ms.</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="title" value="Mrs" />
+              <span>Mrs.</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="title" value="Mr" />
+              <span>Mr.</span>
+            </label>
+          </div>
+        </div>
+        <div class="info-field">
+          <label>Membership Number:</label>
+          <input type="text" id="membership-number" readonly data-field="membership-number" value="" />
+        </div>
+        <div class="info-field">
+          <label>Contact Number:</label>
+          <div class="radio-group" style="margin-bottom: 8px;">
+            <label class="option-label">
+              <input type="radio" name="country-code" value="852" />
+              <span>852</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="country-code" value="853" />
+              <span>853</span>
+            </label>
+            <label class="option-label">
+              <input type="radio" name="country-code" value="86" />
+              <span>86</span>
+            </label>
+          </div>
+          <input type="tel" id="contact-number" readonly data-field="contact-number" value="" placeholder="Enter phone number" />
+        </div>
+        <div class="info-field">
+          <label>Email:</label>
+          <input type="email" id="email" readonly data-field="email" value="" placeholder="Enter email address" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Part 2: Principle and Treatment Description -->
+    <div class="form-section">
+      <div class="section-title">Part 2 : Principle and Treatment Description</div>
+      <div class="static-content">
+        This device features Aqua Peel technology, which deeply removes aged keratin and pore impurities, leaving the skin light, burden-free, and improving absorption. It makes the skin silky smooth and clear. Using a turbine-style design, it painlessly and quickly extracts blackheads and acne, removes aged keratin, and enhances product absorption. After cleansing, nutrients are infused to revitalize skin regeneration and restore radiance. During the treatment, you will feel suction and a cooling sensation from the serum. After the treatment, mild to moderate redness may occur temporarily.
+      </div>
+      <div class="consent-block">
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirmation-part2" required name="confirmation-part2" />
+          <label for="confirmation-part2" class="statement">I have understood the nature and expected results of the treatment and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part 3: Medications, Contraindications and Precautions -->
+    <div class="form-section">
+      <div class="section-title">Part 3 : Medications, Contraindications, and Precautions</div>
+      <div class="static-content">
+        <ul>
+          <li>If you have health issues, are taking medication, or have a medical history, please consult your doctor and disclose this information before treatment.</li>
+          <li>The device is not suitable for individuals with certain health conditions (e.g. facial nerve paralysis, epilepsy, muscle disease, lupus, herpes, severe cystic acne, open wounds, lymphatic or liver disease, loss of skin sensation, fever or infectious disease, pregnancy, implanted electronic or metal devices, abnormal response to electrical stimulation, metal allergy). Failure to disclose may result in you bearing the consequences.</li>
+          <li>Before each treatment, confirm you have no discomfort (e.g. pregnancy, menstruation, chronic illness, skin inflammation, injury, eczema, coagulation disorders) and are not on medication (e.g. anticoagulants, aspirin).</li>
+          <li>If any abnormality is discovered during treatment, notify staff immediately. The company may take measures as necessary; you bear costs if the abnormality is not caused by the company.</li>
+          <li>Risks and complications cannot be fully listed; unforeseen complications may occur.</li>
+        </ul>
+      </div>
+      <div class="consent-block">
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirmation-part3" required name="confirmation-part3" />
+          <label for="confirmation-part3" class="statement">I have understood the contraindications and precautions and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part 4: Risks and Side Effects -->
+    <div class="form-section">
+      <div class="section-title">Part 4 : Risks and Side Effects</div>
+      <div class="static-content">
+        <ul>
+          <li>Local skin may show dark red or purple "sha" marks. Red marks may fade within a few days or over a week.</li>
+          <li>Heat sensation on the back after treatment is normal and may last a few hours. Fatigue or drowsiness after treatment is common; rest may help.</li>
+          <li>Keep warm after treatment; avoid cold exposure. Wait 2–3 hours before showering; avoid very hot water on the back.</li>
+          <li>Avoid raw, oily, or strongly flavored foods for 2–3 days. Avoid strenuous exercise; ensure adequate rest and sleep. Temporarily stop using strong exfoliating products.</li>
+        </ul>
+      </div>
+      <div class="consent-block">
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirmation-part4" required name="confirmation-part4" />
+          <label for="confirmation-part4" class="statement">I clearly understand the risks and side effects and agree to bear any possible consequences and post-treatment conditions. *</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part 5: Disclaimer (read-only) -->
+    <div class="form-section">
+      <div class="section-title">Part 5 : Disclaimer</div>
+      <div class="static-content">
+        <ul>
+          <li>I confirm that the information was explained by staff and my questions were addressed.</li>
+          <li>I acknowledge that the treatment is elective and I assume all risks.</li>
+          <li>I agree to follow post-treatment care (e.g. avoid sun exposure as advised).</li>
+          <li>I confirm that the treatment will be performed by trained Sulwhasoo staff.</li>
+          <li>I agree to follow-up and authorise AP Beauty to take photos/videos if applicable.</li>
+          <li>I understand that treatment effectiveness is not guaranteed.</li>
+          <li>I will inform Sulwhasoo staff of any health changes within two weeks before treatment.</li>
+          <li>I confirm that the English version of this consent form shall prevail in case of any discrepancy.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Part 6: Signature Confirmation -->
+    <div class="form-section">
+      <div class="section-title">Part 6 : Signature Confirmation</div>
+      <div class="confirmation-section">
+        <div class="confirmation-statement">
+          By signing this consent form, I confirm I clearly understand and acknowledge the above disclaimer and have had sufficient opportunity to ask questions and receive clear answers from Sulwhasoo staff. *
+        </div>
+        <div class="confirmation-checkbox">
+          <input type="checkbox" id="confirmation-part6" required name="confirmation-part6" />
+          <label for="confirmation-part6">I confirm I clearly understand all the above matters. *</label>
+        </div>
+      </div>
+      <div class="signature-section" style="display: none;" data-pdf-only="true">
+        <div class="signature-label">
+          Signature * : <span class="required">(Required)</span>
+        </div>
+        <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">
+          Signature will be injected during PDF generation
+        </div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <input type="text" readonly data-field="signature-date" id="signature-date" value="" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-secondary);" />
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <input type="text" readonly data-field="signature-time" id="signature-time" value="" style="padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-secondary);" />
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+      </div>
+    </div>
+
+    <!-- Form Reset Button (Part 6 아래) -->
+    <div class="form-reset-section" style="margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light);">
+      <button type="button" id="form-reset-btn" class="form-reset-btn" style="width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; transition: var(--transition);">
+        Reset Form
+      </button>
+      <p class="form-reset-hint" style="margin-top: 8px; font-size: var(--font-size-xs); color: var(--text-light); text-align: center;">
+        Click to clear all input fields in this form
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // iframe 높이 자동 조정: 문서 높이를 부모에게 전송 (01-01과 동일)
+    function sendHeightToParent() {
+      const height = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight,
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+      );
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    // 양식 데이터 수집 (02-01 필드만)
+    function collectFormData() {
+      const formData = {};
+      const radioGroups = document.querySelectorAll('input[type="radio"]');
+      radioGroups.forEach(radio => {
+        if (radio.name && radio.checked) formData[radio.name] = radio.value;
+      });
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(cb => {
+        if (cb.name) formData[cb.name] = cb.checked;
+        if (cb.id && cb.id.indexOf('confirmation-') === 0) formData[cb.id] = cb.checked;
+      });
+      const fields = {
+        'store-registration': '[data-field="store-registration"]',
+        'responsible-staff': '[data-field="responsible-staff"]',
+        'customer-name': '#customer-name',
+        'email': '#email',
+        'contact-number': '#contact-number',
+        'membership-number': '#membership-number',
+        'signature-date': '#signature-date',
+        'signature-time': '#signature-time'
+      };
+      Object.keys(fields).forEach(key => {
+        const el = document.querySelector(fields[key]);
+        if (el) formData[key] = el.value || '';
+      });
+      // 앱 "다음" 검증용: 동의 체크박스 4개(Part2~Part6)가 모두 체크된 경우에만 confirmation-checkbox = true
+      formData['confirmation-checkbox'] = !!(formData['confirmation-part2'] && formData['confirmation-part3'] && formData['confirmation-part4'] && formData['confirmation-part6']);
+      return formData;
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-request') {
+        const formData = collectFormData();
+        const formKey = event.data.formKey || 'device-consent-aqua-peel';
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-collected', formKey: formKey, data: formData }, '*');
+        }
+        return;
+      }
+      if (event.data && event.data.type === 'form-data-inject') {
+        const data = event.data.data || {};
+        const set = (selector, val) => {
+          const el = document.querySelector(selector);
+          if (el && val != null && val !== '') el.value = val;
+        };
+        set('[data-field="store-registration"]', data['store-registration']);
+        set('[data-field="responsible-staff"]', data['responsible-staff']);
+        const brandEl = document.querySelector('[data-field="brand-name"]');
+        if (brandEl) {
+          const logoFilename = data['brand-logo-filename'];
+          if (logoFilename) {
+            var img = new Image();
+            var logoUrl = '../assets/images/' + logoFilename;
+            img.onload = function() {
+              brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+              brandEl.style.backgroundSize = '170px 75px';
+              brandEl.style.backgroundRepeat = 'no-repeat';
+              brandEl.style.backgroundPosition = '';
+              brandEl.textContent = '';
+              brandEl.style.height = '75px';
+            };
+            img.onerror = function() {
+              brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+              brandEl.style.backgroundImage = '';
+              brandEl.style.backgroundSize = '';
+            };
+            img.src = logoUrl;
+          } else if (data['brand-name']) {
+            brandEl.textContent = data['brand-name'];
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          }
+        }
+        set('#customer-name', data['customer-name']);
+        set('#email', data['email']);
+        set('#contact-number', data['contact-number']);
+        set('#membership-number', data['membership-number']);
+        set('#signature-date', data['signature-date']);
+        set('#signature-time', data['signature-time']);
+        if (data['title']) {
+          const r = document.querySelector('input[name="title"][value="' + data['title'] + '"]');
+          if (r) r.checked = true;
+        }
+        if (data['country-code']) {
+          const r = document.querySelector('input[name="country-code"][value="' + data['country-code'] + '"]');
+          if (r) r.checked = true;
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const dateStr = String(now.getDate()).padStart(2, '0') + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
+      const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const dateEl = document.getElementById('signature-date');
+      const timeEl = document.getElementById('signature-time');
+      if (dateEl && !dateEl.value) dateEl.value = dateStr;
+      if (timeEl && !timeEl.value) timeEl.value = timeStr;
+
+      function resetForm() {
+        document.querySelectorAll('.customer-info-grid input:not([readonly])').forEach(i => { i.value = ''; });
+        document.querySelectorAll('input[name="title"]').forEach(r => { r.checked = false; });
+        document.querySelectorAll('input[name="country-code"]').forEach(r => { r.checked = false; });
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+        if (dateEl) dateEl.value = dateStr;
+        if (timeEl) timeEl.value = timeStr;
+        setTimeout(sendHeightToParent, 100);
+      }
+      const resetBtn = document.getElementById('form-reset-btn');
+      if (resetBtn) resetBtn.addEventListener('click', function() {
+        if (confirm('이 양식을 초기화하시겠습니까?\n입력한 내용이 모두 삭제됩니다.')) resetForm();
+      });
+
+      const autoFillBtn = document.getElementById('auto-fill-btn');
+      if (autoFillBtn) autoFillBtn.addEventListener('click', function() {
+        const titleMs = document.querySelector('input[name="title"][value="Ms"]');
+        if (titleMs) titleMs.checked = true;
+        document.querySelectorAll('input[id^="confirmation-"]').forEach(cb => { cb.checked = true; });
+        setTimeout(sendHeightToParent, 100);
+      });
+
+      sendHeightToParent();
+      setTimeout(sendHeightToParent, 300);
+      var observer = new MutationObserver(function() { sendHeightToParent(); });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+      window.addEventListener('resize', function() { sendHeightToParent(); });
+      document.querySelectorAll('img').forEach(function(img) {
+        if (img.complete) sendHeightToParent();
+        else { img.addEventListener('load', sendHeightToParent); img.addEventListener('error', sendHeightToParent); }
+      });
+    });
+  </script>
+</body>
+</html>

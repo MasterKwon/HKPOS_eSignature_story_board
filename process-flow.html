@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>업무 프로세스 | HK POS eSignature</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="assets/style.css" />
+  <link rel="stylesheet" href="assets/app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body style="padding: 20px; background: var(--bg-secondary);">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <div style="margin-bottom: 16px;">
+      <h1 style="font-size: var(--font-size-xl); color: var(--text-primary); margin: 0;" id="process-flow-title">업무 프로세스</h1>
+      <p class="app-hint" style="margin-top: 8px;" id="process-flow-intro">
+        본 시스템은 아래 프로세스에 따라 단계별로 화면이 구성되어 있습니다. 각 단계는 순차적으로 진행되며, 테스트 데이터를 활용한 시나리오 기반으로 설계되었습니다.
+      </p>
+    </div>
+
+    <div class="app-card" style="padding: 24px;">
+      <div class="mermaid" id="process-flow-mermaid" data-i18n-mermaid="process-flow" style="min-height: 600px;">
+flowchart TD
+    Start([시작]) --> Step0
+    Step0["Step 0: 매장 및 담당자 식별"]
+    Step0 --> Login1["직원 아이디 / 비밀번호 입력"]
+    Login1 --> API1["POS API 호출<br/>직원/매장 정보"]
+    API1 --> Session["브랜드/매장 정보"]
+    Session --> Step1
+    Step1["Step 1: 고객 식별 및 서비스 매칭"]
+    Step1 --> Search1["검색 정보 입력<br/>전화번호/이름/이메일"]
+    Search1 --> API2["POS API 호출<br/>고객 검색"]
+    API2 --> ResultDecision{"검색 결과"}
+    ResultDecision -->|1명| Show1["고객 정보 표시"]
+    ResultDecision -->|2명 이상| Show2["고객 목록 표시"]
+    ResultDecision -->|0명| Error["에러 메시지"]
+    Show2 --> Select["고객 선택"]
+    Show1 --> Info1["고객 정보 조회"]
+    Select --> Info1
+    Info1 --> Info2["사용가능 Package 조회"]
+    Info2 --> Step2
+    Step2["Step 2: 양식 선택 및 BC 선택"]
+    Step2 --> Choose["작성할 양식 선택<br/>13종 중"]
+    Choose --> BC1["상담사(BC) 선택"]
+    BC1 --> Gen1["양식 생성"]
+    Gen1 --> Gen2{"다중 업무?"}
+    Gen2 -->|Yes| Tabs["탭 생성"]
+    Gen2 -->|No| Step3
+    Tabs --> Step3
+    Step3["Step 3: 내용 입력"]
+    Step3 --> Input["데이터 입력"]
+    Input --> Sign{"서명 필요?"}
+    Sign -->|Yes| Collect["서명 수집"]
+    Sign -->|No| Step4
+    Collect --> Step4
+    Step4["Step 4: 최종 확인"]
+    Step4 --> Review["입력 내용 확인"]
+    Review --> BC2["상담사 의견 입력<br/>선택"]
+    BC2 --> Method["발송 방법 선택"]
+    Method --> API3["POS API 호출<br/>상담정보 저장"]
+    API3 --> Step5
+    Step5["Step 5: 전송 완료"]
+    Step5 --> SuccessMsg["성공 메시지 표시"]
+    SuccessMsg --> ResultDisplay["POS 처리 결과 표시<br/>저장된 상담 정보 요약"]
+    ResultDisplay --> End([완료])
+    Error --> Search1
+      </div>
+    </div>
+  </div>
+  <script src="assets/config.js"></script>
+  <script src="assets/utils.js"></script>
+  <script src="assets/i18n.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'default' });
+    function esc(s) {
+      return String(s || '').replace(/"/g, '&quot;');
+    }
+    function renderProcessFlow() {
+      if (!window.HKPOS || !window.HKPOS.i18n) return;
+      var t = window.HKPOS.i18n.t.bind(window.HKPOS.i18n);
+      var titleEl = document.getElementById('process-flow-title');
+      var introEl = document.getElementById('process-flow-intro');
+      if (titleEl) titleEl.textContent = t('processFlow.title');
+      if (introEl) introEl.textContent = t('processFlow.intro');
+      var el = document.getElementById('process-flow-mermaid');
+      if (!el || typeof window.mermaid === 'undefined') return;
+      var code = 'flowchart TD\n' +
+        '    Start([' + esc(t('processFlow.start')) + ']) --> Step0\n' +
+        '    Step0["' + esc(t('processFlow.step0Label')) + '"]\n' +
+        '    Step0 --> Login1["' + esc(t('processFlow.login1')) + '"]\n' +
+        '    Login1 --> API1["' + esc(t('processFlow.api1')) + '"]\n' +
+        '    API1 --> Session["' + esc(t('processFlow.session')) + '"]\n' +
+        '    Session --> Step1\n' +
+        '    Step1["' + esc(t('processFlow.step1Label')) + '"]\n' +
+        '    Step1 --> Search1["' + esc(t('processFlow.search1')) + '"]\n' +
+        '    Search1 --> API2["' + esc(t('processFlow.api2')) + '"]\n' +
+        '    API2 --> ResultDecision{"' + esc(t('processFlow.resultLabel')) + '"}\n' +
+        '    ResultDecision -->|' + esc(t('processFlow.result1')) + '| Show1["' + esc(t('processFlow.show1')) + '"]\n' +
+        '    ResultDecision -->|' + esc(t('processFlow.result2Plus')) + '| Show2["' + esc(t('processFlow.show2')) + '"]\n' +
+        '    ResultDecision -->|' + esc(t('processFlow.result0')) + '| Error["' + esc(t('processFlow.error')) + '"]\n' +
+        '    Show2 --> Select["' + esc(t('processFlow.select')) + '"]\n' +
+        '    Show1 --> Info1["' + esc(t('processFlow.info1')) + '"]\n' +
+        '    Select --> Info1\n' +
+        '    Info1 --> Info2["' + esc(t('processFlow.info2')) + '"]\n' +
+        '    Info2 --> Step2\n' +
+        '    Step2["' + esc(t('processFlow.step2Label')) + '"]\n' +
+        '    Step2 --> Choose["' + esc(t('processFlow.choose')) + '"]\n' +
+        '    Choose --> BC1["' + esc(t('processFlow.bc1')) + '"]\n' +
+        '    BC1 --> Gen1["' + esc(t('processFlow.gen1')) + '"]\n' +
+        '    Gen1 --> Gen2{"' + esc(t('processFlow.gen2Label')) + '"}\n' +
+        '    Gen2 -->|Yes| Tabs["' + esc(t('processFlow.tabs')) + '"]\n' +
+        '    Gen2 -->|No| Step3\n' +
+        '    Tabs --> Step3\n' +
+        '    Step3["' + esc(t('processFlow.step3Label')) + '"]\n' +
+        '    Step3 --> Input["' + esc(t('processFlow.input')) + '"]\n' +
+        '    Input --> Sign{"' + esc(t('processFlow.signLabel')) + '"}\n' +
+        '    Sign -->|Yes| Collect["' + esc(t('processFlow.collect')) + '"]\n' +
+        '    Sign -->|No| Step4\n' +
+        '    Collect --> Step4\n' +
+        '    Step4["' + esc(t('processFlow.step4Label')) + '"]\n' +
+        '    Step4 --> Review["' + esc(t('processFlow.review')) + '"]\n' +
+        '    Review --> BC2["' + esc(t('processFlow.bc2')) + '"]\n' +
+        '    BC2 --> Method["' + esc(t('processFlow.method')) + '"]\n' +
+        '    Method --> API3["' + esc(t('processFlow.api3')) + '"]\n' +
+        '    API3 --> Step5\n' +
+        '    Step5["' + esc(t('processFlow.step5Label')) + '"]\n' +
+        '    Step5 --> SuccessMsg["' + esc(t('processFlow.successMsg')) + '"]\n' +
+        '    SuccessMsg --> ResultDisplay["' + esc(t('processFlow.resultDisplay')) + '"]\n' +
+        '    ResultDisplay --> End([' + esc(t('processFlow.end')) + '])\n' +
+        '    Error --> Search1';
+      var id = 'process-flow-diagram-' + Date.now();
+      window.mermaid.render(id, code).then(function (result) {
+        el.innerHTML = result.svg;
+        if (result.bindFunctions && typeof result.bindFunctions === 'function') {
+          result.bindFunctions(el);
+        }
+      }).catch(function (err) {
+        console.warn('[process-flow] Mermaid render failed', err);
+        el.textContent = code;
+      });
+    }
+    if (window.HKPOS && window.HKPOS.i18n && window.HKPOS.i18n.ready) {
+      window.HKPOS.i18n.ready().then(renderProcessFlow);
+    } else {
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.HKPOS && window.HKPOS.i18n && window.HKPOS.i18n.ready) {
+          window.HKPOS.i18n.ready().then(renderProcessFlow);
+        } else {
+          setTimeout(renderProcessFlow, 300);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

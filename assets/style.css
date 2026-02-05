@@ -1,0 +1,614 @@
+/* ============================================
+   HK POS eSignature - Local CSS (one-off)
+   - Copied/extracted from planning `style.css`
+   - Purpose: make `02.화면설계서` self-contained (no sync)
+   ============================================ */
+
+/* ============================================
+   기본 스타일 및 리셋
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure HTML hidden attribute always works */
+[hidden] {
+  display: none !important;
+}
+
+/* 폰트: 언어 무관 브라우저 기본 (--font-family / --font-family-serif) */
+
+:root {
+  /* 색상 팔레트 - Apple Human Interface Guidelines 스타일 */
+  --primary-color: #007AFF;        /* Apple Blue */
+  --primary-dark: #0051D5;         /* 진한 블루 */
+  --primary-light: #5AC8FA;        /* 연한 블루 */
+  --secondary-color: #007AFF;      /* Apple Blue */
+  --accent-color: #007AFF;         /* Apple Blue 하이라이트 */
+  --success-color: #34C759;        /* Apple Green */
+  --warning-color: #FF9500;        /* Apple Orange */
+  --error-color: #FF3B30;          /* Apple Red */
+  --text-primary: #000000;         /* 검정 (Primary Label) */
+  --text-secondary: #3C3C43;       /* 미디엄 그레이 (Secondary Label) */
+  --text-light: #8E8E93;           /* 연한 그레이 (Tertiary Label) */
+  --bg-primary: #FFFFFF;           /* 순수 흰색 (System Background) */
+  --bg-secondary: #F2F2F7;         /* 연한 그레이 (Secondary System Background) */
+  --bg-tertiary: #E5E5EA;          /* 더 진한 그레이 (Tertiary System Background) */
+  --bg-overlay: rgba(0, 122, 255, 0.1); /* Apple Blue 오버레이 */
+  --border-color: #C6C6CC;         /* 시스템 그레이 테두리 */
+  --border-light: #E5E5EA;         /* 연한 테두리 */
+
+  /* 간격 */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* 폰트: 언어 무관 브라우저 기본 (이전: 언어별 Arita/Noto) */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-serif: ui-serif, "Times New Roman", serif;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-xxl: 36px;           /* 더 큰 제목 */
+  --font-size-xs: 12px;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* 레이아웃 */
+  --container-max-width: 1280px;
+  --nav-height: 70px;
+  --border-radius: 4px;
+  --border-radius-lg: 8px;
+  --box-shadow: 0 2px 12px rgba(0, 122, 255, 0.08);
+  --box-shadow-hover: 0 4px 20px rgba(0, 122, 255, 0.12);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 컨트롤(인풋/셀렉트/버튼) - eMember register 스타일 참고 */
+  --control-height: 48px;
+  --control-radius: 4px;
+  --control-padding-x: 14px;
+  --focus-ring: 0 0 0 4px rgba(0, 122, 255, 0.14);
+}
+
+/* 시스템 공통: 모든 양식(01-01, 02-01 등) 동일 타이포. 원본은 브랜드/시기별로 다를 수 있으나 우리 시스템은 하나의 기준. */
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium); /* 500, 본문 시인성 통일 */
+  line-height: 1.7;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   공통 입력/버튼/폼 UI (스토리보드 데모 컴포넌트)
+   ============================================ */
+.language-select {
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--control-radius);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  appearance: none;
+}
+
+.language-select:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.language-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: var(--focus-ring);
+}
+
+.screen-container {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  min-height: 400px;
+}
+
+.screen-body {
+  padding: var(--spacing-md) 0;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  letter-spacing: -0.1px;
+}
+
+.demo-input {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 12px var(--control-padding-x);
+  border: 1px solid var(--border-light);
+  border-radius: var(--control-radius);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.demo-input::placeholder {
+  color: var(--text-light);
+}
+
+.demo-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: var(--focus-ring);
+}
+
+.demo-input:disabled,
+.demo-input[readonly] {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+/* select은 demo-input을 그대로 쓰되, 화살표/여백만 정리 */
+select.demo-input {
+  appearance: none;
+  padding-right: 40px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%),
+    linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+textarea.demo-input {
+  min-height: 120px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  resize: vertical;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .demo-input {
+  padding-right: 50px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--spacing-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  padding: var(--spacing-xs);
+  color: var(--text-secondary);
+}
+
+.demo-btn-primary {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 12px var(--control-padding-x);
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--control-radius);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: var(--spacing-md);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+
+.demo-btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.demo-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.demo-btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.demo-btn-secondary {
+  min-height: var(--control-height);
+  padding: 12px var(--control-padding-x);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--control-radius);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.demo-btn-secondary:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--primary-color);
+}
+
+.demo-btn-secondary:active {
+  transform: translateY(1px);
+}
+
+.demo-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.demo-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+}
+
+.demo-link:hover {
+  text-decoration: underline;
+}
+
+/* Search */
+.search-section {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
+}
+
+.search-section h4 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.search-results {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  min-height: 200px;
+}
+
+.result-placeholder {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: var(--spacing-xl) 0;
+}
+
+.customer-info-bar {
+  background-color: var(--bg-overlay);
+  padding: 8px var(--spacing-md);
+  border-radius: var(--border-radius);
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+/* Form selection */
+.form-selection {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.form-category {
+  background-color: var(--bg-primary);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-light);
+}
+
+.form-category h4 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-sm);
+  color: var(--primary-color);
+  padding-bottom: var(--spacing-xs);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.checkbox-label,
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 12px 12px;
+  cursor: pointer;
+  border-radius: var(--control-radius);
+  transition: var(--transition);
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+  line-height: 1.4;
+}
+
+.checkbox-label:hover,
+.radio-label:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.checkbox-label input[type="checkbox"],
+.radio-label input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+/* Tabs */
+.tab-menu {
+  display: flex;
+  gap: var(--spacing-xs);
+  padding: 2px 0 0 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.tab-menu::-webkit-scrollbar {
+  height: 3px;
+}
+
+.tab-menu::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 2px;
+}
+
+/* 양식 썸네일 카드 */
+.form-thumbnail {
+  flex: 0 0 auto;
+  min-width: 80px;
+  max-width: 90px;
+  padding: 8px 8px 6px 8px;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-thumbnail:hover {
+  border-color: var(--primary-color);
+  background: var(--bg-secondary);
+}
+
+.form-thumbnail.active {
+  border-color: var(--primary-color);
+  background: rgba(0, 122, 255, 0.05);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.10);
+}
+
+.form-thumbnail-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border-radius: calc(var(--border-radius) - 2px);
+  color: var(--text-secondary);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.form-thumbnail.active .form-thumbnail-icon {
+  background: rgba(0, 122, 255, 0.10);
+  color: var(--primary-color);
+}
+
+.form-thumbnail-title {
+  font-size: 11px;
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+  word-break: keep-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 2.4em;
+}
+
+.tab-content {
+  min-height: 300px;
+  /* 양식 내용이 상단 헤더 영역으로 올라가지 않도록 */
+  position: relative;
+  z-index: 1;
+}
+
+/* Form section styles (Tab 방식) */
+.form-section-item {
+  margin-bottom: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-primary);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+}
+
+/* 확인 화면용: tab-pane이 아닌 경우 (아코디언 방식) */
+.form-section-item:not(.tab-pane) {
+  min-height: auto; /* 높이를 자동으로 조정 */
+}
+
+.form-section-item.tab-pane {
+  display: none;
+}
+
+.form-section-item.tab-pane.active {
+  display: flex;
+}
+
+.form-section-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-section-header {
+  padding: 10px var(--spacing-md);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.form-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.form-section-content {
+  padding: 0;
+  background: var(--bg-primary);
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+
+/* HTML import 방식의 양식 래퍼 */
+.form-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--bg-primary);
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  z-index: 1;
+  scroll-behavior: smooth;
+  /* 양식 내용이 상단 헤더 영역으로 올라가지 않도록 */
+  /* 스크롤은 양식 래퍼 내부에서만 발생하므로 상단 헤더와 겹치지 않음 */
+  /* 양식 래퍼가 독립적으로 스크롤되도록 보장 */
+  contain: layout style paint;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Sections inside forms */
+.form-section {
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background-color: var(--bg-primary);
+  border-radius: var(--border-radius);
+}
+
+.form-section h4 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-primary);
+}
+
+.readonly-field {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  color: var(--text-secondary);
+}
+
+.readonly-field label {
+  font-weight: var(--font-weight-medium);
+  min-width: 120px;
+}
+
+/* Signature */
+.signature-section {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background-color: var(--bg-overlay);
+  border-radius: var(--border-radius);
+  border-top: 2px solid var(--primary-color);
+}
+
+.signature-section h4 {
+  font-size: var(--font-size-base);
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.signature-wrapper {
+  border: 1px solid var(--border-light);
+  border-radius: var(--control-radius);
+  background-color: white;
+  padding: 8px;
+  margin-bottom: var(--spacing-xs);
+}
+
+#signature-canvas {
+  display: block;
+  width: 100%;
+  height: 100px;
+  cursor: crosshair;
+  border-radius: var(--border-radius);
+}
+
+.signature-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  margin-bottom: 6px;
+}
+
+.signature-note {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.form-actions .demo-btn-primary,
+.form-actions .demo-btn-secondary {
+  flex: 1;
+}
+

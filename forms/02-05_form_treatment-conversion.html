@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatment Conversion Confirmation</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html { padding: 0; margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      padding: 0; margin: 0; background: var(--bg-primary);
+      width: 100%; min-height: 100%; overflow: hidden;
+      font-family: var(--font-family); font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium); line-height: 1.7; color: var(--text-primary);
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    .form-container { width: 100%; padding: 16px; margin: 0; box-sizing: border-box; position: relative; }
+    .form-header { margin-bottom: 24px; position: relative; }
+    .auto-fill-btn { position: absolute; top: 16px; right: 16px; padding: 8px 16px; background: #007AFF; border: 1px solid #007AFF; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 100; }
+    .auto-fill-btn:hover { background: #0051D5; border-color: #0051D5; }
+    .brand-logo { font-family: var(--font-family-serif); font-size: 28px; font-weight: var(--font-weight-medium); color: #C67C4E; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .form-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+    .form-intro { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--border-radius); }
+    .admin-field { display: flex; flex-direction: column; gap: 4px; }
+    .admin-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .admin-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-primary); cursor: not-allowed; }
+    .form-section { margin-bottom: 32px; padding: 0; }
+    .section-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
+    .member-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-bottom: 12px; }
+    .member-row .info-field { flex: 1; }
+    .info-field { display: flex; flex-direction: column; gap: 6px; }
+    .info-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .info-field input { padding: 10px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-primary); width: 100%; box-sizing: border-box; }
+    .info-field input[readonly] { background: var(--bg-secondary); cursor: not-allowed; }
+    .btn-select { padding: 8px 14px; font-size: var(--font-size-sm); font-weight: 600; color: #007AFF; background: var(--bg-primary); border: 1px solid #007AFF; border-radius: var(--border-radius); cursor: pointer; white-space: nowrap; }
+    .btn-select:hover { background: rgba(0,122,255,0.08); }
+    .treatment-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: var(--font-size-base); }
+    .treatment-table th, .treatment-table td { border: 1px solid var(--border-light); padding: 10px 12px; text-align: left; }
+    .treatment-table th { background: var(--bg-secondary); font-weight: 600; color: var(--text-primary); }
+    .treatment-table td { background: var(--bg-primary); }
+    .treatment-table .empty-row td { color: var(--text-light); font-style: italic; }
+    .static-content { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+    .static-content ul { margin: 8px 0 8px 20px; padding: 0; }
+    .confirmation-section { margin-top: 16px; padding: 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); page-break-inside: avoid; }
+    .confirmation-checkbox { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; }
+    .confirmation-checkbox input { margin-top: 4px; }
+    .signature-section[data-pdf-only="true"] { display: none; }
+    @media print { .signature-section[data-pdf-only="true"] { display: block !important; } }
+    .signature-label { font-size: var(--font-size-sm); margin-bottom: 4px; }
+    .signature-line { min-height: 60px; border-bottom: 2px solid var(--border-color); margin-bottom: 8px; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .date-time-field { display: flex; flex-direction: column; gap: 4px; }
+    .date-time-field label { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .date-time-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); }
+    .system-note { font-size: var(--font-size-xs); color: var(--text-light); font-style: italic; margin-top: 4px; }
+    .required-note { font-size: var(--font-size-xs); color: var(--text-light); margin-top: 12px; font-style: italic; }
+
+    /* Layer (Modal) */
+    .layer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .layer-backdrop.is-open { display: flex; }
+    .layer-box { background: var(--bg-primary); border-radius: var(--border-radius); box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 480px; width: 100%; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+    .layer-header { padding: 16px; border-bottom: 1px solid var(--border-light); font-weight: 600; font-size: var(--font-size-lg); display: flex; justify-content: space-between; align-items: center; }
+    .layer-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); padding: 0 4px; line-height: 1; }
+    .layer-body { padding: 16px; overflow-y: auto; flex: 1; }
+    .layer-footer { padding: 16px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 8px; }
+    .layer-list { list-style: none; margin: 0; padding: 0; }
+    .layer-list li { padding: 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); margin-bottom: 8px; cursor: pointer; transition: background 0.2s; }
+    .layer-list li:hover { background: var(--bg-secondary); }
+    .layer-list li.selected { border-color: #007AFF; background: rgba(0,122,255,0.08); }
+    .layer-list li .member-id { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: 4px; }
+    .package-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); margin-bottom: 8px; cursor: pointer; user-select: none; }
+    .package-item:hover { background: var(--bg-secondary); }
+    .package-item.selected { border-color: #007AFF; background: rgba(0,122,255,0.08); }
+    .package-item input[type="checkbox"] { flex-shrink: 0; pointer-events: none; }
+    .package-item .pkg-name { font-weight: 500; }
+    .package-item .pkg-meta { font-size: var(--font-size-sm); color: var(--text-secondary); margin-top: 4px; }
+    .btn-primary { padding: 10px 20px; font-size: var(--font-size-base); font-weight: 600; color: #fff; background: #007AFF; border: none; border-radius: var(--border-radius); cursor: pointer; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .form-reset-section { margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .form-reset-btn { width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data">Auto-fill</button>
+    <div class="form-header">
+      <input type="hidden" id="document-id" data-field="document-id" value="" />
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Treatment Conversion Confirmation Letter</div>
+      <div class="form-intro">
+        <span class="brand-name-replace">[Brand]</span> is committed to providing attentive service to our valued customers, ensuring a high-quality and professional treatment experience. To thank you for your continued support and trust, we have specially arranged a one-time membership treatment conversion:
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Member Transferring Treatment</div>
+      <div class="member-row">
+        <div class="info-field">
+          <label>Membership Number :</label>
+          <input type="text" readonly data-field="transfer-member-no" id="transfer-member-no" value="" />
+        </div>
+        <div class="info-field" style="flex: 1;">
+          <label>Member Name :</label>
+          <input type="text" readonly data-field="transfer-member-name" id="transfer-member-name" value="" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Treatment Details</div>
+      <div class="member-row">
+        <div class="info-field" style="flex: 1;"></div>
+        <button type="button" class="btn-select" id="btn-select-packages">Select Packages</button>
+      </div>
+      <p class="static-content" style="margin-bottom: 8px;">Please select at least one package from the transferring member's available packages.</p>
+      <table class="treatment-table" id="treatment-table">
+        <thead>
+          <tr>
+            <th>Treatment Item</th>
+            <th>Sessions / Value</th>
+            <th>Expiry Date</th>
+          </tr>
+        </thead>
+        <tbody id="treatment-tbody">
+          <tr class="empty-row"><td colspan="3">No packages selected</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Member Receiving Treatment</div>
+      <div class="member-row">
+        <div class="info-field" style="flex: 1;">
+          <label>Membership Number :</label>
+          <input type="text" readonly data-field="receiving-member-no" id="receiving-member-no" value="" />
+        </div>
+        <div class="info-field" style="flex: 1;">
+          <label>Member Name :</label>
+          <input type="text" readonly data-field="receiving-member-name" id="receiving-member-name" value="" />
+        </div>
+        <button type="button" class="btn-select" id="btn-select-receiving">Select Member</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Terms and Conditions</div>
+      <div class="static-content">
+        <ul>
+          <li>All treatments are non-transferable, non-convertible, and cannot be exchanged for cash.</li>
+          <li>For any changes or cancellations, please contact us at least 24 hours before the scheduled treatment; otherwise, the system cannot make modifications.</li>
+          <li>Cancellations made less than 24 hours before the appointment will result in one session being deducted from your treatment package.</li>
+          <li>If you arrive late, the treatment time will be shortened accordingly.</li>
+          <li>If the treatment expires, <span class="brand-name-replace">[Brand]</span> cannot arrange an extension, and expired treatments will become invalid immediately.</li>
+          <li>In case of any disputes, <span class="brand-name-replace">[Brand]</span> reserves the right of final decision.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="static-content">
+        We look forward to creating more wonderful experiences for you and helping you fully enjoy the beauty of <span class="brand-name-replace">[Brand]</span> from the inside out.
+      </div>
+      <div class="confirmation-section">
+        <div class="confirmation-checkbox">
+          <input type="checkbox" id="confirmation-checkbox" required name="confirmation-checkbox" />
+          <label for="confirmation-checkbox">I confirm that I have read and agree to the above terms and conditions. *</label>
+        </div>
+      </div>
+      <div class="signature-section" style="display: none;" data-pdf-only="true">
+        <div class="signature-label">Customer Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">Signature will be injected during PDF generation</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <input type="text" readonly data-field="signature-date" id="signature-date" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <input type="text" readonly data-field="signature-time" id="signature-time" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+      </div>
+    </div>
+
+    <div class="form-reset-section">
+      <button type="button" id="form-reset-btn" class="form-reset-btn">Reset Form</button>
+      <p class="form-reset-hint" style="margin-top: 8px; font-size: var(--font-size-xs); color: var(--text-light); text-align: center;">Click to clear all input fields in this form</p>
+    </div>
+  </div>
+
+  <!-- Layer: Select Receiving Member -->
+  <div class="layer-backdrop" id="layer-receiving" role="dialog" aria-modal="true" aria-labelledby="layer-receiving-title">
+    <div class="layer-box">
+      <div class="layer-header"><span id="layer-receiving-title">Select Receiving Member</span><button type="button" class="layer-close" id="layer-receiving-close" aria-label="Close">&times;</button></div>
+      <div class="layer-body">
+        <ul class="layer-list" id="receiving-member-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer: Select Packages -->
+  <div class="layer-backdrop" id="layer-packages" role="dialog" aria-modal="true" aria-labelledby="layer-packages-title">
+    <div class="layer-box">
+      <div class="layer-header"><span id="layer-packages-title">Select Packages</span><button type="button" class="layer-close" id="layer-packages-close" aria-label="Close">&times;</button></div>
+      <div class="layer-body" id="package-list-body"></div>
+      <div class="layer-footer">
+        <button type="button" class="btn-primary" id="layer-packages-confirm" disabled>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function sendHeightToParent() {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+        }
+      }
+
+      var transferMemberPackages = [];
+      var receivingMemberCandidates = [];
+      var transferMemberId = '';
+      var selectedPackages = [];
+      var treatmentRows = [];
+
+      function renderTreatmentTable() {
+        var tbody = document.getElementById('treatment-tbody');
+        if (!tbody) return;
+        if (treatmentRows.length === 0) {
+          tbody.innerHTML = '<tr class="empty-row"><td colspan="3">No packages selected</td></tr>';
+          return;
+        }
+        tbody.innerHTML = treatmentRows.map(function(r) {
+          return '<tr><td>' + (r.item || '') + '</td><td>' + (r.sessionsValue || '') + '</td><td>' + (r.expiryDate || '') + '</td></tr>';
+        }).join('');
+      }
+
+      function updateConfirmButton() {
+        var body = document.getElementById('package-list-body');
+        var btn = document.getElementById('layer-packages-confirm');
+        if (!body || !btn) return;
+        var checkedCount = body.querySelectorAll('input[type="checkbox"]:checked').length;
+        btn.disabled = checkedCount < 1;
+      }
+
+      function openReceivingLayer() {
+        var listEl = document.getElementById('receiving-member-list');
+        if (!listEl) return;
+        listEl.innerHTML = receivingMemberCandidates.map(function(m) {
+          return '<li data-id="' + (m.id || '') + '" data-name="' + (m.name || '').replace(/"/g, '&quot;') + '" data-no="' + (m.id || '') + '">' + (m.name || '') + '<div class="member-id">' + (m.id || '') + '</div></li>';
+        }).join('');
+        listEl.querySelectorAll('li').forEach(function(li) {
+          li.addEventListener('click', function() {
+            var no = this.getAttribute('data-no');
+            var name = this.getAttribute('data-name');
+            var receivingNo = document.getElementById('receiving-member-no');
+            var receivingName = document.getElementById('receiving-member-name');
+            if (receivingNo) receivingNo.value = no || '';
+            if (receivingName) receivingName.value = (name || '').replace(/&quot;/g, '"');
+            document.getElementById('layer-receiving').classList.remove('is-open');
+            sendHeightToParent();
+          });
+        });
+        document.getElementById('layer-receiving').classList.add('is-open');
+      }
+
+      function openPackagesLayer() {
+        var body = document.getElementById('package-list-body');
+        if (!body) return;
+        selectedPackages = treatmentRows.map(function(r) { return r.pkg; }).filter(Boolean);
+        body.innerHTML = transferMemberPackages.map(function(pkg, idx) {
+          var qty = pkg.remainQty != null ? pkg.remainQty : (pkg.remainValue != null ? pkg.remainValue : '');
+          var label = (pkg.packageName || '') + ' — ' + (qty !== '' ? qty : '') + (pkg.expiryDate ? ' · Exp: ' + pkg.expiryDate : '');
+          var checked = selectedPackages.some(function(p) { return p === pkg; }) ? ' checked' : '';
+          return '<label class="package-item' + (checked ? ' selected' : '') + '"><input type="checkbox" data-idx="' + idx + '"' + checked + '><div><div class="pkg-name">' + (pkg.packageName || '') + '</div><div class="pkg-meta">Sessions/Value: ' + (qty !== '' ? qty : '-') + ' · Expiry: ' + (pkg.expiryDate || '-') + '</div></div></label>';
+        }).join('');
+        body.querySelectorAll('.package-item').forEach(function(card) {
+          var cb = card.querySelector('input[type="checkbox"]');
+          if (!cb) return;
+          card.addEventListener('click', function(e) {
+            e.preventDefault();
+            cb.checked = !cb.checked;
+            card.classList.toggle('selected', cb.checked);
+            updateConfirmButton();
+          });
+          cb.addEventListener('change', function() {
+            card.classList.toggle('selected', this.checked);
+            updateConfirmButton();
+          });
+        });
+        updateConfirmButton();
+        document.getElementById('layer-packages').classList.add('is-open');
+      }
+
+      function confirmPackagesSelection() {
+        var body = document.getElementById('package-list-body');
+        if (!body) return;
+        var checkboxes = body.querySelectorAll('input[type="checkbox"]:checked');
+        selectedPackages = Array.from(checkboxes).map(function(cb) {
+          var idx = parseInt(cb.getAttribute('data-idx'), 10);
+          return transferMemberPackages[idx];
+        }).filter(Boolean);
+        treatmentRows = selectedPackages.map(function(p) {
+          var qty = p.remainQty != null ? String(p.remainQty) : (p.remainValue != null ? String(p.remainValue) : '');
+          return { item: p.packageName || '', sessionsValue: qty, expiryDate: p.expiryDate || '', pkg: p };
+        });
+        renderTreatmentTable();
+        document.getElementById('layer-packages').classList.remove('is-open');
+        sendHeightToParent();
+      }
+
+      function collectFormData() {
+        var formData = {};
+        var docIdEl = document.getElementById('document-id');
+        if (docIdEl) formData['document-id'] = docIdEl.value || '';
+        var set = function(key) {
+          var el = document.querySelector('[data-field="' + key + '"]') || document.getElementById(key);
+          if (el && el.value !== undefined) formData[key] = el.value || '';
+        };
+        set('store-registration');
+        set('responsible-staff');
+        set('transfer-member-no');
+        set('transfer-member-name');
+        set('receiving-member-no');
+        set('receiving-member-name');
+        set('signature-date');
+        set('signature-time');
+        var cb = document.getElementById('confirmation-checkbox');
+        formData['confirmation-checkbox'] = !!(cb && cb.checked);
+        formData['treatment-rows'] = treatmentRows.map(function(r) { return { item: r.item, sessionsValue: r.sessionsValue, expiryDate: r.expiryDate }; });
+        return formData;
+      }
+
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'form-data-request') {
+          var formData = collectFormData();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'form-data-collected', formKey: 'treatment-conversion', data: formData }, '*');
+          }
+          return;
+        }
+        if (event.data && event.data.type === 'form-data-inject') {
+          var data = event.data.data || {};
+          var set = function(selector, val) {
+            var el = document.querySelector(selector);
+            if (el && val != null && val !== '') el.value = val;
+          };
+          set('[data-field="store-registration"]', data['store-registration']);
+          set('[data-field="responsible-staff"]', data['responsible-staff']);
+          set('#document-id', data['document-id']);
+          set('[data-field="transfer-member-no"]', data['transfer-member-no']);
+          set('[data-field="transfer-member-name"]', data['transfer-member-name']);
+          set('#signature-date', data['signature-date']);
+          set('#signature-time', data['signature-time']);
+          transferMemberPackages = Array.isArray(data['transfer-member-packages']) ? data['transfer-member-packages'] : [];
+          receivingMemberCandidates = Array.isArray(data['receiving-member-candidates']) ? data['receiving-member-candidates'] : [];
+          if (Array.isArray(data['treatment-rows']) && data['treatment-rows'].length > 0) {
+            treatmentRows = data['treatment-rows'].map(function(r) { return { item: r.item, sessionsValue: r.sessionsValue, expiryDate: r.expiryDate }; });
+            renderTreatmentTable();
+          }
+          var brandName = data['brand-name'] || 'Sulwhasoo';
+          document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+          var brandEl = document.querySelector('[data-field="brand-name"]');
+          if (brandEl) {
+            var logoFilename = data['brand-logo-filename'];
+            if (logoFilename) {
+              var img = new Image();
+              var logoUrl = '../assets/images/' + logoFilename;
+              img.onload = function() {
+                brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+                brandEl.style.backgroundSize = '170px 75px';
+                brandEl.style.backgroundRepeat = 'no-repeat';
+                brandEl.style.backgroundPosition = '';
+                brandEl.textContent = '';
+                brandEl.style.height = '75px';
+              };
+              img.onerror = function() {
+                brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+                brandEl.style.backgroundImage = '';
+                brandEl.style.backgroundSize = '';
+              };
+              img.src = logoUrl;
+            } else if (data['brand-name']) {
+              brandEl.textContent = data['brand-name'];
+              brandEl.style.backgroundImage = '';
+              brandEl.style.backgroundSize = '';
+            }
+          }
+          setTimeout(sendHeightToParent, 100);
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var now = new Date();
+        var dateStr = String(now.getDate()).padStart(2, '0') + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
+        var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        var dateEl = document.getElementById('signature-date');
+        var timeEl = document.getElementById('signature-time');
+        if (dateEl && !dateEl.value) dateEl.value = dateStr;
+        if (timeEl && !timeEl.value) timeEl.value = timeStr;
+
+        document.getElementById('auto-fill-btn').addEventListener('click', function() {
+          var cb = document.getElementById('confirmation-checkbox');
+          if (cb) cb.checked = true;
+          if (!document.getElementById('receiving-member-no').value && receivingMemberCandidates.length > 0) {
+            var first = receivingMemberCandidates[0];
+            document.getElementById('receiving-member-no').value = first.id || '';
+            document.getElementById('receiving-member-name').value = first.name || '';
+          }
+          if (treatmentRows.length < 2 && transferMemberPackages.length >= 2) {
+            var take = transferMemberPackages.slice(0, 2);
+            treatmentRows = take.map(function(p) {
+              var qty = p.remainQty != null ? String(p.remainQty) : (p.remainValue != null ? String(p.remainValue) : '');
+              return { item: p.packageName || '', sessionsValue: qty, expiryDate: p.expiryDate || '', pkg: p };
+            });
+            renderTreatmentTable();
+          }
+          sendHeightToParent();
+        });
+
+        document.getElementById('btn-select-receiving').addEventListener('click', openReceivingLayer);
+        document.getElementById('btn-select-packages').addEventListener('click', openPackagesLayer);
+        document.getElementById('layer-receiving-close').addEventListener('click', function() { document.getElementById('layer-receiving').classList.remove('is-open'); });
+        document.getElementById('layer-packages-close').addEventListener('click', function() { document.getElementById('layer-packages').classList.remove('is-open'); });
+        document.getElementById('layer-packages-confirm').addEventListener('click', confirmPackagesSelection);
+        document.getElementById('layer-receiving').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('is-open'); });
+        document.getElementById('layer-packages').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('is-open'); });
+
+        document.getElementById('form-reset-btn').addEventListener('click', function() {
+          if (confirm('Reset this form? All entered data will be cleared.')) {
+            document.getElementById('receiving-member-no').value = '';
+            document.getElementById('receiving-member-name').value = '';
+            treatmentRows = [];
+            renderTreatmentTable();
+            document.getElementById('confirmation-checkbox').checked = false;
+            if (dateEl) dateEl.value = dateStr;
+            if (timeEl) timeEl.value = timeStr;
+            setTimeout(sendHeightToParent, 100);
+          }
+        });
+
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 300);
+        var observer = new MutationObserver(function() { sendHeightToParent(); });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        window.addEventListener('resize', sendHeightToParent);
+      });
+    })();
+  </script>
+</body>
+</html>

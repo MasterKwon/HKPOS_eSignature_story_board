@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authorization Letter - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    @page { size: A4; margin: 18mm 15mm 15mm 15mm; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Times New Roman', serif; font-size: 9pt; line-height: 1.28; color: #000; background: #fff; margin: 0; padding: 0; padding-top: 2pt; orphans: 2; widows: 2; }
+    .pdf-container { max-width: 210mm; margin: 0 auto; padding: 0 12pt; padding-top: 2pt; }
+    .pdf-header { margin-bottom: 10pt; }
+    .pdf-header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12pt; margin-bottom: 6pt; }
+    .pdf-header-left { flex: 1; min-width: 0; }
+    .brand-logo { font-size: 18pt; font-weight: 500; color: #C67C4E; margin-bottom: 4pt; }
+    .form-title { font-size: 12pt; font-weight: 600; color: #000; margin-bottom: 0; }
+    .form-intro { font-size: 9pt; color: #333; line-height: 1.3; margin-bottom: 8pt; }
+    .doc-id-row { flex-shrink: 0; text-align: right; font-size: 9pt; white-space: nowrap; }
+    .pdf-section { margin-bottom: 10pt; page-break-inside: auto; }
+    .section-title { font-size: 10.5pt; font-weight: 700; margin-bottom: 6pt; padding-top: 2pt; padding-bottom: 4pt; border-bottom: 2pt solid #000; page-break-after: avoid; }
+    .member-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 8pt; }
+    .info-field label { font-size: 9pt; font-weight: 500; color: #333; }
+    .info-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .validity-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 8pt; }
+    .pdf-checkbox { width: 10pt; height: 10pt; border: 1.2pt solid #000; display: inline-block; position: relative; flex-shrink: 0; }
+    .pdf-checkbox.checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -62%); font-size: 11pt; font-weight: bold; }
+    .pdf-scope-options { font-size: 9pt; line-height: 1.5; margin: 6pt 0 8pt 0; }
+    .pdf-scope-options .pdf-option-item { display: flex; align-items: center; gap: 6pt; margin-bottom: 6pt; flex-wrap: wrap; }
+    .pdf-scope-options .pdf-option-item .pdf-value { min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 4pt; }
+    .notice-bullets { font-size: 8.5pt; color: #444; line-height: 1.35; margin: 6pt 0; padding-left: 16pt; }
+    .notice-bullets li { margin-bottom: 3pt; }
+    .static-content { font-size: 9pt; line-height: 1.35; margin-bottom: 8pt; }
+    .signature-section { margin-top: 10pt; padding-top: 8pt; border-top: 1pt solid #000; page-break-inside: avoid; }
+    .signature-label { font-size: 9pt; margin-bottom: 4pt; }
+    .signature-line { min-height: 50px; border-bottom: 2pt solid #000; margin-bottom: 8pt; }
+    .signature-line img { max-width: 100%; max-height: 50px; object-fit: contain; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-top: 8pt; }
+    .date-time-field label { font-size: 8pt; color: #333; }
+    .date-time-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .system-note { font-size: 7pt; color: #666; font-style: italic; margin-top: 1pt; }
+    .required-note { font-size: 8pt; color: #666; margin-top: 6pt; font-style: italic; }
+    .pdf-toolbar { position: fixed; top: 12px; right: 12px; z-index: 100; }
+    .pdf-btn { padding: 8px 14px; font-size: 13px; font-weight: 500; color: #fff; background: #c67c4e; border: none; border-radius: 6px; cursor: pointer; }
+    @media print { .pdf-toolbar { display: none !important; } body { print-color-adjust: exact; padding: 0; background: #fff; } .pdf-container { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+
+  <div class="pdf-container">
+    <div class="pdf-header">
+      <div class="pdf-header-top">
+        <div class="pdf-header-left">
+          <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+          <div class="form-title">Authorization Letter</div>
+        </div>
+        <div class="doc-id-row">
+          Document ID : <span class="pdf-value" data-field="document-id"></span>
+        </div>
+      </div>
+      <div class="form-intro">
+        I, the undersigned (Delegator), hereby authorize the person named below (Delegatee) to act on my behalf within the scope specified, for the validity period stated.
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Delegator (Authorizing Party)</div>
+      <div class="member-row">
+        <div class="info-field">
+          <label>Name :</label>
+          <div class="pdf-value" data-field="delegator-name"></div>
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="pdf-value" data-field="delegator-title"></div>
+        </div>
+      </div>
+      <div class="member-row">
+        <div class="info-field">
+          <label>Membership Number :</label>
+          <div class="pdf-value" data-field="delegator-membership-no"></div>
+        </div>
+        <div class="info-field">
+          <label>Contact / Email :</label>
+          <div class="pdf-value" data-field="delegator-contact-email"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Delegatee (Authorized Party)</div>
+      <div class="member-row">
+        <div class="info-field">
+          <label>Name :</label>
+          <div class="pdf-value" data-field="delegatee-name"></div>
+        </div>
+        <div class="info-field">
+          <label>Name (confirm) :</label>
+          <div class="pdf-value" data-field="delegatee-name-2"></div>
+        </div>
+      </div>
+      <div class="member-row">
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="pdf-value" data-field="delegatee-contact"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Validity Period</div>
+      <div class="validity-row">
+        <div class="info-field">
+          <label>Start Date :</label>
+          <div class="pdf-value" data-field="validity-start"></div>
+        </div>
+        <div class="info-field">
+          <label>End Date :</label>
+          <div class="pdf-value" data-field="validity-end"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="section-title">Scope of Authorization</div>
+      <ul class="notice-bullets">
+        <li>The company (store) reserves the right to verify the delegatee's contact details and identity document.</li>
+        <li>Processing may be refused if valid proof cannot be provided.</li>
+      </ul>
+      <div class="pdf-scope-options">
+        <div class="pdf-option-item">
+          <span class="pdf-checkbox" data-value="gift-exchange"></span>
+          <span><span class="brand-name-replace">[Brand]</span> Gift Exchange</span>
+        </div>
+        <div class="pdf-option-item">
+          <span class="pdf-checkbox" data-value="points-use"></span>
+          <span><span class="brand-name-replace">[Brand]</span> Points Use</span>
+        </div>
+        <div class="pdf-option-item">
+          <span class="pdf-checkbox" data-value="Other"></span>
+          <span>Others</span>
+          <div class="pdf-value" data-field="scope-other" style="min-width: 120pt; max-width: 200pt; min-height: 12pt; padding: 2pt 4pt; border-bottom: 1pt solid #000; display: inline-block; margin-left: 4pt;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="static-content">
+        I acknowledge and accept that all actions taken by the delegatee within the scope of this authorization are binding on me, and I assume full responsibility therefor.
+      </div>
+      <div class="signature-section">
+        <div class="signature-label">Delegator Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="display: flex; align-items: center; justify-content: center; color: #999; font-style: italic;">Signature will be injected</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <div class="pdf-value" data-field="signature-date"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <div class="pdf-value" data-field="signature-time"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    function injectPDFData(formData) {
+      var brandName = formData['brand-name'] || 'Sulwhasoo';
+      document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+
+      document.querySelectorAll('.pdf-value[data-field]').forEach(function(el) {
+        var name = el.getAttribute('data-field');
+        if (name === 'signature-image') return;
+        var val = formData[name];
+        el.textContent = (val != null && val !== '') ? val : '________________';
+      });
+      var delegateeContactEl = document.querySelector('.pdf-value[data-field="delegatee-contact"]');
+      if (delegateeContactEl) {
+        var dc = formData['delegatee-contact'] || '';
+        if (dc && /^\d+\s+.+$/.test(dc)) {
+          var parts = dc.split(/\s+/);
+          delegateeContactEl.textContent = '(' + parts[0] + ') ' + parts.slice(1).join(' ');
+        }
+      }
+
+      var scope = Array.isArray(formData['scope']) ? formData['scope'] : [];
+      document.querySelectorAll('.pdf-scope-options .pdf-checkbox').forEach(function(el) {
+        var value = el.getAttribute('data-value');
+        var checked = scope.some(function(s) {
+          if (value === 'Other') return s === 'Other' || (typeof s === 'string' && s.indexOf('Other:') === 0);
+          return s === value;
+        });
+        el.classList.toggle('checked', !!checked);
+      });
+      var scopeOtherEl = document.querySelector('[data-field="scope-other"]');
+      if (scopeOtherEl) {
+        var otherText = formData['scope-other'] || '';
+        if (!otherText && scope.length) {
+          var otherItem = scope.filter(function(s) { return typeof s === 'string' && s.indexOf('Other:') === 0; })[0];
+          if (otherItem) otherText = otherItem.replace(/^Other:\s*/, '');
+        }
+        scopeOtherEl.textContent = otherText || '';
+      }
+
+      var brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        var logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var img = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          img.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          img.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          img.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+
+      var sigEl = document.querySelector('[data-field="signature-image"]');
+      if (sigEl && formData['signature-image']) {
+        sigEl.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = formData['signature-image'];
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '50px';
+        img.style.objectFit = 'contain';
+        sigEl.appendChild(img);
+      }
+    }
+
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    var pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        var opt = { margin: [18, 15, 15, 15], filename: 'Authorization-Letter.pdf', image: { type: 'jpeg', quality: 0.98 }, html2pdf: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.querySelector('.pdf-container')).save();
+      });
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-inject') {
+        var data = event.data.data || {};
+        injectPDFData(data);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-injection-complete', formKey: 'authorization-letter' }, '*');
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { sendHeightToParent(); });
+    } else {
+      sendHeightToParent();
+    }
+    window.addEventListener('resize', function() { sendHeightToParent(); });
+    var observer = new MutationObserver(function() { sendHeightToParent(); });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+  </script>
+</body>
+</html>

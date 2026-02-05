@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Data Schemas | HK POS eSignature</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="../assets/app.css" />
+  <style>
+    /* Swagger UI-inspired */
+    :root {
+      --swagger-topbar: #2d3748;
+      --swagger-accent: #4990e2;
+      --swagger-border: #e2e8f0;
+      --swagger-bg: #f7fafc;
+      --swagger-code: #1a202c;
+    }
+    body.swagger-style { margin: 0; background: var(--swagger-bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .swagger-topbar {
+      background: var(--swagger-topbar);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .swagger-topbar h1 { font-size: 1.5rem; font-weight: 600; margin: 0; letter-spacing: -0.02em; }
+    .swagger-topbar .subtitle { font-size: 0.8125rem; opacity: 0.85; margin-top: 2px; }
+    .swagger-topbar a { color: #90cdf4; text-decoration: none; font-size: 0.875rem; }
+    .swagger-topbar a:hover { text-decoration: underline; }
+    .schemas-page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .schemas-page section { margin-bottom: 32px; background: #fff; border: 1px solid var(--swagger-border); border-radius: 6px; overflow: hidden; }
+    .schemas-page section > h2 {
+      font-size: 1rem; font-weight: 600; margin: 0; padding: 14px 20px;
+      background: #fff; border-bottom: 1px solid var(--swagger-border); color: var(--swagger-code);
+    }
+    .schemas-page section > .section-desc { padding: 12px 20px; font-size: 0.875rem; color: #4a5568; border-bottom: 1px solid var(--swagger-border); }
+    .spec-section-title { font-size: 0.9375rem; font-weight: 600; margin: 0 0 0 0; padding: 12px 16px; background: #edf2f7; border: 1px solid var(--swagger-border); border-bottom: none; color: var(--swagger-code); }
+    .spec-table-wrap { border: 1px solid var(--swagger-border); }
+    .schemas-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    .schemas-table th, .schemas-table td { text-align: left; padding: 10px 12px; border: 1px solid var(--swagger-border); vertical-align: top; }
+    .schemas-table th { background: #e2e8f0; font-weight: 600; color: #2d3748; }
+    .schemas-table td.num { width: 40px; text-align: center; }
+    .schemas-table td.name { min-width: 140px; }
+    .schemas-table td.type { width: 80px; }
+    .schemas-table td.len { width: 60px; text-align: center; }
+    .schemas-table td.req { width: 70px; }
+    .schemas-table tbody tr:hover { background: #f7fafc; }
+    .schemas-table code { font-family: "SF Mono", Monaco, monospace; font-size: 0.75rem; background: #edf2f7; color: var(--swagger-code); padding: 2px 6px; border-radius: 3px; }
+    .sample-box { margin-top: 12px; padding: 12px; background: #1a202c; color: #e2e8f0; font-family: "SF Mono", Monaco, monospace; font-size: 0.75rem; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+    .sample-label { font-size: 0.75rem; font-weight: 600; color: #4a5568; margin-bottom: 4px; }
+    .form-block {
+      margin: 0 0 1px 0; border: none; border-left: 3px solid var(--swagger-accent); background: #fff;
+      border-radius: 0; overflow: hidden;
+    }
+    .form-block summary {
+      padding: 14px 20px; background: #fff; font-weight: 600; cursor: pointer; list-style: none;
+      display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--swagger-border);
+      font-size: 0.9375rem; color: var(--swagger-code);
+    }
+    .form-block summary:hover { background: #f7fafc; }
+    .form-block summary::-webkit-details-marker { display: none; }
+    .form-block summary::before { content: "▶"; font-size: 0.625rem; color: #a0aec0; transition: transform 0.2s; }
+    .form-block[open] summary::before { transform: rotate(90deg); }
+    .form-block .form-body { padding: 20px; border-bottom: 1px solid var(--swagger-border); background: #fff; }
+    .form-block h3 { font-size: 0.875rem; font-weight: 600; margin: 0 0 10px 0; color: #4a5568; }
+    .form-block .file-path { font-size: 0.8125rem; color: #718096; margin-bottom: 16px; }
+    .form-block .file-path code { background: #edf2f7; padding: 4px 8px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; }
+    .badge-inject { background: #ebf8ff; color: #2b6cb0; }
+    .badge-collect { background: #f0fff4; color: #276749; }
+    .schemas-page .error { color: #c53030; padding: 16px; background: #fff5f5; border-radius: 6px; }
+    .schemas-page #loading { color: #718096; padding: 24px; }
+  </style>
+</head>
+<body class="app-body swagger-style">
+  <header class="swagger-topbar">
+    <div>
+      <h1>HK POS eSignature</h1>
+      <div class="subtitle">Form Data Schemas — 양식별 주입(inject) / 수집(collect) 필드 정의</div>
+    </div>
+    <a href="../04_consultation-review-and-input-tabs.html">← 내용입력 화면설계</a>
+  </header>
+
+  <div class="schemas-page">
+    <p class="section-desc" style="margin-bottom:20px; padding:12px 20px; background:#fff; border:1px solid var(--swagger-border); border-radius:6px; font-size:0.875rem; color:#4a5568;">
+      본 문서는 양식별 데이터 구조를 <strong>테이블 설계·API 설계</strong> 관점에서 정의합니다. 컬럼: 번호, Name, Type, 자릿수, 필수여부, 필드설명. Request = 부모→양식 주입(inject), Response = 양식→부모 수집(collect). 실제 구현은 <code>assets/form-handler.js</code> 및 각 양식 HTML <code>data-field</code> 기준.
+    </p>
+    <div id="loading">JSON 불러오는 중…</div>
+    <div id="error" class="error" style="display:none;"></div>
+    <div id="content" style="display:none;"></div>
+  </div>
+
+  <script>
+(function () {
+  const loading = document.getElementById('loading');
+  const errEl = document.getElementById('error');
+  const content = document.getElementById('content');
+
+  function showError(msg) {
+    loading.style.display = 'none';
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    const div = document.createElement('div');
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  var TABLE_HEAD_API = '<thead><tr><th class="num">번호</th><th class="name">Name</th><th class="type">Type</th><th class="len">자릿수</th><th class="req">필수여부</th><th>필드설명</th></tr></thead>';
+
+  function renderCommonInject(data) {
+    const fields = data.common_inject && data.common_inject.fields;
+    if (!fields || typeof fields !== 'object') return '';
+    var i = 0;
+    const rows = Object.entries(fields).map(function (e) {
+      i++;
+      const key = e[0];
+      const val = e[1];
+      const type = (val && val.type) ? val.type : 'string';
+      const desc = (val && val.desc) ? val.desc : '';
+      return '<tr><td class="num">' + i + '</td><td class="name"><code>' + escapeHtml(key) + '</code></td><td class="type">' + escapeHtml(type) + '</td><td class="len">-</td><td class="req">필수</td><td>' + escapeHtml(desc) + '</td></tr>';
+    }).join('');
+    return '<section><h2>Request — 공통 주입 필드 (common_inject)</h2><p class="section-desc">' + escapeHtml(data.common_inject.description || '') + '</p><div class="spec-table-wrap"><table class="schemas-table">' + TABLE_HEAD_API + '<tbody>' + rows + '</tbody></table></div></section>';
+  }
+
+  function renderFormsSummary(data) {
+    const forms = data.forms;
+    if (!forms || typeof forms !== 'object') return '';
+    const rows = Object.entries(forms).map(function (e) {
+      const key = e[0];
+      const f = e[1];
+      const title = (f && f.title) ? f.title : key;
+      const file = (f && f.file) ? f.file : '';
+      const extraCount = (f && f.inject_extra && typeof f.inject_extra === 'object') ? Object.keys(f.inject_extra).length : 0;
+      const collectCount = (f && f.collect && f.collect.fields && Array.isArray(f.collect.fields)) ? f.collect.fields.length : 0;
+      return '<tr><td><code>' + escapeHtml(key) + '</code></td><td>' + escapeHtml(title) + '</td><td><code>' + escapeHtml(file) + '</code></td><td>' + extraCount + '</td><td>' + collectCount + '</td></tr>';
+    }).join('');
+    return '<section><h2>Forms (13)</h2><p class="section-desc">양식 키·파일·추가 주입·수집 필드 수 요약</p><table class="schemas-table"><thead><tr><th>키</th><th>제목</th><th>파일</th><th>inject_extra</th><th>collect</th></tr></thead><tbody>' + rows + '</tbody></table></section>';
+  }
+
+  function renderFormDetail(key, f) {
+    const title = (f && f.title) ? f.title : key;
+    const file = (f && f.file) ? f.file : '';
+    let html = '<details class="form-block"><summary><span>' + escapeHtml(title) + '</span> <code style="font-weight:normal;color:#718096;">' + escapeHtml(key) + '</code></summary><div class="form-body">';
+    html += '<p class="file-path"><code>' + escapeHtml(file) + '</code></p>';
+
+    const extra = f && f.inject_extra && typeof f.inject_extra === 'object' && Object.keys(f.inject_extra).length > 0;
+    if (extra) {
+      html += '<div class="spec-section-title">Request — 추가 주입 (inject_extra)</div><div class="spec-table-wrap"><table class="schemas-table">' + TABLE_HEAD_API + '<tbody>';
+      var idx = 0;
+      Object.entries(f.inject_extra).forEach(function (e) {
+        idx++;
+        const k = e[0];
+        const v = e[1];
+        const type = (v && v.type) ? v.type : 'string';
+        const desc = (v && v.desc) ? v.desc : '';
+        html += '<tr><td class="num">' + idx + '</td><td class="name"><code>' + escapeHtml(k) + '</code></td><td class="type">' + escapeHtml(type) + '</td><td class="len">-</td><td class="req">필수</td><td>' + escapeHtml(desc) + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+    } else {
+      html += '<div class="spec-section-title">Request — 추가 주입 (inject_extra)</div><p class="section-desc" style="margin:0; padding:12px 16px; border:1px solid var(--swagger-border); border-top:none;">(공통만 사용)</p>';
+    }
+
+    const collect = f && f.collect;
+    if (collect) {
+      html += '<div class="spec-section-title" style="margin-top:20px;">Response — 수집 필드 (collect)</div>';
+      if (collect.description) html += '<p class="section-desc" style="margin:0; padding:8px 16px; border:1px solid var(--swagger-border); border-top:none;">' + escapeHtml(collect.description) + '</p>';
+      if (collect.fields && Array.isArray(collect.fields)) {
+        const fieldSpecs = (collect.fieldSpecs && typeof collect.fieldSpecs === 'object') ? collect.fieldSpecs : {};
+        html += '<div class="spec-table-wrap"><table class="schemas-table">' + TABLE_HEAD_API + '<tbody>';
+        collect.fields.forEach(function (field, i) {
+          const spec = fieldSpecs[field];
+          const type = (spec && spec.type) ? spec.type : 'string';
+          const req = (spec && spec.required === false) ? '옵션' : '필수';
+          const desc = (spec && spec.desc) ? spec.desc : '(양식 data-field)';
+          html += '<tr><td class="num">' + (i + 1) + '</td><td class="name"><code>' + escapeHtml(field) + '</code></td><td class="type">' + escapeHtml(type) + '</td><td class="len">-</td><td class="req">' + req + '</td><td>' + escapeHtml(desc) + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+    }
+    html += '</div></details>';
+    return html;
+  }
+
+  function renderFormsDetails(data) {
+    const forms = data.forms;
+    if (!forms || typeof forms !== 'object') return '';
+    let html = '<section><h2>Forms (상세) — Request / Response 필드 정의</h2><p class="section-desc">양식별 주입(inject_extra)·수집(collect) 필드를 <strong>표 형태</strong>로 정의했습니다. 개발 시 번호, Name, Type, 자릿수, 필수여부, 필드설명을 보고 구현할 수 있습니다.</p>';
+    Object.entries(forms).forEach(function (e) {
+      html += renderFormDetail(e[0], e[1]);
+    });
+    html += '</section>';
+    return html;
+  }
+
+  fetch('./form-data-schemas.json')
+    .then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function (data) {
+      loading.style.display = 'none';
+      content.style.display = 'block';
+      content.innerHTML = renderCommonInject(data) + renderFormsSummary(data) + renderFormsDetails(data);
+    })
+    .catch(function (err) {
+      showError('JSON을 불러올 수 없습니다. 로컬 서버로 열어주세요. (예: npm run start) ' + (err.message || ''));
+    });
+})();
+  </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collagen Drink Purchase Terms and Conditions - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    @page { size: A4; margin: 16mm 12mm 14mm 12mm; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Times New Roman', serif; font-size: 9pt; line-height: 1.28; color: #000; background: #fff; margin: 0; padding: 0; padding-top: 2pt; orphans: 2; widows: 2; }
+    .pdf-container { max-width: 210mm; margin: 0 auto; padding: 0 12pt; padding-top: 2pt; }
+    .pdf-header { margin-bottom: 8pt; }
+    .brand-logo { font-size: 17pt; font-weight: 500; color: #C67C4E; margin-bottom: 3pt; }
+    .form-title { font-size: 11.5pt; font-weight: 600; color: #000; margin-bottom: 5pt; }
+    .form-intro { font-size: 9pt; color: #333; line-height: 1.28; margin-bottom: 8pt; font-style: italic; }
+    .pdf-section { margin-bottom: 8pt; page-break-inside: auto; }
+    .section-title { font-size: 10.5pt; font-weight: 700; margin-bottom: 5pt; padding-top: 2pt; padding-bottom: 4pt; border-bottom: 2pt solid #000; page-break-after: avoid; }
+    .customer-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7pt; margin-bottom: 8pt; }
+    .info-field { display: flex; flex-direction: column; gap: 2pt; }
+    .info-field label { font-size: 9pt; font-weight: 500; color: #333; }
+    .info-field .pdf-value { padding: 2pt 5pt; border-bottom: 1pt solid #000; min-height: 13pt; }
+    .terms-list { margin: 6pt 0; padding-left: 18pt; }
+    .terms-list li { margin-bottom: 4pt; line-height: 1.32; }
+    .terms-list li.term-emphasis { color: #c00; }
+    .static-content { font-size: 9pt; line-height: 1.3; margin-bottom: 8pt; }
+    .page-1-content { }
+    .signature-section { margin-top: 10pt; padding-top: 8pt; border-top: 1pt solid #000; page-break-inside: avoid; }
+    .signature-label { font-size: 9pt; margin-bottom: 4pt; }
+    .signature-line { min-height: 46px; border-bottom: 2pt solid #000; margin-bottom: 7pt; }
+    .signature-line img { max-width: 100%; max-height: 50px; object-fit: contain; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-top: 8pt; }
+    .date-time-field label { font-size: 8pt; color: #333; }
+    .date-time-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .system-note { font-size: 7pt; color: #666; font-style: italic; margin-top: 1pt; }
+    .required-note { font-size: 8pt; color: #666; margin-top: 6pt; font-style: italic; }
+    .pdf-option-group { display: flex; flex-wrap: wrap; gap: 8pt; align-items: center; }
+    .pdf-option-item { display: flex; align-items: center; gap: 4pt; font-size: 9pt; }
+    .pdf-radio { width: 10pt; height: 10pt; border: 1.2pt solid #000; border-radius: 50%; display: inline-block; position: relative; flex-shrink: 0; }
+    .pdf-radio.checked::after { content: '●'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6.5pt; }
+    .pdf-toolbar { position: fixed; top: 12px; right: 12px; z-index: 100; }
+    .pdf-btn { padding: 8px 14px; font-size: 13px; font-weight: 500; color: #fff; background: #c67c4e; border: none; border-radius: 6px; cursor: pointer; }
+    @media print { .pdf-toolbar { display: none !important; } body { print-color-adjust: exact; padding: 0; background: #fff; } .pdf-container { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+
+  <div class="pdf-container">
+    <!-- Page 1 -->
+    <div class="page-1-content">
+      <div class="pdf-header">
+        <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+        <div class="form-title">Collagen Drink Purchase Terms and Conditions</div>
+        <p class="form-intro">*These terms and conditions apply to Collagen Drink purchased from our company.</p>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Customer Information</div>
+        <div class="customer-info-grid">
+          <div class="info-field">
+            <label>Name :</label>
+            <div class="pdf-value" data-field="customer-name"></div>
+          </div>
+          <div class="info-field">
+            <label>Title :</label>
+            <div class="pdf-option-group" data-field="title">
+              <div class="pdf-option-item"><span class="pdf-radio" data-value="Ms"></span><span>Ms.</span></div>
+              <div class="pdf-option-item"><span class="pdf-radio" data-value="Mrs"></span><span>Mrs.</span></div>
+              <div class="pdf-option-item"><span class="pdf-radio" data-value="Mr"></span><span>Mr.</span></div>
+            </div>
+          </div>
+          <div class="info-field">
+            <label>Membership Number :</label>
+            <div class="pdf-value" data-field="membership-number"></div>
+          </div>
+          <div class="info-field">
+            <label>Contact Number :</label>
+            <div class="pdf-value" data-field="contact-number-formatted"></div>
+          </div>
+          <div class="info-field">
+            <label>Email :</label>
+            <div class="pdf-value" data-field="email"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Treatment Terms and Conditions</div>
+        <ol class="terms-list" start="1">
+          <li>These terms apply to Collagen Drink purchased from <span class="brand-name-replace">[Brand]</span> and form a legally binding contract.</li>
+          <li>Redemption locations and methods: products may be redeemed at <span class="brand-name-replace">[Brand]</span> counters or as notified.</li>
+          <li>All purchases of Collagen Drink are governed by these terms and conditions.</li>
+          <li>Other redemption locations and methods may apply as notified by the company.</li>
+          <li>Valid identification may be required upon redemption.</li>
+          <li>Customers with special health conditions (e.g. pregnancy, allergies) must consult a doctor before use; the company is not responsible for problems arising from non-disclosure.</li>
+          <li>Refund or exchange amounts will deduct all discounts enjoyed (special discounts, member points); used products are calculated at original price.</li>
+          <li>Refund and exchange calculations are subject to company policy; see terms for details.</li>
+          <li>Products already opened or used may not be refunded or exchanged.</li>
+          <li>Expired products cannot be used, extended or refunded.</li>
+          <li>Redemption must be completed within the validity period; expired products are forfeited.</li>
+          <li class="term-emphasis">Discount combination restrictions may apply; not all promotions can be combined.</li>
+          <li class="term-emphasis">Purchase amount calculations: promotional discounts will be deducted as per policy.</li>
+          <li class="term-emphasis">Member points used at purchase will be deducted from refund/exchange amount.</li>
+          <li class="term-emphasis">Upgrade or additional purchase terms may apply as notified.</li>
+          <li class="term-emphasis">Double points, delivery options and related offers are subject to separate terms and availability.</li>
+          <li>In case of any dispute, <span class="brand-name-replace">[Brand]</span> reserves the right of final decision.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 서명 영역 (페이지 나눔 없이 본문과 이어서 한 장에) -->
+    <div class="pdf-section">
+      <div class="signature-section">
+        <div class="signature-label">I confirm that I clearly understand all the above matters *</div>
+        <div class="signature-label" style="margin-top: 8pt;">Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="display: flex; align-items: center; justify-content: center; color: #999; font-style: italic;">Signature will be injected</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <div class="pdf-value" data-field="signature-date"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <div class="pdf-value" data-field="signature-time"></div>
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+        <div class="required-note">* Required field</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    function injectPDFData(formData) {
+      var brandName = formData['brand-name'] || 'Sulwhasoo';
+      document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+
+      document.querySelectorAll('.pdf-value[data-field]').forEach(function(el) {
+        var name = el.getAttribute('data-field');
+        if (name === 'contact-number-formatted') {
+          var cc = formData['country-code'] || '';
+          var num = formData['contact-number'] || '';
+          el.textContent = (cc && num) ? ('(' + cc + ') ' + num) : (num || '________________');
+          return;
+        }
+        var val = formData[name];
+        el.textContent = (val != null && val !== '') ? val : '________________';
+      });
+
+      var titleVal = formData['title'] || '';
+      document.querySelectorAll('.pdf-radio[data-value]').forEach(function(radio) {
+        radio.classList.toggle('checked', radio.getAttribute('data-value') === titleVal);
+      });
+
+      var brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        var logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var img = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          img.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          img.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          img.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+
+      var sigEl = document.querySelector('[data-field="signature-image"]');
+      if (sigEl && formData['signature-image']) {
+        sigEl.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = formData['signature-image'];
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '50px';
+        img.style.objectFit = 'contain';
+        sigEl.appendChild(img);
+      }
+    }
+
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    var pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        var opt = { margin: [18, 15, 15, 15], filename: 'Collagen-Drink-Terms-and-Conditions.pdf', image: { type: 'jpeg', quality: 0.98 }, html2pdf: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.querySelector('.pdf-container')).save();
+      });
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-inject') {
+        var data = event.data.data || {};
+        injectPDFData(data);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-injection-complete', formKey: 'collagen-drink-terms' }, '*');
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { sendHeightToParent(); });
+    } else {
+      sendHeightToParent();
+    }
+    window.addEventListener('resize', function() { sendHeightToParent(); });
+    var observer = new MutationObserver(function() { sendHeightToParent(); });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+  </script>
+</body>
+</html>

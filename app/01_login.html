@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=768, height=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>태블릿 화면 | 매장사용자 로그인</title>
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./tablet.css" />
+</head>
+<body data-app-page="login">
+  <div class="t-screen">
+    <main class="t-body">
+      <div class="t-logo">
+        <img src="../assets/logo.png" alt="AMOREPACIFIC" />
+      </div>
+      <div class="t-card">
+        <div class="form-group">
+          <label for="staff-id" data-i18n="app.login.staffId">직원 ID</label>
+          <input id="staff-id" class="demo-input" type="text" placeholder="직원 ID를 입력하세요" data-i18n-placeholder="app.login.staffIdPlaceholder" autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <label for="staff-password" data-i18n="app.login.password">비밀번호</label>
+          <div class="password-input-wrapper">
+            <input id="staff-password" class="demo-input" type="password" placeholder="비밀번호를 입력하세요" data-i18n-placeholder="app.login.passwordPlaceholder" autocomplete="current-password" />
+            <button class="password-toggle" id="password-toggle" type="button" data-i18n-aria="app.login.passwordToggle" aria-label="비밀번호 표시 전환">👁️</button>
+          </div>
+        </div>
+
+        <button class="demo-btn-primary" id="login-btn" type="button" data-i18n="app.login.submit"></button>
+
+        <div id="login-error" class="app-callout" style="display:none; margin-top: 12px; border-left-color: var(--error-color);" data-i18n="app.login.error"></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="app-toast" id="app-toast" role="status" aria-live="polite">
+    <div class="app-toast-title" id="app-toast-title">알림</div>
+    <div class="app-toast-desc" id="app-toast-desc">메시지</div>
+  </div>
+
+  <!-- Core modules -->
+  <script src="../assets/config.js"></script>
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/i18n.js"></script>
+  <script src="../assets/form-handler.js"></script>
+  <!-- Page modules -->
+  <script src="../assets/pages/topbar.js"></script>
+  <script src="../assets/pages/list.js"></script>
+  <script src="../assets/pages/login.js"></script>
+  <script src="../assets/pages/customer-search.js"></script>
+  <script src="../assets/pages/consultation-selection.js"></script>
+  <script src="../assets/pages/tabs.js"></script>
+  <script src="../assets/pages/review.js"></script>
+  <script src="../assets/pages/completion.js"></script>
+  <script src="../assets/pages/signature.js"></script>
+  <script src="../assets/pages/wrapper.js"></script>
+  <!-- Main entry point -->
+  <script src="../assets/app.js"></script>
+  <script>
+    // Wrapper(설계서)에서 "자동 입력" 버튼을 눌렀을 때 로그인 폼에 값 주입
+    window.addEventListener("message", function (e) {
+      const data = e && e.data;
+      if (!data || data.type !== "demo.fillLogin") return;
+      const id = String(data.staffId || "");
+      const pw = String(data.password || "");
+      const idEl = document.getElementById("staff-id");
+      const pwEl = document.getElementById("staff-password");
+      if (idEl) idEl.value = id;
+      if (pwEl) pwEl.value = pw;
+    });
+  </script>
+</body>
+</html>
+

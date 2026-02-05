@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Exchange Delivery Confirmation</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../assets/style.css" />
+  <style>
+    html { padding: 0; margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { padding: 0; margin: 0; background: var(--bg-primary); width: 100%; min-height: 100%; overflow: hidden; font-family: var(--font-family); font-size: var(--font-size-base); font-weight: var(--font-weight-medium); line-height: 1.7; color: var(--text-primary); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .form-container { width: 100%; padding: 16px; margin: 0; box-sizing: border-box; position: relative; }
+    .form-header { margin-bottom: 24px; position: relative; }
+    .auto-fill-btn { position: absolute; top: 16px; right: 16px; padding: 8px 16px; background: #007AFF; border: 1px solid #007AFF; border-radius: 6px; color: white; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 100; }
+    .auto-fill-btn:hover { background: #0051D5; border-color: #0051D5; }
+    .brand-logo { font-family: var(--font-family-serif); font-size: 28px; font-weight: var(--font-weight-medium); color: #C67C4E; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .form-title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); color: var(--text-primary); margin-bottom: 8px; }
+    .form-intro { font-size: var(--font-size-base); color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; padding: 16px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--border-radius); }
+    .admin-field { display: flex; flex-direction: column; gap: 4px; }
+    .admin-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .admin-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); color: var(--text-primary); cursor: not-allowed; }
+    .form-section { margin-bottom: 28px; padding: 0; }
+    .section-title { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
+    .customer-info-grid { display: grid; gap: 16px; margin-bottom: 20px; }
+    .info-field { display: flex; flex-direction: column; gap: 6px; }
+    .info-field label { font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: var(--font-weight-medium); }
+    .info-field input[type="text"], .info-field input[type="email"], .info-field input[type="tel"] { padding: 10px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-primary); width: 100%; box-sizing: border-box; }
+    .info-field.readonly input { background: var(--bg-secondary); cursor: not-allowed; }
+    .radio-group { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .option-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: var(--font-size-base); color: var(--text-primary); }
+    .option-label input { margin: 0; cursor: pointer; }
+    .product-list-wrap { margin-bottom: 12px; }
+    .product-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-light); border-radius: var(--border-radius); }
+    .product-table th, .product-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-light); }
+    .product-table th { background: var(--bg-secondary); font-size: var(--font-size-sm); color: var(--text-secondary); font-weight: 600; }
+    .product-table td .product-name { background: var(--bg-secondary); padding: 8px; border-radius: var(--border-radius); }
+    .product-table td input[type="number"] { width: 80px; padding: 8px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); }
+    .product-table .remove-row { padding: 4px 10px; font-size: var(--font-size-sm); background: transparent; border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); cursor: pointer; }
+    .product-table .remove-row:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    .select-product-btn { padding: 8px 16px; background: #6c757d; border: 1px solid #5a6268; border-radius: var(--border-radius); color: #fff; font-size: var(--font-size-sm); font-weight: 600; cursor: pointer; margin-bottom: 12px; }
+    .select-product-btn:hover { background: #5a6268; border-color: #545b62; }
+    .policy-text { padding: 14px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); color: var(--text-primary); line-height: 1.6; margin-bottom: 16px; }
+    .policy-text ol { margin: 0; padding-left: 20px; }
+    .policy-text li { margin-bottom: 8px; }
+    .confirmation-section { margin-top: 16px; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .confirmation-checkbox { display: flex; align-items: flex-start; gap: 10px; }
+    .confirmation-checkbox input { margin-top: 4px; }
+    .signature-section[data-pdf-only="true"] { display: none; }
+    @media print { .signature-section[data-pdf-only="true"] { display: block !important; } }
+    .signature-label { font-size: var(--font-size-sm); margin-bottom: 4px; }
+    .signature-line { min-height: 60px; border-bottom: 2px solid var(--border-color); margin-bottom: 8px; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .date-time-field label { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .date-time-field input { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); background: var(--bg-secondary); }
+    .system-note { font-size: var(--font-size-xs); color: var(--text-light); font-style: italic; margin-top: 4px; }
+    .required-note { font-size: var(--font-size-xs); color: var(--text-light); margin-top: 12px; font-style: italic; }
+    .form-reset-section { margin: 24px 0; padding: 16px; background: var(--bg-secondary); border-radius: var(--border-radius); border: 1px solid var(--border-light); }
+    .form-reset-btn { width: 100%; padding: 10px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--border-radius); color: var(--text-secondary); font-size: var(--font-size-sm); cursor: pointer; }
+    /* Layer popup */
+    .exchange-layer-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+    .exchange-layer-overlay.open { display: flex; }
+    .exchange-layer-box { background: var(--bg-primary); border-radius: var(--border-radius); box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 560px; width: 100%; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+    .exchange-layer-header { padding: 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .exchange-layer-title { font-size: var(--font-size-lg); font-weight: 600; color: var(--text-primary); }
+    .exchange-layer-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-secondary); padding: 4px; line-height: 1; }
+    .exchange-layer-body { padding: 16px; overflow: auto; flex: 1; }
+    .exchange-layer-filter { margin-bottom: 12px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .exchange-layer-filter label { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .exchange-layer-filter input[type="date"] { padding: 8px 12px; border: 1px solid var(--border-light); border-radius: var(--border-radius); font-size: var(--font-size-base); }
+    .exchange-product-list { border: 1px solid var(--border-light); border-radius: var(--border-radius); max-height: 280px; overflow: auto; }
+    .exchange-product-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: background 0.15s; }
+    .exchange-product-item:last-child { border-bottom: none; }
+    .exchange-product-item:hover { background: var(--bg-secondary); }
+    .exchange-product-item.selected { background: rgba(108,117,125,0.12); border-left: 3px solid #6c757d; }
+    .exchange-product-item input[type="checkbox"] { margin: 0; flex-shrink: 0; }
+    .exchange-product-item .item-product { font-weight: 500; color: var(--text-primary); flex: 1; }
+    .exchange-product-item .item-code { font-size: var(--font-size-sm); color: var(--text-secondary); }
+    .exchange-layer-empty { padding: 24px; text-align: center; color: var(--text-secondary); font-size: var(--font-size-sm); }
+    .exchange-layer-actions { margin-top: 12px; text-align: right; }
+    .exchange-layer-actions .select-product-btn { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <button type="button" class="auto-fill-btn" id="auto-fill-btn" title="Fill sample data">Auto-fill</button>
+    <div class="form-header">
+      <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+      <div class="form-title">Product Exchange Delivery Confirmation</div>
+      <p class="form-intro">Please confirm the exchange/delivery product list and delivery terms below.</p>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-field">
+        <label>Store Registration :</label>
+        <input type="text" readonly data-field="store-registration" value="" />
+      </div>
+      <div class="admin-field">
+        <label>Responsible Staff :</label>
+        <input type="text" readonly data-field="responsible-staff" value="" />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Customer Information</div>
+      <div class="customer-info-grid">
+        <div class="info-field readonly">
+          <label>Name :</label>
+          <input type="text" id="customer-name" readonly data-field="customer-name" value="" />
+        </div>
+        <div class="info-field">
+          <label>Title :</label>
+          <div class="radio-group">
+            <label class="option-label"><input type="radio" name="title" value="Ms" /><span>Ms.</span></label>
+            <label class="option-label"><input type="radio" name="title" value="Mrs" /><span>Mrs.</span></label>
+            <label class="option-label"><input type="radio" name="title" value="Mr" /><span>Mr.</span></label>
+          </div>
+        </div>
+        <div class="info-field readonly">
+          <label>Membership Number :</label>
+          <input type="text" id="membership-number" readonly data-field="membership-number" value="" />
+        </div>
+        <div class="info-field">
+          <label>Contact Number :</label>
+          <div class="radio-group" style="margin-bottom: 8px;">
+            <label class="option-label"><input type="radio" name="country-code" value="852" /><span>852</span></label>
+            <label class="option-label"><input type="radio" name="country-code" value="853" /><span>853</span></label>
+            <label class="option-label"><input type="radio" name="country-code" value="86" /><span>86</span></label>
+          </div>
+          <input type="tel" id="contact-number" data-field="contact-number" placeholder="Enter phone number" />
+        </div>
+        <div class="info-field">
+          <label>Email :</label>
+          <input type="email" id="email" data-field="email" placeholder="Enter email address" />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Product List (Exchange / Delivery)</div>
+      <div class="product-list-wrap">
+        <button type="button" class="select-product-btn" id="select-product-btn">Select Products</button>
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th style="width: 100px;">Quantity</th>
+              <th style="width: 80px;"></th>
+            </tr>
+          </thead>
+          <tbody id="product-list-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title">Delivery Terms and Conditions</div>
+      <div class="policy-text">
+        <ol>
+          <li>Orders are accepted for Hong Kong only (overseas excluded).</li>
+          <li>If the customer fails to receive within the agreed time: conditions and administrative fee ($100) apply; order may be cancelled.</li>
+          <li>Delivery address change procedure and delivery fee ($20).</li>
+          <li>"Home delivery service" conditions: correct recipient information required; PO Box not allowed; certain areas excluded (warehouses, certain exhibition centres, etc.); residential delivery requires SF Express booking.</li>
+          <li>If there is a problem with delivered goods, report within 1 business day (customer name, contact, invoice no., delivery order no., product photo).</li>
+          <li>Other delivery-related conditions.</li>
+        </ol>
+      </div>
+      <div class="confirmation-section">
+        <div class="confirmation-checkbox">
+          <input type="checkbox" id="confirmation-checkbox" name="confirmation-checkbox" required />
+          <label for="confirmation-checkbox">I have read the above delivery terms and conditions and agree to them. *</label>
+        </div>
+        <div class="required-note">* Required</div>
+      </div>
+      <div class="signature-section" style="display: none;" data-pdf-only="true">
+        <div class="signature-label">Signature * : <span class="required">(Required)</span></div>
+        <div class="signature-line" data-field="signature-image" style="min-height: 60px; display: flex; align-items: center; justify-content: center; padding: 8px; color: var(--text-light); font-size: var(--font-size-sm); font-style: italic;">Signature will be injected during PDF generation</div>
+        <div class="date-time-group">
+          <div class="date-time-field">
+            <label>Date : Year / Month / Day</label>
+            <input type="text" readonly data-field="signature-date" id="signature-date" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+          <div class="date-time-field">
+            <label>Time :</label>
+            <input type="text" readonly data-field="signature-time" id="signature-time" value="" />
+            <div class="system-note">(System generated)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-reset-section">
+      <button type="button" id="form-reset-btn" class="form-reset-btn">Reset Form</button>
+    </div>
+  </div>
+
+  <!-- Product selection layer popup -->
+  <div class="exchange-layer-overlay" id="exchange-layer-overlay">
+    <div class="exchange-layer-box">
+      <div class="exchange-layer-header">
+        <span class="exchange-layer-title">Select Products (Exchange / Delivery)</span>
+        <button type="button" class="exchange-layer-close" id="exchange-layer-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="exchange-layer-body">
+        <div class="exchange-layer-filter">
+          <label for="exchange-layer-date">Business Date :</label>
+          <input type="date" id="exchange-layer-date" />
+        </div>
+        <div class="exchange-product-list" id="exchange-product-list"></div>
+        <div class="exchange-layer-actions">
+          <button type="button" class="select-product-btn" id="exchange-layer-add-btn">Add Selected</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var formKey = 'product-exchange-delivery';
+
+      function sendHeightToParent() {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+        }
+      }
+
+      function getSalesByDate(dateStr) {
+        var list = (window.parent && window.parent.HKPOS && window.parent.HKPOS.SAMPLE_SALES) || (window.HKPOS && window.HKPOS.SAMPLE_SALES) || [];
+        if (!dateStr) return list;
+        return list.filter(function(item) { return item.date === dateStr; });
+      }
+
+      function renderProductList() {
+        var dateInput = document.getElementById('exchange-layer-date');
+        var listEl = document.getElementById('exchange-product-list');
+        var dateStr = dateInput ? dateInput.value : '';
+        var items = getSalesByDate(dateStr);
+        listEl.innerHTML = '';
+        if (items.length === 0) {
+          listEl.innerHTML = '<div class="exchange-layer-empty">No sales data for this date. Please select another date.</div>';
+          return;
+        }
+        items.forEach(function(item, idx) {
+          var row = document.createElement('div');
+          row.className = 'exchange-product-item';
+          row.setAttribute('data-index', idx);
+          row.innerHTML = '<input type="checkbox" name="exchange-layer-select" value="' + idx + '" />' +
+            '<div><div class="item-product">' + (item.productInfo || item.productCode || '') + '</div>' +
+            '<div class="item-code">' + (item.productCode || '') + '</div></div>';
+          listEl.appendChild(row);
+        });
+      }
+
+      function addSelectedToTable() {
+        var dateStr = document.getElementById('exchange-layer-date').value;
+        var items = getSalesByDate(dateStr);
+        var checked = document.querySelectorAll('#exchange-product-list input[name="exchange-layer-select"]:checked');
+        var tbody = document.getElementById('product-list-tbody');
+        checked.forEach(function(cb) {
+          var idx = parseInt(cb.value, 10);
+          if (!items[idx]) return;
+          var item = items[idx];
+          var productName = item.productInfo || item.productCode || '';
+          var tr = document.createElement('tr');
+          tr.setAttribute('data-product-info', productName);
+          tr.innerHTML = '<td><span class="product-name">' + escapeHtml(productName) + '</span></td>' +
+            '<td><input type="number" min="1" value="1" class="product-qty" data-product-name="' + escapeHtml(productName) + '" /></td>' +
+            '<td><button type="button" class="remove-row">Remove</button></td>';
+          tr.querySelector('.remove-row').addEventListener('click', function() {
+            tr.remove();
+            sendHeightToParent();
+          });
+          tbody.appendChild(tr);
+        });
+        document.querySelectorAll('#exchange-product-list input[name="exchange-layer-select"]').forEach(function(cb) { cb.checked = false; });
+        document.querySelectorAll('.exchange-product-item').forEach(function(r) { r.classList.remove('selected'); });
+        document.getElementById('exchange-layer-overlay').classList.remove('open');
+        sendHeightToParent();
+      }
+
+      function escapeHtml(s) {
+        if (!s) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function collectFormData() {
+        var formData = {};
+        var set = function(key) {
+          var el = document.querySelector('[data-field="' + key + '"]') || document.getElementById(key);
+          if (el && el.value !== undefined) formData[key] = (el.value || '').trim();
+        };
+        set('store-registration');
+        set('responsible-staff');
+        set('customer-name');
+        set('membership-number');
+        set('contact-number');
+        set('email');
+        set('signature-date');
+        set('signature-time');
+        var titleRadio = document.querySelector('input[name="title"]:checked');
+        formData['title'] = titleRadio ? titleRadio.value : '';
+        var ccRadio = document.querySelector('input[name="country-code"]:checked');
+        formData['country-code'] = ccRadio ? ccRadio.value : '';
+        var cb = document.getElementById('confirmation-checkbox');
+        formData['confirmation-checkbox'] = !!(cb && cb.checked);
+        var productList = [];
+        document.querySelectorAll('#product-list-tbody tr').forEach(function(tr) {
+          var nameEl = tr.querySelector('.product-name');
+          var qtyEl = tr.querySelector('.product-qty');
+          var name = nameEl ? nameEl.textContent.trim() : '';
+          var qty = qtyEl && qtyEl.value !== '' ? parseInt(qtyEl.value, 10) : 1;
+          if (isNaN(qty) || qty < 1) qty = 1;
+          if (name) productList.push({ productName: name, quantity: qty });
+        });
+        formData['product-list'] = productList;
+        return formData;
+      }
+
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'form-data-request') {
+          var formData = collectFormData();
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: 'form-data-collected', formKey: formKey, data: formData }, '*');
+          }
+          return;
+        }
+        if (event.data && event.data.type === 'form-data-inject') {
+          var data = event.data.data || {};
+          var set = function(selector, val) {
+            var el = document.querySelector(selector);
+            if (el && val != null && val !== '') el.value = val;
+          };
+          var setRadio = function(name, val) {
+            var el = document.querySelector('input[name="' + name + '"][value="' + (val || '') + '"]');
+            if (el) el.checked = true;
+          };
+          set('[data-field="store-registration"]', data['store-registration']);
+          set('[data-field="responsible-staff"]', data['responsible-staff']);
+          set('[data-field="customer-name"]', data['customer-name']);
+          set('[data-field="membership-number"]', data['membership-number']);
+          set('[data-field="contact-number"]', data['contact-number']);
+          set('#contact-number', data['contact-number']);
+          set('[data-field="email"]', data['email']);
+          set('#email', data['email']);
+          set('#signature-date', data['signature-date']);
+          set('#signature-time', data['signature-time']);
+          setRadio('title', data['title']);
+          setRadio('country-code', data['country-code']);
+          var productList = data['product-list'];
+          var tbody = document.getElementById('product-list-tbody');
+          if (tbody && Array.isArray(productList)) {
+            tbody.innerHTML = '';
+            productList.forEach(function(row) {
+              var name = row.productName || row.productInfo || '';
+              var qty = row.quantity != null ? parseInt(row.quantity, 10) : 1;
+              if (isNaN(qty) || qty < 1) qty = 1;
+              var tr = document.createElement('tr');
+              tr.setAttribute('data-product-info', name);
+              tr.innerHTML = '<td><span class="product-name">' + escapeHtml(name) + '</span></td>' +
+                '<td><input type="number" min="1" value="' + qty + '" class="product-qty" data-product-name="' + escapeHtml(name) + '" /></td>' +
+                '<td><button type="button" class="remove-row">Remove</button></td>';
+              tr.querySelector('.remove-row').addEventListener('click', function() {
+                tr.remove();
+                sendHeightToParent();
+              });
+              tbody.appendChild(tr);
+            });
+          }
+          var brandName = data['brand-name'] || 'Sulwhasoo';
+          var brandEl = document.querySelector('[data-field="brand-name"]');
+          if (brandEl) {
+            var logoFilename = data['brand-logo-filename'];
+            if (logoFilename) {
+              var img = new Image();
+              var logoUrl = '../assets/images/' + logoFilename;
+              img.onload = function() {
+                brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+                brandEl.style.backgroundSize = '170px 75px';
+                brandEl.style.backgroundRepeat = 'no-repeat';
+                brandEl.style.backgroundPosition = '';
+                brandEl.textContent = '';
+                brandEl.style.height = '75px';
+              };
+              img.onerror = function() {
+                brandEl.textContent = data['brand-name'] || 'Sulwhasoo';
+                brandEl.style.backgroundImage = '';
+              };
+              img.src = logoUrl;
+            } else if (data['brand-name']) {
+              brandEl.textContent = data['brand-name'];
+              brandEl.style.backgroundImage = '';
+            }
+          }
+          setTimeout(sendHeightToParent, 100);
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var now = new Date();
+        var dateStr = String(now.getFullYear()) + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+        var layerDateDefault = '2026-01-30'; // demo: match SAMPLE_SALES
+        var dateEl = document.getElementById('signature-date');
+        var timeEl = document.getElementById('signature-time');
+        if (dateEl && !dateEl.value) dateEl.value = formatDateDisplay(dateStr);
+        if (timeEl && !timeEl.value) timeEl.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+        var layerDate = document.getElementById('exchange-layer-date');
+        if (layerDate && !layerDate.value) layerDate.value = layerDateDefault;
+        layerDate.addEventListener('change', renderProductList);
+
+        document.getElementById('select-product-btn').addEventListener('click', function() {
+          if (layerDate && !layerDate.value) layerDate.value = layerDateDefault;
+          renderProductList();
+          document.getElementById('exchange-layer-overlay').classList.add('open');
+        });
+        document.getElementById('exchange-layer-close').addEventListener('click', function() {
+          document.getElementById('exchange-layer-overlay').classList.remove('open');
+        });
+        document.getElementById('exchange-layer-overlay').addEventListener('click', function(e) {
+          if (e.target === this) this.classList.remove('open');
+        });
+        document.getElementById('exchange-product-list').addEventListener('click', function(e) {
+          var row = e.target.closest('.exchange-product-item');
+          if (!row) return;
+          if (e.target.type === 'checkbox') {
+            document.querySelectorAll('.exchange-product-item').forEach(function(r) { r.classList.remove('selected'); });
+            document.querySelectorAll('.exchange-product-item input:checked').forEach(function(c) {
+              var r = c.closest('.exchange-product-item');
+              if (r) r.classList.add('selected');
+            });
+            return;
+          }
+          var cb = row.querySelector('input[name="exchange-layer-select"]');
+          if (cb) {
+            cb.checked = !cb.checked;
+            document.querySelectorAll('.exchange-product-item').forEach(function(r) { r.classList.remove('selected'); });
+            document.querySelectorAll('.exchange-product-item input:checked').forEach(function(c) {
+              var r = c.closest('.exchange-product-item');
+              if (r) r.classList.add('selected');
+            });
+          }
+        });
+        document.getElementById('exchange-layer-add-btn').addEventListener('click', function() {
+          var checked = document.querySelectorAll('#exchange-product-list input[name="exchange-layer-select"]:checked');
+          if (checked.length === 0) return;
+          addSelectedToTable();
+        });
+
+        document.getElementById('auto-fill-btn').addEventListener('click', function() {
+          var titleRadio = document.querySelector('input[name="title"]');
+          if (titleRadio) titleRadio.checked = true;
+          var ccRadio = document.querySelector('input[name="country-code"]');
+          if (ccRadio) ccRadio.checked = true;
+          if (layerDate && !layerDate.value) layerDate.value = layerDateDefault;
+          renderProductList();
+          var items = getSalesByDate(layerDate ? layerDate.value : layerDateDefault);
+          var tbody = document.getElementById('product-list-tbody');
+          tbody.innerHTML = '';
+          if (items.length >= 2) {
+            [items[0], items[1]].forEach(function(item) {
+              var productName = item.productInfo || item.productCode || '';
+              var tr = document.createElement('tr');
+              tr.setAttribute('data-product-info', productName);
+              tr.innerHTML = '<td><span class="product-name">' + escapeHtml(productName) + '</span></td>' +
+                '<td><input type="number" min="1" value="1" class="product-qty" data-product-name="' + escapeHtml(productName) + '" /></td>' +
+                '<td><button type="button" class="remove-row">Remove</button></td>';
+              tr.querySelector('.remove-row').addEventListener('click', function() {
+                tr.remove();
+                sendHeightToParent();
+              });
+              tbody.appendChild(tr);
+            });
+          } else if (items.length === 1) {
+            var item = items[0];
+            var productName = item.productInfo || item.productCode || '';
+            var tr = document.createElement('tr');
+            tr.setAttribute('data-product-info', productName);
+            tr.innerHTML = '<td><span class="product-name">' + escapeHtml(productName) + '</span></td>' +
+              '<td><input type="number" min="1" value="2" class="product-qty" data-product-name="' + escapeHtml(productName) + '" /></td>' +
+              '<td><button type="button" class="remove-row">Remove</button></td>';
+            tr.querySelector('.remove-row').addEventListener('click', function() {
+              tr.remove();
+              sendHeightToParent();
+            });
+            tbody.appendChild(tr);
+          }
+          document.getElementById('confirmation-checkbox').checked = true;
+          sendHeightToParent();
+        });
+
+        function formatDateDisplay(iso) {
+          if (!iso) return '';
+          var p = iso.split('-');
+          return p.length === 3 ? p[2] + '-' + p[1] + '-' + p[0] : iso;
+        }
+
+        document.getElementById('form-reset-btn').addEventListener('click', function() {
+          if (confirm('양식을 초기화하시겠습니까? 입력한 모든 데이터가 삭제됩니다.')) {
+            document.getElementById('product-list-tbody').innerHTML = '';
+            document.getElementById('confirmation-checkbox').checked = false;
+            if (dateEl) dateEl.value = formatDateDisplay(dateStr);
+            if (timeEl) timeEl.value = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            if (layerDate) layerDate.value = layerDateDefault;
+            setTimeout(sendHeightToParent, 100);
+          }
+        });
+
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 300);
+        var observer = new MutationObserver(function() { sendHeightToParent(); });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        window.addEventListener('resize', sendHeightToParent);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treatment Extension Confirmation - PDF</title>
+  <link rel="icon" href="data:," />
+  <style>
+    @page { size: A4; margin: 18mm 15mm 15mm 15mm; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Times New Roman', serif; font-size: 9pt; line-height: 1.25; color: #000; background: #fff; margin: 0; padding: 0; padding-top: 2pt; orphans: 2; widows: 2; }
+    .pdf-container { max-width: 210mm; margin: 0 auto; padding: 0 12pt; padding-top: 1pt; }
+    .pdf-header { margin-bottom: 10pt; }
+    .pdf-header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12pt; margin-bottom: 6pt; }
+    .pdf-header-left { flex: 1; min-width: 0; }
+    .brand-logo { font-size: 18pt; font-weight: 500; color: #C67C4E; margin-bottom: 4pt; }
+    .form-title { font-size: 12pt; font-weight: 600; color: #000; margin-bottom: 0; }
+    .form-intro { font-size: 9pt; color: #333; line-height: 1.3; margin-bottom: 8pt; }
+    .doc-id-row { flex-shrink: 0; text-align: right; font-size: 9pt; white-space: nowrap; }
+    .admin-section { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 10pt; padding-bottom: 8pt; border-bottom: 1pt solid #ccc; font-size: 9pt; }
+    .admin-field label { font-weight: 600; color: #333; }
+    .admin-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .pdf-section { margin-bottom: 10pt; page-break-inside: auto; }
+    .section-title { font-size: 10.5pt; font-weight: 700; margin-bottom: 6pt; padding-top: 2pt; padding-bottom: 4pt; border-bottom: 2pt solid #000; page-break-after: avoid; }
+    .member-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-bottom: 8pt; }
+    .info-field label { font-size: 9pt; font-weight: 500; color: #333; }
+    .info-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .treatment-table { width: 100%; border-collapse: collapse; font-size: 9pt; margin-top: 8pt; page-break-inside: avoid; }
+    .treatment-table th, .treatment-table td { border: 1pt solid #000; padding: 6pt 8pt; text-align: left; }
+    .treatment-table th { background: #f5f5f5; font-weight: 600; }
+    .static-content { font-size: 9pt; line-height: 1.3; margin-bottom: 10pt; }
+    .static-content ul { margin: 4pt 0 4pt 18pt; padding: 0; }
+    .page-1-content { page-break-after: always; }
+    .signature-section { margin-top: 10pt; padding-top: 8pt; border-top: 1pt solid #000; page-break-inside: avoid; }
+    .signature-label { font-size: 9pt; margin-bottom: 4pt; }
+    .signature-line { min-height: 50px; border-bottom: 2pt solid #000; margin-bottom: 8pt; }
+    .signature-line img { max-width: 100%; max-height: 50px; object-fit: contain; }
+    .date-time-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin-top: 8pt; }
+    .date-time-field label { font-size: 8pt; color: #333; }
+    .date-time-field .pdf-value { padding: 2pt 6pt; border-bottom: 1pt solid #000; min-height: 14pt; }
+    .system-note { font-size: 7pt; color: #666; font-style: italic; margin-top: 1pt; }
+    .required-note { font-size: 8pt; color: #666; margin-top: 6pt; font-style: italic; }
+    .pdf-toolbar { position: fixed; top: 12px; right: 12px; z-index: 100; }
+    .pdf-btn { padding: 8px 14px; font-size: 13px; font-weight: 500; color: #fff; background: #c67c4e; border: none; border-radius: 6px; cursor: pointer; }
+    .page-2-header { display: flex; justify-content: flex-end; margin-bottom: 24pt; }
+    @media print { .pdf-toolbar { display: none !important; } body { print-color-adjust: exact; padding: 0; background: #fff; } .pdf-container { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="pdf-toolbar">
+    <button type="button" class="pdf-btn" id="pdf-print-btn">PDF</button>
+  </div>
+
+  <div class="pdf-container">
+    <!-- Page 1 -->
+    <div class="page-1-content">
+      <div class="pdf-header">
+        <div class="pdf-header-top">
+          <div class="pdf-header-left">
+            <div class="brand-logo" data-field="brand-name">Sulwhasoo</div>
+            <div class="form-title">Treatment Extension Confirmation Letter</div>
+          </div>
+          <div class="doc-id-row">Document ID : <span class="pdf-value" data-field="document-id"></span></div>
+        </div>
+        <div class="form-intro">
+          <span class="brand-name-replace">[Brand]</span> is pleased to provide you with a one-time extension of your membership beauty treatment. Please find the details below:
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-field">
+          <label>Store Registration :</label>
+          <div class="pdf-value" data-field="store-registration"></div>
+        </div>
+        <div class="admin-field">
+          <label>Responsible Staff :</label>
+          <div class="pdf-value" data-field="responsible-staff"></div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Member Information</div>
+        <div class="member-row">
+          <div class="info-field">
+            <label>Membership Number :</label>
+            <div class="pdf-value" data-field="member-no"></div>
+          </div>
+          <div class="info-field">
+            <label>Member Name :</label>
+            <div class="pdf-value" data-field="member-name"></div>
+          </div>
+        </div>
+        <div class="member-row">
+          <div class="info-field">
+            <label>Store Location :</label>
+            <div class="pdf-value" data-field="store-location"></div>
+          </div>
+          <div class="info-field">
+            <label>Responsible Staff :</label>
+            <div class="pdf-value" data-field="responsible-staff"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Treatment Details</div>
+        <table class="treatment-table">
+          <thead>
+            <tr>
+              <th>Treatment Item</th>
+              <th>Sessions / Value</th>
+              <th>Original Expiry Date (YY/MM/DD)</th>
+              <th>Extended To (YY/MM/DD)</th>
+            </tr>
+          </thead>
+          <tbody id="treatment-tbody">
+            <tr><td colspan="4" class="pdf-value">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pdf-section">
+        <div class="section-title">Terms and Conditions</div>
+        <div class="static-content">
+          <ul>
+            <li>All treatments are non-transferable, non-exchangeable, and cannot be redeemed for cash.</li>
+            <li>For any changes or cancellations, please contact us at least 24 hours before the scheduled treatment; otherwise, the system cannot make modifications.</li>
+            <li>If cancellation occurs within 24 hours, one treatment session will be deducted from your account.</li>
+            <li>If you arrive late, the treatment time will be shortened accordingly.</li>
+            <li>If the treatment expires, <span class="brand-name-replace">[Brand]</span> cannot arrange another extension, and expired treatments will become invalid immediately.</li>
+            <li>In case of any disputes, <span class="brand-name-replace">[Brand]</span> reserves the right of final decision.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pdf-section">
+        <div class="static-content">
+          We look forward to creating more premium service experiences for you and helping you fully embrace the beauty of <span class="brand-name-replace">[Brand]</span> from the inside out.
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 2: Document ID + Signature -->
+    <div class="page-2-header">
+      Document ID : <span class="pdf-value" data-field="document-id"></span>
+    </div>
+    <div class="signature-section">
+      <div class="signature-label">Customer Signature * : <span class="required">(Required)</span></div>
+      <div class="signature-line" data-field="signature-image" style="display: flex; align-items: center; justify-content: center; color: #999; font-style: italic;">Signature will be injected</div>
+      <div class="date-time-group">
+        <div class="date-time-field">
+          <label>Date : Year / Month / Day</label>
+          <div class="pdf-value" data-field="signature-date"></div>
+          <div class="system-note">(Displayed by system)</div>
+        </div>
+        <div class="date-time-field">
+          <label>Time :</label>
+          <div class="pdf-value" data-field="signature-time"></div>
+          <div class="system-note">(Displayed by system)</div>
+        </div>
+      </div>
+      <div class="required-note">* Fields marked with an asterisk are mandatory.</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    function injectPDFData(formData) {
+      var brandName = formData['brand-name'] || 'Sulwhasoo';
+      document.querySelectorAll('.brand-name-replace').forEach(function(span) { span.textContent = brandName; });
+
+      var docIdVal = (formData['document-id'] != null && formData['document-id'] !== '') ? formData['document-id'] : '________________';
+      document.querySelectorAll('[data-field="document-id"]').forEach(function(el) { el.textContent = docIdVal; });
+
+      document.querySelectorAll('.pdf-value[data-field]').forEach(function(el) {
+        var name = el.getAttribute('data-field');
+        if (name === 'contact-number-formatted' || name === 'document-id') return;
+        var val = formData[name];
+        el.textContent = (val != null && val !== '') ? val : '________________';
+      });
+
+      var tbody = document.getElementById('treatment-tbody');
+      if (tbody) {
+        var rows = Array.isArray(formData['treatment-rows']) ? formData['treatment-rows'] : [];
+        if (rows.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4">—</td></tr>';
+        } else {
+          tbody.innerHTML = rows.map(function(r) {
+            return '<tr><td>' + (r.item || '') + '</td><td>' + (r.sessionsValue || '') + '</td><td>' + (r.originalExpiry || '') + '</td><td>' + (r.extendedTo || '') + '</td></tr>';
+          }).join('');
+        }
+      }
+
+      var brandEl = document.querySelector('[data-field="brand-name"]');
+      if (brandEl) {
+        var logoFilename = formData['brand-logo-filename'];
+        if (logoFilename) {
+          var img = new Image();
+          var logoUrl = '../../assets/images/' + logoFilename;
+          img.onload = function() {
+            brandEl.style.backgroundImage = 'url(' + logoUrl + ')';
+            brandEl.style.backgroundSize = '170px 75px';
+            brandEl.style.backgroundRepeat = 'no-repeat';
+            brandEl.style.backgroundPosition = '';
+            brandEl.textContent = '';
+            brandEl.style.height = '75px';
+          };
+          img.onerror = function() {
+            brandEl.textContent = formData['brand-name'] || 'Sulwhasoo';
+            brandEl.style.backgroundImage = '';
+            brandEl.style.backgroundSize = '';
+          };
+          img.src = logoUrl;
+        } else if (formData['brand-name']) {
+          brandEl.textContent = formData['brand-name'];
+          brandEl.style.backgroundImage = '';
+          brandEl.style.backgroundSize = '';
+        }
+      }
+
+      var sigEl = document.querySelector('[data-field="signature-image"]');
+      if (sigEl && formData['signature-image']) {
+        sigEl.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = formData['signature-image'];
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '50px';
+        img.style.objectFit = 'contain';
+        sigEl.appendChild(img);
+      }
+    }
+
+    function sendHeightToParent() {
+      if (window.parent && window.parent !== window) {
+        var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+        window.parent.postMessage({ type: 'iframe-resize', height: height }, '*');
+      }
+    }
+
+    var pdfBtn = document.getElementById('pdf-print-btn');
+    if (pdfBtn) {
+      pdfBtn.addEventListener('click', function() {
+        var opt = { margin: [18, 15, 15, 15], filename: 'Treatment-Extension-Confirmation.pdf', image: { type: 'jpeg', quality: 0.98 }, html2pdf: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(document.querySelector('.pdf-container')).save();
+      });
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'form-data-inject') {
+        var data = event.data.data || {};
+        injectPDFData(data);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'form-data-injection-complete', formKey: 'treatment-extension' }, '*');
+        }
+        setTimeout(sendHeightToParent, 100);
+      }
+    });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { sendHeightToParent(); });
+    } else {
+      sendHeightToParent();
+    }
+    window.addEventListener('resize', function() { sendHeightToParent(); });
+    var observer = new MutationObserver(function() { sendHeightToParent(); });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+  </script>
+</body>
+</html>

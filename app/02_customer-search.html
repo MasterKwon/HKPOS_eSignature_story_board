@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=768, height=1024, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>태블릿 화면 | 고객검색</title>
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./tablet.css" />
+</head>
+<body data-app-page="customer-search">
+  <div class="t-screen">
+    <main class="t-body">
+      <nav class="t-stepper" aria-label="단계 진행" data-i18n-aria="app.stepper.ariaLabel">
+        <ol class="t-stepper__list">
+          <li class="t-stepper__item is-active"><span class="t-stepper__no">1</span><span class="t-stepper__label" data-i18n="app.stepper.step1">고객검색</span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">2</span><span class="t-stepper__label" data-i18n="app.stepper.step2">양식 및 BC 선택</span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">3</span><span class="t-stepper__label" data-i18n="app.stepper.step3">내용입력</span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">4</span><span class="t-stepper__label" data-i18n="app.stepper.step4">최종 확인</span></li>
+          <li class="t-stepper__item"><span class="t-stepper__no">5</span><span class="t-stepper__label" data-i18n="app.stepper.step5">전송 완료</span></li>
+        </ol>
+      </nav>
+      <header class="t-brand-header" id="customer-search-brand-header" aria-hidden="true">
+        <div class="t-brand-logo" id="customer-search-brand-logo"></div>
+      </header>
+
+      <div class="t-card">
+        <div class="app-card-title" style="margin-bottom: 8px;" data-i18n="app.customerSearch.searchTitle">검색</div>
+
+        <div class="t-form-grid">
+          <div class="form-group">
+            <label for="search-phone" data-i18n="app.customerSearch.phone">전화번호</label>
+            <input id="search-phone" class="demo-input" type="tel" inputmode="numeric" placeholder="예: 91234567" data-i18n-placeholder="app.customerSearch.phonePlaceholder" />
+          </div>
+
+          <div class="form-group">
+            <label for="search-name" data-i18n="app.customerSearch.name">이름</label>
+            <input id="search-name" class="demo-input" type="text" placeholder="예: CHAN TAI MAN" data-i18n-placeholder="app.customerSearch.namePlaceholder" />
+          </div>
+
+          <div class="form-group">
+            <label for="search-email" data-i18n="app.customerSearch.email">이메일</label>
+            <input id="search-email" class="demo-input" type="email" placeholder="예: name@example.com" data-i18n-placeholder="app.customerSearch.emailPlaceholder" />
+          </div>
+        </div>
+
+        <div class="t-actions">
+          <button class="demo-btn-secondary" id="clear-search" type="button" data-i18n="app.customerSearch.clear">초기화</button>
+          <button class="demo-btn-primary" id="search-btn" type="button" data-i18n="app.customerSearch.searchBtn">조회</button>
+        </div>
+
+        <div class="app-callout" id="search-hint" style="margin-top: 12px; display:none;">
+          <div id="search-feedback" style="font-weight: var(--font-weight-medium);"></div>
+        </div>
+      </div>
+
+      <div style="height: 12px;"></div>
+
+      <div class="t-card" id="result-card" style="display:none;">
+        <div class="app-card-title" id="result-title" style="margin-bottom: 8px;" data-i18n="app.customerSearch.resultTitle">검색 결과</div>
+        <div class="search-results" id="search-results">
+          <div class="result-placeholder"><p data-i18n="app.customerSearch.resultPlaceholder">검색 결과가 여기에 표시됩니다.</p></div>
+        </div>
+
+        <div class="t-actions">
+          <button class="demo-btn-primary" id="to-selected" type="button" disabled data-i18n="app.customerSearch.next">다음</button>
+        </div>
+      </div>
+
+      <div style="height: 12px;"></div>
+    </main>
+  </div>
+
+  <div class="app-toast" id="app-toast" role="status" aria-live="polite">
+    <div class="app-toast-title" id="app-toast-title">알림</div>
+    <div class="app-toast-desc" id="app-toast-desc">메시지</div>
+  </div>
+
+  <!-- Core modules -->
+  <script src="../assets/config.js"></script>
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/i18n.js"></script>
+  <script src="../assets/form-handler.js"></script>
+  <!-- Page modules -->
+  <script src="../assets/pages/topbar.js"></script>
+  <script src="../assets/pages/list.js"></script>
+  <script src="../assets/pages/login.js"></script>
+  <script src="../assets/pages/customer-search.js"></script>
+  <script src="../assets/pages/consultation-selection.js"></script>
+  <script src="../assets/pages/tabs.js"></script>
+  <script src="../assets/pages/review.js"></script>
+  <script src="../assets/pages/completion.js"></script>
+  <script src="../assets/pages/signature.js"></script>
+  <script src="../assets/pages/wrapper.js"></script>
+  <!-- Main entry point -->
+  <script src="../assets/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HK POS eSignature | 최종 확인</title>
+  <link rel="icon" href="data:," />
+
+  <link rel="stylesheet" href="assets/style.css" />
+
+  <link rel="stylesheet" href="assets/app.css" />
+</head>
+<body class="app-body" data-app-page="review" data-layout-title="최종 확인" data-layout-subtitle="4 / 5단계 • 입력 내용 확인 및 전송" data-layout-title-i18n="screen.review.title" data-layout-subtitle-i18n="screen.review.subtitle">
+  <div class="app-stage">
+    <div class="app-shell">
+      <header class="app-topbar" data-layout="topbar"></header>
+
+      <main class="app-page">
+        <div class="app-grid">
+          <section class="app-card">
+            <div style="margin-top: 12px; display:flex; justify-content:center;">
+              <div class="device-frame" aria-label="Tablet preview frame">
+                <div class="device-frame__screen">
+                  <iframe class="device-frame__iframe" src="app/05_review.html" title="태블릿 화면 - 최종 확인"></iframe>
+                  <div class="device-frame__home-indicator" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="app-card">
+            <div class="app-card-title" data-i18n="common.screenTitle"></div>
+            <p class="app-hint" data-i18n="wrapper.review.screenDesc"></p>
+
+            <div class="app-card-title" style="margin-top: 20px; margin-bottom: 8px;" data-i18n="common.columnTitle"></div>
+            <ul style="margin-left: 18px; color: var(--text-secondary); line-height: 1.7;">
+              <li data-i18n="wrapper.review.column1"></li>
+              <li data-i18n="wrapper.review.column2"></li>
+              <li data-i18n="wrapper.review.column3"></li>
+              <li data-i18n="wrapper.review.column4"></li>
+              <li data-i18n="wrapper.review.column5"></li>
+              <li data-i18n="wrapper.review.column6"></li>
+            </ul>
+
+            <div class="app-card-title" style="margin-top: 20px; margin-bottom: 8px;" data-i18n="common.usageTitle"></div>
+            <ul style="margin-left: 18px; color: var(--text-secondary); line-height: 1.7;">
+              <li data-i18n="wrapper.review.usage1"></li>
+              <li data-i18n="wrapper.review.usage2"></li>
+              <li data-i18n="wrapper.review.usage3"></li>
+              <li data-i18n="wrapper.review.usage4"></li>
+              <li data-i18n="wrapper.review.usage5"></li>
+              <li data-i18n="wrapper.review.usage6"></li>
+              <li data-i18n="wrapper.review.usage7"></li>
+            </ul>
+
+            <div class="app-card-title" style="margin-top: 20px; margin-bottom: 8px;" data-i18n="common.testDataTitle"></div>
+
+            <div class="app-callout" style="margin-top: 20px;">
+              <strong data-i18n="common.designNoteTitle"></strong>
+              <ul style="margin-left: 18px; margin-top: 6px; line-height: 1.7;">
+                <li><strong data-i18n="wrapper.review.designTitle"></strong></li>
+                <li data-i18n="wrapper.review.designPdf"></li>
+                <li data-i18n="wrapper.review.designIframe"></li>
+                <li data-i18n="wrapper.review.designPostMessage"></li>
+                <li data-i18n="wrapper.review.designInject"></li>
+                <li data-i18n="wrapper.review.designResize"></li>
+                <li data-i18n="wrapper.review.designCollect"></li>
+                <li data-i18n="wrapper.review.designRealName"></li>
+                <li data-i18n="wrapper.review.designReadOnly"></li>
+                <li data-i18n="wrapper.review.designConditional"></li>
+                <li data-i18n="wrapper.review.designOthers"></li>
+                <li><strong data-i18n="wrapper.review.designProdTitle"></strong></li>
+                <li data-i18n="wrapper.review.designSecurity"></li>
+                <li data-i18n="wrapper.review.designPerf"></li>
+                <li data-i18n="wrapper.review.designError"></li>
+                <li data-i18n="wrapper.review.designA11y"></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/utils.js"></script>
+  <script src="assets/i18n.js"></script>
+  <script src="assets/layout.js"></script>
+  <!-- Core modules -->
+  <script src="assets/form-handler.js"></script>
+  <!-- Page modules -->
+  <script src="assets/pages/topbar.js"></script>
+  <script src="assets/pages/list.js"></script>
+  <script src="assets/pages/login.js"></script>
+  <script src="assets/pages/customer-search.js"></script>
+  <script src="assets/pages/consultation-selection.js"></script>
+  <script src="assets/pages/tabs.js"></script>
+  <script src="assets/pages/review.js"></script>
+  <script src="assets/pages/completion.js"></script>
+  <script src="assets/pages/signature.js"></script>
+  <script src="assets/pages/wrapper.js"></script>
+  <!-- Main entry point -->
+  <script src="assets/app.js"></script>
+</body>
+</html>
