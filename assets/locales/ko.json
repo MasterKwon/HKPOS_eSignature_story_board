@@ -269,6 +269,12 @@
   "app.consultationSelection.noCustomerToastDesc": "설계 플로우 기준, 고객검색 화면부터 진행해주세요.",
 
   "app.consultationSelection.customerInfo": "고객 정보",
+  "app.consultationSelection.customerTitle": "호칭",
+  "app.consultationSelection.customerName": "이름",
+  "app.consultationSelection.memberNo": "회원번호",
+  "app.consultationSelection.phoneNo": "전화번호",
+  "app.consultationSelection.emailLabel": "이메일",
+  "app.consultationSelection.memberGrade": "회원등급",
   "app.consultationSelection.noCustomer": "고객 정보가 없습니다.",
   "app.consultationSelection.formsToFill": "작성할 양식",
   "app.consultationSelection.bcLabel": "담당 BC (필수)",

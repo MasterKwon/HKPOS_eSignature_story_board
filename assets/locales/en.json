@@ -269,6 +269,12 @@
   "app.consultationSelection.noCustomerToastDesc": "Please start from the customer search step.",
 
   "app.consultationSelection.customerInfo": "Customer information",
+  "app.consultationSelection.customerTitle": "Ms. Mrs. Mr.",
+  "app.consultationSelection.customerName": "Name",
+  "app.consultationSelection.memberNo": "Member No.",
+  "app.consultationSelection.phoneNo": "Phone No.",
+  "app.consultationSelection.emailLabel": "Email",
+  "app.consultationSelection.memberGrade": "Member Grade",
   "app.consultationSelection.noCustomer": "No customer information.",
   "app.consultationSelection.formsToFill": "Forms to complete",
   "app.consultationSelection.bcLabel": "Responsible BC (required)",

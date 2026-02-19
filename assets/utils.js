@@ -180,12 +180,16 @@
     if (!host || !customer) return;
     const t = (window.HKPOS && window.HKPOS.i18n && window.HKPOS.i18n.t)
       ? window.HKPOS.i18n.t.bind(window.HKPOS.i18n) : function (k, p) { if (p && p.count !== undefined) return String(k).replace("{count}", p.count); return k; };
+    // 6행 구조: Ms. Mrs. Mr. | Name | Member No. | Phone No. | Email | Member Grade
+    const setVal = (id, val) => { const el = qs("#" + id); if (el) el.textContent = val != null && val !== "" ? String(val) : ""; };
+    setVal("customer-val-title", customer.title || customer.honorific || "");
+    setVal("customer-val-name", customer.name || "");
+    setVal("customer-val-memberNo", customer.id || "");
+    setVal("customer-val-phone", customer.phone || "");
+    setVal("customer-val-email", customer.email || "");
+    setVal("customer-val-grade", customer.tier || "");
     const packages = Array.isArray(customer.availablePackages) ? customer.availablePackages : [];
     const hasPackages = packages.length > 0;
-    const nameL = t("app.customerSearch.nameLabel");
-    const phoneL = t("app.customerSearch.phoneLabel");
-    const emailL = t("app.customerSearch.emailLabel");
-    const customerIdL = t("app.customerSearch.customerIdLabel");
     const availPkg = t("app.customerSearch.availablePackages");
     const pkgCount = hasPackages ? t("app.customerSearch.packagesCount", { count: packages.length }) : "";
     const pkgName = t("app.customerSearch.packageName");
@@ -195,50 +199,42 @@
     const noPkg = t("app.customerSearch.noPackages");
     const remainUnit = t("app.customerSearch.remainQtyUnit");
     host.innerHTML = `
-      <div style="margin-top: 4px; display:grid; gap: 8px;">
-        <div style="color: var(--text-secondary); font-size: var(--font-size-base); line-height:1.5;">
-          <div style="margin-bottom: 4px;"><strong>${nameL}</strong> ${customer.name} <span class="app-badge" style="margin-left:6px;">${customer.tier}</span></div>
-          <div style="margin-bottom: 4px;"><strong>${phoneL}</strong> ${customer.phone}</div>
-          <div style="margin-bottom: 4px;"><strong>${emailL}</strong> ${customer.email}</div>
-          <div><strong>${customerIdL}</strong> ${customer.id}</div>
-        </div>
-        <div style="padding-top: 8px; border-top: 1px solid var(--border-light);">
-          <button type="button" id="toggle-packages" style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; background: none; border: none; cursor: pointer; text-align: left;">
-            <div style="font-weight: var(--font-weight-medium); color: var(--text-primary); font-size: var(--font-size-base);">${availPkg} ${hasPackages ? `<span style="color: var(--text-secondary); font-weight: normal; font-size: var(--font-size-sm);">${pkgCount}</span>` : ""}</div>
-            <span id="toggle-packages-icon" style="color: var(--text-secondary); font-size: 12px; flex: 0 0 auto;">▼</span>
-          </button>
-          <div id="packages-content" style="display: none; margin-top: 6px; overflow-x: auto;">
-            ${
-              hasPackages
-                ? `
-                  <table style="width: 100%; border-collapse: collapse; font-size: var(--font-size-sm);">
-                    <thead>
-                      <tr style="border-bottom: 1px solid var(--border-light); background: var(--bg-secondary);">
-                        <th style="padding: 8px 6px; text-align: left; font-weight: var(--font-weight-medium); color: var(--text-primary);">${pkgName}</th>
-                        <th style="padding: 8px 6px; text-align: right; font-weight: var(--font-weight-medium); color: var(--text-primary);">${remainL}</th>
-                        <th style="padding: 8px 6px; text-align: center; font-weight: var(--font-weight-medium); color: var(--text-primary);">${expiryL}</th>
-                        <th style="padding: 8px 6px; text-align: left; font-weight: var(--font-weight-medium); color: var(--text-primary);">${issueL}</th>
+      <div style="display: none; padding-top: 8px; border-top: 1px solid var(--border-light);">
+        <button type="button" id="toggle-packages" style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; background: none; border: none; cursor: pointer; text-align: left;">
+          <div style="font-weight: var(--font-weight-medium); color: var(--text-primary); font-size: var(--font-size-base);">${availPkg} ${hasPackages ? `<span style="color: var(--text-secondary); font-weight: normal; font-size: var(--font-size-sm);">${pkgCount}</span>` : ""}</div>
+          <span id="toggle-packages-icon" style="color: var(--text-secondary); font-size: 12px; flex: 0 0 auto;">▼</span>
+        </button>
+        <div id="packages-content" style="display: none; margin-top: 6px; overflow-x: auto;">
+          ${
+            hasPackages
+              ? `
+                <table style="width: 100%; border-collapse: collapse; font-size: var(--font-size-sm);">
+                  <thead>
+                    <tr style="border-bottom: 1px solid var(--border-light); background: var(--bg-secondary);">
+                    <th style="padding: 8px 6px; text-align: left; font-weight: var(--font-weight-medium); color: var(--text-primary);">${pkgName}</th>
+                    <th style="padding: 8px 6px; text-align: right; font-weight: var(--font-weight-medium); color: var(--text-primary);">${remainL}</th>
+                    <th style="padding: 8px 6px; text-align: center; font-weight: var(--font-weight-medium); color: var(--text-primary);">${expiryL}</th>
+                    <th style="padding: 8px 6px; text-align: left; font-weight: var(--font-weight-medium); color: var(--text-primary);">${issueL}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    ${packages
+                      .map(
+                        (p) => `
+                      <tr style="border-bottom: 1px solid var(--border-light);">
+                        <td style="padding: 10px 6px; color: var(--text-primary);">${p.packageName}</td>
+                        <td style="padding: 10px 6px; text-align: right; color: var(--text-secondary);">${p.remainQty ? `${p.remainQty}${remainUnit}` : `HK$${p.remainValue?.toLocaleString() || 0}`}</td>
+                        <td style="padding: 10px 6px; text-align: center; color: var(--text-secondary);">${p.expiryDate}</td>
+                        <td style="padding: 10px 6px; color: var(--text-secondary); font-size: 11px;">${p.issueStoreName}<br><span style="color: var(--text-light);">${p.issueStoreCode}</span></td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      ${packages
-                        .map(
-                          (p) => `
-                        <tr style="border-bottom: 1px solid var(--border-light);">
-                          <td style="padding: 10px 6px; color: var(--text-primary);">${p.packageName}</td>
-                          <td style="padding: 10px 6px; text-align: right; color: var(--text-secondary);">${p.remainQty ? `${p.remainQty}${remainUnit}` : `HK$${p.remainValue?.toLocaleString() || 0}`}</td>
-                          <td style="padding: 10px 6px; text-align: center; color: var(--text-secondary);">${p.expiryDate}</td>
-                          <td style="padding: 10px 6px; color: var(--text-secondary); font-size: 11px;">${p.issueStoreName}<br><span style="color: var(--text-light);">${p.issueStoreCode}</span></td>
-                        </tr>
-                      `
-                        )
-                        .join("")}
-                    </tbody>
-                  </table>
-                `
-                : `<div style="color: var(--text-secondary); font-size: var(--font-size-sm);">${noPkg}</div>`
-            }
-          </div>
+                    `
+                      )
+                      .join("")}
+                  </tbody>
+                </table>
+              `
+              : `<div style="color: var(--text-secondary); font-size: var(--font-size-sm);">${noPkg}</div>`
+          }
         </div>
       </div>
     `;

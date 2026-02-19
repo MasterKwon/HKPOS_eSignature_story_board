@@ -269,6 +269,12 @@
   "app.consultationSelection.noCustomerToastDesc": "請從顧客搜尋步驟開始。",
 
   "app.consultationSelection.customerInfo": "顧客資料",
+  "app.consultationSelection.customerTitle": "小姐 / 女士 / 先生",
+  "app.consultationSelection.customerName": "姓名",
+  "app.consultationSelection.memberNo": "會員編號",
+  "app.consultationSelection.phoneNo": "電話號碼",
+  "app.consultationSelection.emailLabel": "電郵",
+  "app.consultationSelection.memberGrade": "會員等級",
   "app.consultationSelection.noCustomer": "無顧客資料。",
   "app.consultationSelection.formsToFill": "待填表單",
   "app.consultationSelection.bcLabel": "負責 BC（必填）",

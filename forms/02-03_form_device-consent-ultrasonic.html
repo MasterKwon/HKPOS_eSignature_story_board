@@ -437,8 +437,9 @@
       </div>
     </div>
 
+    <!-- Customer Information -->
     <div class="form-section">
-      <div class="section-title">Part 1 : Personal Information *</div>
+      <div class="section-title">Customer Information</div>
       <div class="customer-info-grid">
         <div class="info-field">
           <label>Name:</label>
@@ -448,15 +449,15 @@
           <label>Title:</label>
           <div class="radio-group">
             <label class="option-label">
-              <input type="radio" name="title" value="Ms" />
+              <input type="radio" name="title" value="Ms" disabled />
               <span>Ms.</span>
             </label>
             <label class="option-label">
-              <input type="radio" name="title" value="Mrs" />
+              <input type="radio" name="title" value="Mrs" disabled />
               <span>Mrs.</span>
             </label>
             <label class="option-label">
-              <input type="radio" name="title" value="Mr" />
+              <input type="radio" name="title" value="Mr" disabled />
               <span>Mr.</span>
             </label>
           </div>
@@ -469,15 +470,15 @@
           <label>Contact Number:</label>
           <div class="radio-group" style="margin-bottom: 8px;">
             <label class="option-label">
-              <input type="radio" name="country-code" value="852" />
+              <input type="radio" name="country-code" value="852" disabled />
               <span>852</span>
             </label>
             <label class="option-label">
-              <input type="radio" name="country-code" value="853" />
+              <input type="radio" name="country-code" value="853" disabled />
               <span>853</span>
             </label>
             <label class="option-label">
-              <input type="radio" name="country-code" value="86" />
+              <input type="radio" name="country-code" value="86" disabled />
               <span>86</span>
             </label>
           </div>
@@ -486,6 +487,10 @@
         <div class="info-field">
           <label>Email:</label>
           <input type="email" id="email" readonly data-field="email" value="" placeholder="Enter email address" />
+        </div>
+        <div class="info-field">
+          <label>Member Grade:</label>
+          <input type="text" id="member-grade" readonly data-field="member-grade" value="" />
         </div>
       </div>
     </div>

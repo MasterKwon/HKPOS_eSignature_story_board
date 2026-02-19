@@ -108,9 +108,9 @@
         <div class="info-field">
           <label>Title :</label>
           <div class="radio-group" style="display: flex; gap: 12px; flex-wrap: wrap;">
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Ms" /><span>Ms.</span></label>
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mrs" /><span>Mrs.</span></label>
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mr" /><span>Mr.</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Ms" disabled /><span>Ms.</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mrs" disabled /><span>Mrs.</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-title" value="Mr" disabled /><span>Mr.</span></label>
           </div>
         </div>
         <div class="info-field">
@@ -120,15 +120,19 @@
         <div class="info-field">
           <label>Contact Number :</label>
           <div class="radio-group" style="margin-bottom: 6px; display: flex; gap: 12px; flex-wrap: wrap;">
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="852" /><span>852</span></label>
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="853" /><span>853</span></label>
-            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="86" /><span>86</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="852" disabled /><span>852</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="853" disabled /><span>853</span></label>
+            <label class="option-label" style="display: flex; align-items: center; gap: 6px; cursor: pointer;"><input type="radio" name="delegator-country-code" value="86" disabled /><span>86</span></label>
           </div>
           <input type="tel" readonly data-field="delegator-contact" id="delegator-contact" value="" />
         </div>
         <div class="info-field">
           <label>Email :</label>
           <input type="email" readonly data-field="delegator-email" id="delegator-email" value="" />
+        </div>
+        <div class="info-field">
+          <label>Member Grade :</label>
+          <input type="text" readonly data-field="delegator-member-grade" id="delegator-member-grade" value="" />
         </div>
       </div>
     </div>
